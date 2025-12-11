@@ -1,6 +1,6 @@
 # Focason Service Registry
 
-The Eureka Discovery Server is a fundamental component of the Focason Cloud microservice architecture. It provides a
+The Service Registry is a fundamental component of the Focason Cloud microservice architecture by Eureka. It provides a
 central registry where client services (producers) can register themselves, and other services (consumers) can discover
 them for dynamic, load-balanced communication.
 

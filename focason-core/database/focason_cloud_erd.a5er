@@ -1,0 +1,2298 @@
+﻿# A5:ER FORMAT:19
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.20.4 Copyright © 1997 - 2025 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+Page=Main
+PageInfo="Main",7,"B2Landscape",$FFFFFF
+Domain=CHAR_10=@CHAR(10)
+DomainInfo="CHAR_10","@CHAR(10)","",""
+Domain=DATETIME_FULL=@DATETIME
+DomainInfo="DATETIME_FULL","@DATETIME","",""
+Domain=DATE_ONLY=@DATE
+DomainInfo="DATE_ONLY","@DATE","",""
+Domain=DECIMAL_15_2=@DECIMAL(15,2)
+DomainInfo="DECIMAL_15_2","@DECIMAL(15,2)","",""
+Domain=NUM_MEDIUM=BIGINT
+DomainInfo="NUM_MEDIUM","BIGINT","",""
+Domain=NUM_SMALL=@INT(15)
+DomainInfo="NUM_SMALL","@INT(15)","",""
+Domain=NUM_TINY=@INT(1)
+DomainInfo="NUM_TINY","@INT(1)","",""
+Domain=SEQ_NO=INT(11) auto_increment
+DomainInfo="SEQ_NO","INT(11) auto_increment","",""
+Domain=TEXT_LONG=TEXT
+DomainInfo="TEXT_LONG","TEXT","",""
+Domain=TIMESTAMP_FULL=@TIMESTAMP
+DomainInfo="TIMESTAMP_FULL","@TIMESTAMP","",""
+Domain=UUID=@VARCHAR(36)
+DomainInfo="UUID","@VARCHAR(36)","",""
+Domain=VARCHAR_128=@VARCHAR(128)
+DomainInfo="VARCHAR_128","@VARCHAR(128)","",""
+Domain=VARCHAR_255=@VARCHAR(255)
+DomainInfo="VARCHAR_255","@VARCHAR(255)","",""
+Domain=VARCHAR_36=@VARCHAR(36)
+DomainInfo="VARCHAR_36","@VARCHAR(36)","",""
+Domain=コード=@VARCHAR(10)
+DomainInfo="コード","@VARCHAR(10)","",""
+Domain=ステータス=@INT(2)
+DomainInfo="ステータス","@INT(2)","",""
+Domain=タイプ=@INT(2)
+DomainInfo="タイプ","@INT(2)","",""
+Domain=テキスト=TEXT
+DomainInfo="テキスト","TEXT","",""
+Domain=フラグ=@INT(1)
+DomainInfo="フラグ","@INT(1)","",""
+Domain=メールアドレス=@VARCHAR(255)
+DomainInfo="メールアドレス","@VARCHAR(255)","",""
+Domain=商品SKU=@VARCHAR(36)
+DomainInfo="商品SKU","@VARCHAR(36)","",""
+Domain=小数=@DECIMAL(15,2)
+DomainInfo="小数","@DECIMAL(15,2)","",""
+Domain=数字=@INT(11)
+DomainInfo="数字","@INT(11)","",""
+Domain=文字列_128=@VARCHAR(128)
+DomainInfo="文字列_128","@VARCHAR(128)","",""
+Domain=文字列_255=@VARCHAR(255)
+DomainInfo="文字列_255","@VARCHAR(255)","",""
+Domain=日付=@DATE
+DomainInfo="日付","@DATE","",""
+Domain=日時=@DATETIME
+DomainInfo="日時","@DATETIME","",""
+Domain=自動採番キー=INT(11) auto_increment
+DomainInfo="自動採番キー","INT(11) auto_increment","",""
+Domain=金額=@DECIMAL(15,2)
+DomainInfo="金額","@DECIMAL(15,2)","",""
+LogicalView=1
+DecodeDomain=0
+ViewModePageIndividually=1
+ViewMode=7
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Meiryo UI
+FontSize=6
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+RDBMSType=6
+RDBMSTypeName=MySQL
+GenerateDropTableStatement=1
+DropTableIfExists=1
+BackupRestoreTempTable=0
+ForceQuoteIdentifier=1
+CommonField="作成者","created_by","*VARCHAR_36","NOT NULL",,"","",$FFFFFFFF
+CommonField="作成日時","created_at","*DATETIME_FULL","NOT NULL",,"","",$FFFFFFFF
+CommonField="更新者","modified_by","*VARCHAR_36","NOT NULL",,"","",$FFFFFFFF
+CommonField="更新日時","modified_at","*DATETIME_FULL","NOT NULL",,"","",$FFFFFFFF
+CommonField="削除フラグ","is_deleted","*NUM_TINY","NOT NULL",,"","",$FFFFFFFF
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+CreateOrder=Dependent
+ShowTag=1
+ShowCommonAttributes=1
+BugFixEntityWidth=1
+
+[Entity]
+PName=mg005_user
+LName=ユーザー
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=2550
+Top=2050
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="UUID","uuid","*UUID","NOT NULL",,"","",$FFFFFFFF,""
+Field="ユーザー名","username","*文字列_128",,,"","",$FFFFFFFF,""
+Field="メールアドレス","email","*メールアドレス","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","password","*文字列_128",,,"","",$FFFFFFFF,""
+Field="会社コード","company_code","*コード",,,"","",$FFFFFFFF,""
+Field="電話番号","phone","*文字列_128",,,"","",$FFFFFFFF,""
+Field="タイプ","type","*タイプ","NOT NULL",,"","1:ルートユーザー, 2:通常ユーザー",$FFFFFFFF,""
+Field="認証コード","verification_code","*UUID",,,"","",$FFFFFFFF,""
+Field="ステータス","is_verified","*ステータス","NOT NULL",,"","1:認証待ち, 2:正常, 3:ブロック",$FFFFFFFF,""
+Field="画像","picture","*テキスト",,,"","",$FFFFFFFF,""
+Field="リフレッシュトークン","refresh_token","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_email=1,email
+Index=idx_uuid=1,uuid
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20251106205647
+Position="MAIN",2550,2050
+ZOrder=-3
+
+[Entity]
+PName=mg001_company
+LName=会社
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3050
+Top=1500
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="会社コード","company_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="会社名称","company_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="会社ステータス","company_status","*ステータス","NOT NULL",,"1","1:稼働中, 2:非稼働中, 3:閉鎖中",$FFFFFFFF,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250201222519
+Position="MAIN",3050,1500
+ZOrder=-1
+
+[Entity]
+PName=mg003_client
+LName=荷主
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1700
+Top=1800
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="会社コード","company_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主名称","client_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主ステータス","client_status","*ステータス","NOT NULL",,"3","1:稼働中, 2:非稼働中, 3:閉鎖中",$FFFFFFFF,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$808000
+ModifiedDateTime=20250222193013
+Position="MAIN",1700,1800
+ZOrder=3
+
+[Relation]
+Entity1=mg001_company
+Entity2=mg003_client
+RelationType1=2
+RelationType2=3
+Fields1=company_code
+Fields2=company_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,8264,2689,905,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240229180232
+LineMode=0
+Bar1=826
+Bar2=269
+Bar3=90
+TermPos1=R
+TermPos2=R
+ZOrder=5
+
+[Entity]
+PName=pd001_product
+LName=商品
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1650
+Top=350
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品名称","product_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品タイプ","product_type","*タイプ","NOT NULL",,"1","1:通常商品、2:セット商品、3:同梱品",$FFFFFFFF,""
+Field="税抜き単価","included_tax_unit_price","*金額","NOT NULL",,"0","",$FFFFFFFF,""
+Field="税込み単価","excluded_tax_unit_price","*金額","NOT NULL",,"0","",$FFFFFFFF,""
+Field="税金","tax","*金額","NOT NULL",,"0","",$FFFFFFFF,""
+Field="税率","tax_rate","*数字","NOT NULL",,"0","",$FFFFFFFF,""
+Field="商品分類コード","product_category_code","*コード",,,"","",$FFFFFFFF,""
+Field="長さ","length","*小数",,,"","",$FFFFFFFF,""
+Field="幅","width","*小数",,,"","",$FFFFFFFF,""
+Field="高さ","height","*小数",,,"","",$FFFFFFFF,""
+Field="容積(m³)","volume","*小数",,,"","",$FFFFFFFF,""
+Field="重量(kg)","weight","*小数",,,"","",$FFFFFFFF,""
+Field="シリアル番号管理要否","is_serial_number_managed","*フラグ","NOT NULL",,"0","",$FFFFFFFF,""
+Field="賞味期間管理要否","is_best_before_managed","*フラグ","NOT NULL",,"0","",$FFFFFFFF,""
+Field="賞味期間（日数）","best_before_period_days","*数字","NOT NULL",,"0","",$FFFFFFFF,""
+Field="商品ステータス","product_status","*ステータス","NOT NULL",,"1","1:有効, 2:無効, 3:アーカイブ",$FFFFFFFF,""
+Field="画像","image","*文字列_255",,,"","Amazon S3パス",$FFFFFFFF,""
+Field="バーコード","barcode","*文字列_255",,,"","Amazon S3パス",$FFFFFFFF,""
+Field="QRコード","qr_code","*文字列_255",,,"","Amazon S3パス",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Index=idx_client_product_code=1,client_code,product_sku
+Index=idx_product_name=0,product_name
+Index=idx_product_type=0,product_type
+EffectMode=None
+Color=$000000
+BkColor=$F0CAA6
+ModifiedDateTime=20250224195238
+Position="MAIN",1650,350
+ZOrder=6
+
+[Entity]
+PName=pd002_set_component
+LName=構成品
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=900
+Top=800
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="親商品SKU","parent_product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="子商品SKU","child_product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字","NOT NULL",,"1","",$FFFFFFFF,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$F0CAA6
+ModifiedDateTime=20250223160913
+Position="MAIN",900,800
+ZOrder=7
+
+[Relation]
+Entity1=pd001_product
+Entity2=pd002_set_component
+RelationType1=2
+RelationType2=3
+Fields1=product_sku
+Fields2=parent_product_sku
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7583,2928,4707,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240304214840
+LineMode=0
+Bar1=758
+Bar2=293
+Bar3=471
+TermPos1=R
+TermPos2=R
+ZOrder=8
+
+[Relation]
+Entity1=mg003_client
+Entity2=pd001_product
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1765,3244,4309,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240229221924
+LineMode=0
+Bar1=176
+Bar2=324
+Bar3=431
+TermPos1=R
+TermPos2=R
+ZOrder=10
+
+[Entity]
+PName=mg014_file
+LName=ファイル
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1000
+Top=2350
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="ファイルコード","file_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="ストアコード","store_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="ファイル名称","file_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="タイプ","type","*タイプ","NOT NULL",,"","1:CSV, 2:Excel",$FFFFFFFF,""
+Field="種類","category","*タイプ","NOT NULL",,"","1:商品, 2:受注依頼, 3:出荷依頼",$FFFFFFFF,""
+Field="場所","location","*文字列_255","NOT NULL",,"","",$FFFFFFFF,""
+Field="ステータス","status","*ステータス","NOT NULL",,"1","1:未処理, 2:正常処理済, 3:異常あり, 4:キャンセル",$FFFFFFFF,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$F0FBFF
+ModifiedDateTime=20250222204213
+Position="MAIN",1000,2350
+ZOrder=11
+
+[Entity]
+PName=mg015_file_content
+LName=ファイル内容
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1150
+Top=2800
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="ファイルコード","file_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="シート番号","sheet_number","*数字","NOT NULL",,"1","",$FFFFFFFF,""
+Field="項目1","value_1","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目2","value_2","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目3","value_3","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目4","value_4","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目5","value_5","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目6","value_6","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目7","value_7","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目8","value_8","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目9","value_9","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目10","value_10","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目11","value_11","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目12","value_12","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目13","value_13","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目14","value_14","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目15","value_15","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目16","value_16","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目17","value_17","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目18","value_18","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目19","value_19","*文字列_128",,,"","",$FFFFFFFF,""
+Field="項目20","value_20","*文字列_128",,,"","",$FFFFFFFF,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$F0FBFF
+ModifiedDateTime=20240316135600
+Position="MAIN",1150,2800,471,714
+ZOrder=12
+
+[Relation]
+Entity1=mg014_file
+Entity2=mg015_file_content
+RelationType1=2
+RelationType2=3
+Fields1=file_code
+Fields2=file_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7649,4510,3866,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240309142332
+LineMode=0
+Bar1=765
+Bar2=451
+Bar3=387
+TermPos1=R
+TermPos2=R
+ZOrder=13
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg014_file
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=store_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,8231,3161,7637,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240309142232
+LineMode=0
+Bar1=823
+Bar2=316
+Bar3=764
+TermPos1=R
+TermPos2=R
+ZOrder=14
+
+[Entity]
+PName=mg010_product_mapping
+LName=商品マッピング
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=2050
+Top=1200
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="外部商品SKU","external_product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="外部システム","external_system","*文字列_128",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250223162222
+Position="MAIN",2050,1200
+ZOrder=15
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg010_product_mapping
+RelationType1=2
+RelationType2=2
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,3601,6397,4428,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310154629
+LineMode=0
+Bar1=360
+Bar2=640
+Bar3=443
+TermPos1=R
+TermPos2=R
+ZOrder=16
+
+[Entity]
+PName=mg002_warehouse
+LName=倉庫
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4550
+Top=2000
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="会社コード","company_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫名称","warehouse_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫ステータス","warehouse_status","*ステータス","NOT NULL",,"3","1:稼働中, 2:非稼働中, 3:閉鎖中",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$808000
+ModifiedDateTime=20250324223936
+Position="MAIN",4550,2000,524,260
+ZOrder=18
+
+[Entity]
+PName=mg013_contract
+LName=契約
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=2950
+Top=900
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="契約コード","contract_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="契約種類","contract_type","*タイプ","NOT NULL",,"","1:倉庫契約, 2:ストア契約",$00FF0000,""
+Field="契約プラン","contract_plan","*タイプ","NOT NULL",,"","1:スタンダード, 2:プレミアム",$FFFFFFFF,""
+Field="契約開始日","contract_start_date","*日付","NOT NULL",,"","",$FFFFFFFF,""
+Field="契約終了日","contract_end_date","*日付","NOT NULL",,"","",$FFFFFFFF,""
+Field="契約先コード","contractor_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="担当者_名前","manager_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="担当者_電話番号","manager_phone","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="担当者_メールアドレス","manager_email","*メールアドレス","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20240316135037
+Position="MAIN",2950,900
+ZOrder=19
+
+[Entity]
+PName=iv002_shelf
+LName=棚
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4800
+Top=3050
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="棚コード","shelf_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="ゾーンコード","zone_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="棚名称","shelf_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="優先度","priority","*数字","NOT NULL",,"999","",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250305000428
+Position="MAIN",4800,3050
+ZOrder=22
+
+[Entity]
+PName=iv003_shelf_unit
+LName=棚ユニット
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4600
+Top=3550
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="棚ユニットコード","shelf_unit_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="ゾーンコード","zone_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="棚コード","shelf_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="棚ユニット名称","shelf_unit_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250304234450
+Position="MAIN",4600,3550
+ZOrder=24
+
+[Relation]
+Entity1=iv002_shelf
+Entity2=iv003_shelf_unit
+RelationType1=2
+RelationType2=3
+Fields1=shelf_code
+Fields2=shelf_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,9155,4960,2282,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310163020
+LineMode=0
+Bar1=916
+Bar2=496
+Bar3=228
+TermPos1=R
+TermPos2=R
+ZOrder=25
+
+[Entity]
+PName=iv004_inventory
+LName=在庫
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3600
+Top=3200
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="ゾーンコード","zone_code","*コード",,,"","",$FFFFFFFF,""
+Field="棚ユニットコード","shelf_unit_code","*文字列_128",,,"","",$FFFFFFFF,""
+Field="ロット番号","lot_number","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="実在庫数量","actual_stock","*数字","NOT NULL",,"0","物理的にカウントされた在庫数",$FFFFFFFF,""
+Field="利用可能在庫数量","available_stock","*数字","NOT NULL",,"0","顧客や顧客注文に対して利用可能な在庫数",$FFFFFFFF,""
+Field="予約在庫数量","reserved_stock","*数字","NOT NULL",,"0","顧客が商品を注文したが、まだ出荷されていない在庫数",$FFFFFFFF,""
+Field="バックオーダー在庫数量","back_order_stock","*数字","NOT NULL",,"0","現在は在庫切れであり、注文された商品の数量",$FFFFFFFF,""
+Field="リードタイム在庫数量","lead_time_stock","*数字","NOT NULL",,"0","供給者からの補充注文が到着するまでの間の在庫数",$FFFFFFFF,""
+Field="賞味期限","expiry_date","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="在庫ステータス","inventory_status","*ステータス","NOT NULL",,"1","1:未検査, 2:検査合格, 3:検査不合格",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+Index=idx_client_product=0,client_code
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250302133645
+Position="MAIN",3600,3200
+ZOrder=26
+
+[Relation]
+Entity1=iv003_shelf_unit
+Entity2=iv004_inventory
+RelationType1=2
+RelationType2=3
+Fields1=shelf_unit_code
+Fields2=shelf_unit_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2660,5590,5406,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310170023
+LineMode=0
+Bar1=266
+Bar2=559
+Bar3=541
+TermPos1=R
+TermPos2=R
+ZOrder=27
+
+[Entity]
+PName=iv102_inventory_adjustment_history
+LName=在庫調整履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3400
+Top=4250
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="調整前数量","quantity_before_change","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="調整後数量","quantity_after_change","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:新規, 2:在庫増加, 3:在庫減少, 4:在庫移動",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20250223190136
+Position="MAIN",3400,4250
+ZOrder=28
+
+[Entity]
+PName=iv005_inbound
+LName=入庫
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3900
+Top=1150
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="入庫コード","inbound_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="サプライヤーコード","supplier_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="入庫依頼日付","request_inbound_date","*日付","NOT NULL",,"","",$FFFFFFFF,""
+Field="予想入庫日付","expected_inbound_date","*日付",,,"","",$FFFFFFFF,""
+Field="実際入庫日付","actual_inbound_date","*日付",,,"","",$FFFFFFFF,""
+Field="入庫ステータス","inbound_status","*ステータス","NOT NULL",,"","1:未処理, 2:進行中, 3:入庫済み, 4:キャンセル, 5:異常",$FFFFFFFF,""
+Field="入庫タイプ","inbound_type","*タイプ","NOT NULL",,"","1:通常入庫, 2:返品入庫, 3:調達入庫, 4:棚卸差異調整入庫",$FFFFFFFF,""
+Field="配送伝票番号","shipment_manifest_number","*文字列_128",,,"","",$FFFFFFFF,""
+Field="荷主側担当者","client_manager","*文字列_128",,,"","",$FFFFFFFF,""
+Field="倉庫側担当者","warehouse_manager","*文字列_128",,,"","",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+Index=idx_inbound_code=0,inbound_code
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250224230959
+Position="MAIN",3900,1150
+ZOrder=29
+
+[Entity]
+PName=mg007_supplier
+LName=サプライヤー
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=100
+Top=1350
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="サプライヤーコード","supplier_code","*コード","NOT NULL",,"","",$00000000,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="サプライヤー名称","supplier_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250222195931
+Position="MAIN",100,1350
+ZOrder=30
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg007_supplier
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2224,3336,5737,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310190030
+LineMode=0
+Bar1=222
+Bar2=334
+Bar3=574
+TermPos1=R
+TermPos2=R
+ZOrder=31
+
+[Entity]
+PName=iv006_inbound_item
+LName=入庫部品
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4100
+Top=450
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="入庫部品コード","inbound_item_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="入庫コード","inbound_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="予想数量","expected_quantity","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="実際数量","actual_quantity","*数字",,,"0","",$FFFFFFFF,""
+Field="棚ユニットコード","shelf_unit_code","*コード",,,"","",$FFFFFFFF,""
+Field="入庫部品ステータス","inbound_item_status","*ステータス","NOT NULL",,"","1:未処理, 2:一部入庫, 3:入庫済み, 4:キャンセル, 5:異常",$FFFFFFFF,""
+Field="ロット番号","lot_number","*文字列_128",,,"","",$FFFFFFFF,""
+Field="製造日","production_date","*日付",,,"","",$FFFFFFFF,""
+Index=idx_inbound_code=0,inbound_code
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250224231009
+Position="MAIN",4100,450
+ZOrder=32
+
+[Relation]
+Entity1=iv005_inbound
+Entity2=iv006_inbound_item
+RelationType1=2
+RelationType2=3
+Fields1=inbound_code
+Fields2=inbound_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,9500,4366,9388,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310200803
+LineMode=0
+Bar1=950
+Bar2=437
+Bar3=939
+TermPos1=R
+TermPos2=R
+ZOrder=33
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=iv005_inbound
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1510,4632,4924,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310201342
+LineMode=0
+Bar1=151
+Bar2=463
+Bar3=492
+TermPos1=R
+TermPos2=R
+ZOrder=35
+
+[Entity]
+PName=iv008_outbound
+LName=出庫
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=5150
+Top=1200
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="出庫コード","outbound_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字","NOT NULL",,"0","",$FFFFFFFF,""
+Field="棚ユニットコード","shelf_unit_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="出庫日付","outbound_date","*日付","NOT NULL",,"","",$FFFFFFFF,""
+Field="出庫ステータス","outbound_status","*ステータス","NOT NULL",,"1","1:未処理, 2:処理中, 3:完了, 4:キャンセル, 5:異常",$FFFFFFFF,""
+Field="出庫タイプ","outbound_type","*タイプ","NOT NULL",,"","1:正規出庫, 2:返品, 3:サンプル出庫, 4:破棄, 5:移動",$FFFFFFFF,""
+Field="出庫先","destination","*文字列_128",,,"","",$FFFFFFFF,""
+Field="担当者","manager","*文字列_128",,,"","",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+Index=idx_outbound_code=0,outbound_code
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250224231019
+Position="MAIN",5150,1200
+ZOrder=36
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=iv008_outbound
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5366,6571,2773,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310212452
+LineMode=0
+Bar1=537
+Bar2=657
+Bar3=277
+TermPos1=R
+TermPos2=R
+ZOrder=37
+
+[Entity]
+PName=pd003_product_option
+LName=商品オプション
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=950
+Top=400
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="オプションキー","option_key","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="オプション値","option_value","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$F0CAA6
+ModifiedDateTime=20250223160908
+Position="MAIN",950,400
+ZOrder=38
+
+[Relation]
+Entity1=pd001_product
+Entity2=pd003_product_option
+RelationType1=2
+RelationType2=3
+Fields1=product_sku
+Fields2=product_sku
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4233,6226,3142,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310223813
+LineMode=0
+Bar1=423
+Bar2=623
+Bar3=314
+TermPos1=R
+TermPos2=R
+ZOrder=39
+
+[Entity]
+PName=pd004_product_category
+LName=商品分類
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=2500
+Top=200
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="商品分類コード","product_category_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="親商品分類コード","parent_product_category_code","*コード","NOT NULL",,"","レベルが1の場合、自分のカテゴリーコードを格納する。",$FFFFFFFF,""
+Field="商品分類名称","product_category_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品分類レベル","product_category_level","*数字","NOT NULL",,"","数字が大きいほど階層が高くなり、最高レベルは1です。",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$F0CAA6
+ModifiedDateTime=20250223155259
+Position="MAIN",2500,200
+ZOrder=40
+
+[Relation]
+Entity1=pd004_product_category
+Entity2=pd001_product
+RelationType1=2
+RelationType2=3
+Fields1=product_category_code
+Fields2=product_category_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5384,6152,4968,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310224143
+LineMode=0
+Bar1=538
+Bar2=615
+Bar3=497
+TermPos1=R
+TermPos2=R
+ZOrder=41
+
+[Entity]
+PName=sp001_shipment
+LName=出荷
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=5550
+Top=2700
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="出荷コード","shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="受注コード","order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="依頼主コード","sponsor_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="出荷ステータス","shipment_status","*ステータス","NOT NULL",,"","1:未処理, 2:出荷準備中, 3:引当済み, 4:検品済み, 5:梱包完了, 6:出荷済み, 7:出荷一時停止, 8:出荷分割, 9:出荷統合",$FFFFFFFF,""
+Field="出荷一時停止理由","shipment_stop_reason","*文字列_255",,,"","1:在庫不足, 2:品質問題, 3:配送問題, 4:顧客要求, 5:法的/規制上の問題, 6:出荷統合",$FFFFFFFF,""
+Field="受注受付日時","order_accept_datetime","*日時",,,"","",$FFFFFFFF,""
+Field="出荷依頼日時","shipment_request_datetime","*日時",,,"","",$FFFFFFFF,""
+Field="予定出荷日時","scheduled_shipment_date","*日時",,,"","",$FFFFFFFF,""
+Field="実際出荷日時","actual_shipment_date","*日時",,,"","",$FFFFFFFF,""
+Field="配送希望日","desired_delivery_date","*日付",,,"","",$FFFFFFFF,""
+Field="配送希望時間帯","desired_delivery_time_slot","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送方法","delivery_method","*文字列_128",,,"","",$FFFFFFFF,""
+Field="支払方法","payment_method","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送伝票番号","shipment_manifest_number","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送伝票連携ステータス","shipment_manifest_integration_status","*ステータス",,,"","",$FFFFFFFF,""
+Field="合計商品数量","total_quantity","*数字",,,"","",$FFFFFFFF,""
+Field="総金額","total_price_amount","*金額",,,"","総金額=商品合計金額+税金+送料+手数料−割引金額",$FFFFFFFF,""
+Field="商品合計金額","total_product_amount","*金額",,,"","税抜金額",$FFFFFFFF,""
+Field="税金","total_amount","*金額",,,"","",$FFFFFFFF,""
+Field="送料","shipment_fee","*金額",,,"","",$FFFFFFFF,""
+Field="手数料","handling_fee","*金額",,,"","",$FFFFFFFF,""
+Field="割引金額","discount_amount","*金額",,,"","",$FFFFFFFF,""
+Field="調整金額","adjustment_amount","*金額",,,"","",$FFFFFFFF,""
+Field="注文者_郵便番号","customer_postal_code","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_都道府県","customer_province","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_市区町村","customer_city","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_住所1","customer_address_1","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_住所2","customer_address_2","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_名前","customer_name","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_電話番号","customer_phone_number","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_メールアドレス","customer_email","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_郵便番号","shipment_postal_code","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_都道府県","shipment_province","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_市区町村","shipment_city","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_住所1","shipment_address_1","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_住所2","shipment_address_2","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_名前","shipment_name","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_電話番号","shipment_phone_number","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_メールアドレス","shipment_email","*文字列_128",,,"","",$FFFFFFFF,""
+Field="出荷特記事項","shipment_remark","*文字列_255",,,"","",$FFFFFFFF,""
+Field="配送伝票特記事項","shipment_manifest_remark","*文字列_255",,,"","",$FFFFFFFF,""
+Field="納品書特記事項","delivery_note_remark","*文字列_255",,,"","",$FFFFFFFF,""
+Field="添付ファイル1","attached_file_1","*文字列_128",,,"","Amazon S3パス",$FFFFFFFF,""
+Field="添付ファイル2","attached_file_2","*文字列_128",,,"","Amazon S3パス",$FFFFFFFF,""
+Field="添付ファイル3","attached_file_3","*文字列_128",,,"","Amazon S3パス",$FFFFFFFF,""
+Index=idx_shipment_code=1,shipment_code
+Index=idx_warehouse_code=0,warehouse_code
+Index=idx_shipment_status=0,shipment_status
+EffectMode=None
+Color=$000000
+BkColor=$ADE787
+ModifiedDateTime=20250222200456
+Position="MAIN",5550,2700
+ZOrder=43
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=sp001_shipment
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2065,9044,2621,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240310232634
+LineMode=0
+Bar1=206
+Bar2=904
+Bar3=262
+TermPos1=R
+TermPos2=R
+ZOrder=44
+
+[Entity]
+PName=sp002_shipment_detail
+LName=出荷明細
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=5850
+Top=2000
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="出荷コード","shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品名称","product_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="税抜き単価","excluded_unit_price","*金額","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品の小計金額","subtotal_price","*金額","NOT NULL",,"","商品の小計金額=税抜き単価*数量",$FFFFFFFF,""
+Field="税金","tax","*金額","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品の合計金額","total_price","*金額","NOT NULL",,"","商品の合計金額=商品の小計金額+税金",$FFFFFFFF,""
+Field="商品の割引金額","discount_amount","*金額","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品の総金額","total_amount","*金額","NOT NULL",,"","総金額=商品の合計金額-商品の割引金額",$FFFFFFFF,""
+Field="引当済み数量","allocated_amount","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="引当ステータス","allocation_status","*ステータス","NOT NULL",,"","1:未処理, 2:一部引当済み, 3:引当済み",$FFFFFFFF,""
+Index=idx_shipment_code=0,shipment_code
+Index=idx_shipment_product=1,shipment_code
+EffectMode=None
+Color=$000000
+BkColor=$ADE787
+ModifiedDateTime=20250223174727
+Position="MAIN",5850,2000
+ZOrder=45
+
+[Relation]
+Entity1=sp001_shipment
+Entity2=sp002_shipment_detail
+RelationType1=2
+RelationType2=4
+Fields1=shipment_code
+Fields2=shipment_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4100,5940,4457,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240311111835
+LineMode=0
+Bar1=410
+Bar2=594
+Bar3=446
+TermPos1=R
+TermPos2=R
+ZOrder=46
+
+[Entity]
+PName=sp101_shipment_operation_log
+LName=出荷操作履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6600
+Top=4200
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="出荷コード","shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:出荷準備, 2:引当, 3:検品, 4:梱包, 5:出荷指示送信, 6:出荷済み, 7:出荷一時停止, 8:出荷調整, 9:出荷再開",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20240318184233
+Position="MAIN",6600,4200
+ZOrder=47
+
+[Relation]
+Entity1=sp001_shipment
+Entity2=sp101_shipment_operation_log
+RelationType1=2
+RelationType2=3
+Fields1=shipment_code
+Fields2=shipment_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,9242,6117,5541,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240311115149
+LineMode=0
+Bar1=924
+Bar2=612
+Bar3=554
+TermPos1=R
+TermPos2=R
+ZOrder=48
+
+[Entity]
+PName=mg009_delivery_method
+LName=配送方法
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3100
+Top=2600
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="配送方法コード","delivery_method_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="配送会社","delivery_company","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="配送方法","delivery_method","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="配送時間帯","delivery_time_slot","*文字列_128",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20240316134842
+Position="MAIN",3100,2600
+ZOrder=49
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=mg009_delivery_method
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7824,4015,4849,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240311121318
+LineMode=0
+Bar1=782
+Bar2=402
+Bar3=485
+TermPos1=R
+TermPos2=R
+ZOrder=50
+
+[Entity]
+PName=mg011_delivery_method_mapping
+LName=配送方法マッピング
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1950
+Top=2550
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="配送方法コード","delivery_method_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="外部配送方法","external_delivery_method","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="外部配送時間帯","external_delivery_time_slot","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="外部システム","external_system","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250222200158
+Position="MAIN",1950,2550,666,279
+ZOrder=51
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg011_delivery_method_mapping
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,8940,6243,5005,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240311121853
+LineMode=0
+Bar1=894
+Bar2=624
+Bar3=500
+TermPos1=R
+TermPos2=R
+ZOrder=52
+
+[Relation]
+Entity1=mg009_delivery_method
+Entity2=mg011_delivery_method_mapping
+RelationType1=2
+RelationType2=3
+Fields1=delivery_method_code
+Fields2=delivery_method_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,6012,3988,6036,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240311123617
+LineMode=0
+Bar1=601
+Bar2=399
+Bar3=604
+TermPos1=R
+TermPos2=R
+ZOrder=57
+
+[Entity]
+PName=iv104_inbound_log
+LName=入庫履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3450
+Top=450
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード",,,"","",$FFFFFFFF,""
+Field="商品SKU","product_sku","*商品SKU",,,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字",,,"","",$FFFFFFFF,""
+Field="棚ユニットコード","shelf_unit_code","*コード",,,"","",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:仕入れ受領, 2:入庫済み, 3:キャンセル",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20250301221428
+Position="MAIN",3450,450
+ZOrder=59
+
+[Entity]
+PName=iv101_inventory_movement_history
+LName=在庫移動履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=2700
+Top=4250
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="移動元","source_shelf_unit_code","*コード",,,"","棚ユニットコード",$FFFFFFFF,""
+Field="移動先","destination_shelf_unit_code","*コード",,,"","棚ユニットコード",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:受領上棚, 2:ピッキング移動, 3:補充移動, 4:調達移動, 5:返品処理, 6:在庫整理, 7:品質検査移動",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20250223190125
+Position="MAIN",2700,4250
+ZOrder=62
+
+[Entity]
+PName=iv105_stock_withdrawal_operation_log
+LName=出庫操作履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=5550
+Top=650
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品SKU","product_sku","*商品SKU",,,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字",,,"","",$FFFFFFFF,""
+Field="棚ユニットコード","shelf_unit_code","*コード",,,"","",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:出庫開始, 2:出庫承認, 3:梱包, 4:出荷, 5:キャンセル処理, 6:異常報告",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20250223161319
+Position="MAIN",5550,650
+ZOrder=64
+
+[Entity]
+PName=od001_order
+LName=受注
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=100
+Top=2150
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="受注コード","order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="受注ソース","order_source","*タイプ","NOT NULL",,"","1:外部システム, 2:CSVインポート, 3:手動入力",$FFFFFFFF,""
+Field="外部受注コード","external_order_code","*文字列_128",,,"","",$FFFFFFFF,""
+Field="受注ステータス","order_status","*ステータス","NOT NULL",,"1","1:未処理, 2:出荷依頼中, 3:出荷済み, 4:キャンセル, 5:受注分割, 6:受注統合",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="出荷コード","shipment_code","*コード",,,"","",$FFFFFFFF,""
+Field="受注日時","order_datetime","*日時",,,"","",$FFFFFFFF,""
+Field="出荷依頼日時","shipment_request_datetime","*日時",,,"","",$FFFFFFFF,""
+Field="配送方法","delivery_method","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送希望日","desired_delivery_date","*日付",,,"","",$FFFFFFFF,""
+Field="配送希望時間帯","desired_delivery_time_slot","*文字列_128",,,"","",$FFFFFFFF,""
+Field="支払方法","payment_method","*文字列_128",,,"","",$FFFFFFFF,""
+Field="総金額","total_amount","*金額",,,"","",$FFFFFFFF,""
+Field="商品の合計金額","total_product_amount","*金額",,,"","",$FFFFFFFF,""
+Field="税金","total_tax","*金額",,,"","",$FFFFFFFF,""
+Field="送料","delivery_fee","*金額",,,"","",$FFFFFFFF,""
+Field="手数料","handling_fee","*金額",,,"","",$FFFFFFFF,""
+Field="割引金額","discount_amount","*金額",,,"","",$FFFFFFFF,""
+Field="調整金額","adjustment_amount","*金額",,,"","",$FFFFFFFF,""
+Field="注文者_郵便番号","customer_postal_code","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_都道府県","customer_province","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_市区町村","customer_city","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_住所1","customer_address_1","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_住所2","customer_address_2","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_名前","customer_name","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_電話番号","customer_phone","*文字列_128",,,"","",$FFFFFFFF,""
+Field="注文者_メールアドレス","customer_email","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_郵便番号","shipment_postal_code","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_都道府県","shipment_province","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_市区町村","shipment_city","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_住所1","shipment_address_1","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_住所2","shipment_address_2","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_名前","shipment_name","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_電話番号","shipment_phone","*文字列_128",,,"","",$FFFFFFFF,""
+Field="配送先_メールアドレス","shipment_email","*文字列_128",,,"","",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_order_code=1,order_code
+Index=idx_order_status=0,order_status
+EffectMode=None
+Color=$000000
+BkColor=$FFFF00
+ModifiedDateTime=20250222200115
+Position="MAIN",100,2150
+ZOrder=66
+
+[Entity]
+PName=od002_order_detail
+LName=受注明細
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=500
+Top=3350
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="受注コード","order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品SKU","product_sku","*商品SKU","NOT NULL",,"","",$FFFFFFFF,""
+Field="商品名称","product_name","*文字列_128",,,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字",,,"","",$FFFFFFFF,""
+Field="税抜き単価","excluded_unit_price","*金額",,,"","",$FFFFFFFF,""
+Field="商品の小計金額","subtotal_amount","*金額",,,"","",$FFFFFFFF,""
+Field="税金","tax","*金額",,,"","",$FFFFFFFF,""
+Field="商品の合計金額","total_product_amount","*金額",,,"","",$FFFFFFFF,""
+Field="割引金額","discount_amount","*金額",,,"","",$FFFFFFFF,""
+Field="調整金額","adjustment_amount","*金額",,,"","",$FFFFFFFF,""
+Field="総金額","total_amount","*金額",,,"","",$FFFFFFFF,""
+Index=idx_order_product=1,order_code
+EffectMode=None
+Color=$000000
+BkColor=$FFFF00
+ModifiedDateTime=20250223161343
+Position="MAIN",500,3350
+ZOrder=67
+
+[Relation]
+Entity1=od001_order
+Entity2=od002_order_detail
+RelationType1=2
+RelationType2=3
+Fields1=order_code
+Fields2=order_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7478,6050,6124,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240312141105
+LineMode=0
+Bar1=748
+Bar2=605
+Bar3=612
+TermPos1=R
+TermPos2=R
+ZOrder=68
+
+[Entity]
+PName=od101_order_operation_log
+LName=受注操作履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=100
+Top=3850
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="受注操作履歴コード","order_operation_log_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="受注コード","order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:出荷依頼, 2:受注調整, 3:キャンセル",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20240318184243
+Position="MAIN",100,3850
+ZOrder=70
+
+[Relation]
+Entity1=od001_order
+Entity2=od101_order_operation_log
+RelationType1=2
+RelationType2=3
+Fields1=order_code
+Fields2=order_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2339,7661,2130,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240312143936
+LineMode=0
+Bar1=234
+Bar2=766
+Bar3=213
+TermPos1=R
+TermPos2=R
+ZOrder=71
+
+[Entity]
+PName=mg012_payment_method_mapping
+LName=支払方法マッピング
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1800
+Top=3000
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="支払方法","payment_method","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="外部支払方法","external_payment_method","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250222200214
+Position="MAIN",1800,3000
+ZOrder=72
+
+[Entity]
+PName=mg006_warehouse_user
+LName=倉庫_ユーザー関係
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3250
+Top=2200
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="UUID","uuid","*UUID","NOT NULL",,"","",$FFFFFFFF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250222194659
+Position="MAIN",3250,2200
+ZOrder=73
+
+[Relation]
+Entity1=mg005_user
+Entity2=mg006_warehouse_user
+RelationType1=2
+RelationType2=3
+Fields1=uuid
+Fields2=uuid
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7417,3819,5881,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20250204230817
+LineMode=0
+Bar1=742
+Bar2=382
+Bar3=588
+TermPos1=R
+TermPos2=R
+ZOrder=74
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg012_payment_method_mapping
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1933,6993,950,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240312163054
+LineMode=0
+Bar1=193
+Bar2=699
+Bar3=95
+TermPos1=R
+TermPos2=R
+ZOrder=75
+
+[Relation]
+Entity1=mg003_client
+Entity2=od001_order
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,6304,4958,1039,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240312182409
+LineMode=0
+Bar1=630
+Bar2=496
+Bar3=104
+TermPos1=R
+TermPos2=R
+ZOrder=76
+
+[Entity]
+PName=mg008_sponsor
+LName=依頼主
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=150
+Top=1750
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="依頼主コード","sponsor_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="依頼主名前","sponsor_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250222200052
+Position="MAIN",150,1750
+ZOrder=77
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg008_sponsor
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4635,5365,5816,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240312234124
+LineMode=0
+Bar1=464
+Bar2=536
+Bar3=582
+TermPos1=R
+TermPos2=R
+ZOrder=78
+
+[Entity]
+PName=sp003_shipment_consolidation
+LName=出荷統合
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6500
+Top=3150
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="出荷統合コード","shipment_consolidation_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="統合先出荷コード","consolidated_shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="統合元出荷コード","original_shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="統合日時","consolidation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$ADE787
+ModifiedDateTime=20240316141342
+Position="MAIN",6500,3150
+ZOrder=79
+
+[Entity]
+PName=od003_order_split
+LName=受注分割
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1100
+Top=3800
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="受注分割コード","order_split_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="分割元受注コード","original_order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="分割先受注コード","split_order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="分割日時","split_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFF00
+ModifiedDateTime=20240316141324
+Position="MAIN",1100,3800
+ZOrder=80
+
+[Entity]
+PName=od004_order_consolidation
+LName=受注統合
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=1100
+Top=4100
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="受注統合コード","order_consolidation_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="統合先受注コード","consolidated_order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="統合元受注コード","original_order_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="統合日時","consolidation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFF00
+ModifiedDateTime=20240316141331
+Position="MAIN",1100,4100
+ZOrder=81
+
+[Entity]
+PName=sp004_shipment_split
+LName=受注分割
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6500
+Top=3600
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="受注分割コード","shipment_split_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="分割元受注コード","original_shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="分割先受注コード","split_shipment_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="分割日時","split_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$ADE787
+ModifiedDateTime=20240316141348
+Position="MAIN",6500,3600
+ZOrder=82
+
+[Entity]
+PName=mg004_warehouse_client
+LName=倉庫_荷主関係
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=3100
+Top=1850
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00000000,""
+Field="作成者","created_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="作成日時","created_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新者","modified_by","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="更新日時","modified_at","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="削除フラグ","is_deleted","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$C0DCC0
+ModifiedDateTime=20250222193116
+Position="MAIN",3100,1850
+ZOrder=83
+
+[Relation]
+Entity1=mg003_client
+Entity2=mg004_warehouse_client
+RelationType1=2
+RelationType2=3
+Fields1=client_code
+Fields2=client_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,6512,3488,6388,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240313235434
+LineMode=0
+Bar1=651
+Bar2=349
+Bar3=639
+TermPos1=R
+TermPos2=R
+ZOrder=84
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=mg004_warehouse_client
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,2961,3488,6864,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20250222194726
+LineMode=0
+Bar1=296
+Bar2=349
+Bar3=686
+TermPos1=R
+TermPos2=R
+ZOrder=85
+
+[Relation]
+Entity1=mg001_company
+Entity2=mg002_warehouse
+RelationType1=2
+RelationType2=3
+Fields1=id
+Fields2=id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,8940,4728,976,R,R,""
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=894
+Bar2=473
+Bar3=98
+TermPos1=R
+TermPos2=R
+ZOrder=86
+
+[Entity]
+PName=iv103_shelf_unit_log
+LName=棚ユニット履歴
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4350
+Top=4150
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="荷主コード","client_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="商品SKU","product_sku","*商品SKU",,,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字",,,"","",$FFFFFFFF,""
+Field="調整前数量","quantity_before_change","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="調整後数量","quantity_after_change","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="作業員","operator","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作日時","operation_datetime","*日時","NOT NULL",,"","",$FFFFFFFF,""
+Field="操作タイプ","operation_type","*タイプ","NOT NULL",,"","1:新規, 2:在庫増加, 3:在庫減少, 4:在庫移動",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+Index=idx_warehouse_code=0,warehouse_code
+EffectMode=None
+Color=$000000
+BkColor=$A4A0A0
+ModifiedDateTime=20250226225549
+Position="MAIN",4350,4150
+ZOrder=87
+
+[View]
+PName=vw001_inventory_search
+LName=在庫検索ビュー
+Comment=
+Query=SELECT\n    iv004_inventory.id,\n    mg002_warehouse.warehouse_code,\n    mg002_warehouse.warehouse_name,\n    mg003_client.client_code,\n    mg003_client.client_name,\n    pd001_product.product_sku,\n    pd001_product.product_name,\n    pd001_product.product_type,\n    iv002_shelf.shelf_code,\n    iv002_shelf.shelf_name,\n    iv003_shelf_unit.shelf_unit_code,\n    iv003_shelf_unit.shelf_unit_name,\n    iv004_inventory.actual_stock,\n    iv004_inventory.available_stock,\n    iv004_inventory.reserved_stock,\n    iv004_inventory.back_order_stock,\n    iv004_inventory.lead_time_stock,\n    iv004_inventory.inventory_status,\n    iv004_inventory.expiry_date,\n    iv004_inventory.remark,\n    iv004_inventory.is_deleted\nFROM\n    iv004_inventory\n    JOIN mg002_warehouse ON iv004_inventory.warehouse_code = mg002_warehouse.warehouse_code\n    JOIN mg003_client ON iv004_inventory.client_code = mg003_client.client_code\n    JOIN pd001_product ON iv004_inventory.product_sku = pd001_product.product_sku\n    JOIN iv003_shelf_unit ON iv004_inventory.shelf_unit_code = iv003_shelf_unit.shelf_unit_code\n    JOIN iv002_shelf ON iv002_shelf.shelf_code = iv003_shelf_unit.shelf_code\n
+LNameByComment=1
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",2950,3250,526,572
+ZOrder=89
+Page=MAIN
+Left=2950
+Top=3250
+
+[Entity]
+PName=iv007_inbound_shelving
+LName=入庫棚上げ
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4800
+Top=700
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="入庫棚上げコード","inbound_shelving_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="入庫部品コード","inbound_item_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="棚ユニットコード","shelf_unit_code","*コード","NOT NULL",,"","",$FFFFFFFF,""
+Field="数量","quantity","*数字","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250224231014
+Position="MAIN",4800,700
+ZOrder=90
+
+[Relation]
+Entity1=iv006_inbound_item
+Entity2=iv007_inbound_shelving
+RelationType1=2
+RelationType2=3
+Fields1=inbound_item_code
+Fields2=inbound_item_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,1248,5851,1990,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20240503171056
+LineMode=0
+Bar1=125
+Bar2=585
+Bar3=199
+TermPos1=R
+TermPos2=R
+ZOrder=91
+
+[View]
+PName=vw002_inventory_movement_history_search
+LName=在庫移動履歴検索ビュー
+Comment=
+Query=SELECT\n    il.id\n    , il.warehouse_code\n    , wh.warehouse_name\n    , il.client_code\n    , st.client_name\n    , il.product_sku\n    , pr.product_name\n    , pr.product_type\n    , il.quantity\n    , su1.shelf_code\n    , sh.shelf_name \n    , il.source_shelf_unit_code\n    , su1.shelf_unit_name AS source_shelf_unit_name\n    , il.destination_shelf_unit_code\n    , su2.shelf_unit_name AS destination_shelf_unit_name\n    , il.operator\n    , il.operation_datetime\n    , il.operation_type\n    , il.remark\n    , il.is_deleted\nFROM\n    iv101_inventory_movement_history AS il \n    INNER JOIN mg002_warehouse AS wh \n        ON il.warehouse_code = wh.warehouse_code \n    INNER JOIN mg003_client AS st \n        ON il.client_code = st.client_code \n    INNER JOIN pd001_product AS pr \n        ON il.product_sku = pr.product_sku \n    LEFT OUTER JOIN iv003_shelf_unit AS su1 \n        ON il.source_shelf_unit_code = su1.shelf_unit_code \n    LEFT OUTER JOIN iv003_shelf_unit AS su2 \n        ON il.destination_shelf_unit_code = su2.shelf_unit_code \n    LEFT OUTER JOIN iv002_shelf AS sh \n        ON su2.shelf_code = sh.shelf_code\n
+LNameByComment=1
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",2200,3500
+ZOrder=93
+Page=MAIN
+Left=2200
+Top=3500
+
+[View]
+PName=vw003_product_search
+LName=商品検索ビュー
+Comment=
+Query=SELECT\n    pd001.id\n    , pd001.product_sku\n    , pd001.client_code\n    , mg003.client_name\n    , pd001.product_name\n    , pd001.product_type\n    , pd001.included_tax_unit_price\n    , pd001.excluded_tax_unit_price\n    , pd001.tax\n    , pd001.tax_rate\n    , pd001.product_category_code\n    , pd001.length\n    , pd001.width\n    , pd001.height\n    , pd001.volume\n    , pd001.weight\n    , pd001.is_serial_number_managed\n    , pd001.is_best_before_managed\n    , pd001.best_before_period_days\n    , pd001.product_status\n    , pd001.image\n    , pd001.barcode\n    , pd001.qr_code\n    , pd001.remark\n    , pd001.is_deleted\nFROM\n    pd001_product pd001\n    JOIN mg003_client mg003 ON pd001.client_code = mg003.client_code\n    LEFT JOIN pd004_product_category pd004 ON pd001.product_category_code = pd004.product_category_code\n
+LNameByComment=1
+Color=$000000
+BkColor=$FFFFFF
+Position="MAIN",200,450
+ZOrder=94
+Page=MAIN
+Left=200
+Top=450
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=mg006_warehouse_user
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5657,2297,5079,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20250222194719
+LineMode=0
+Bar1=566
+Bar2=230
+Bar3=508
+TermPos1=R
+TermPos2=R
+ZOrder=95
+
+[Entity]
+PName=iv001_zone
+LName=ゾーン
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4150
+Top=2600
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="ゾーンコード","zone_code","*コード","NOT NULL",,"","",$00000000,""
+Field="倉庫コード","warehouse_code","*コード","NOT NULL",,"","",$00FF0000,""
+Field="ゾーン名称","zone_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="ゾーンタイプ","zone_type","*タイプ","NOT NULL",,"1","10:受入ゾーン, 11:検品ゾーン, 12:一時保管ゾーン, 20:棚保管ゾーン, 21:バルク保管ゾーン, 22:冷蔵ゾーン, 23:危険物保管ゾーン, 24:高価値商品ゾーン, 25:返品保管ゾーン, 30:ピッキングゾーン, 31:仕分けゾーン, 40:梱包ゾーン, 41:ラベリングゾーン, 42:出荷ゾーン",$FFFFFFFF,""
+Field="備考","remark","*文字列_255",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$DEB2C7
+ModifiedDateTime=20250301233745
+Position="MAIN",4150,2600
+ZOrder=96
+
+[Relation]
+Entity1=mg002_warehouse
+Entity2=iv001_zone
+RelationType1=2
+RelationType2=3
+Fields1=warehouse_code
+Fields2=warehouse_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,7174,2826,6772,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20250224230328
+LineMode=0
+Bar1=717
+Bar2=283
+Bar3=677
+TermPos1=R
+TermPos2=R
+ZOrder=97
+
+[Relation]
+Entity1=iv001_zone
+Entity2=iv002_shelf
+RelationType1=2
+RelationType2=3
+Fields1=zone_code
+Fields2=zone_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,6168,3832,5469,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20250224230433
+LineMode=0
+Bar1=617
+Bar2=383
+Bar3=547
+TermPos1=R
+TermPos2=R
+ZOrder=98
+
+[Relation]
+Entity1=iv001_zone
+Entity2=iv004_inventory
+RelationType1=2
+RelationType2=3
+Fields1=id
+Fields2=id
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,4379,4904,9233,R,R,""
+Dependence=1
+Caption=
+PName=
+LineMode=0
+Bar1=438
+Bar2=490
+Bar3=923
+TermPos1=R
+TermPos2=R
+ZOrder=99
+
+[Entity]
+PName=io002_task_detail
+LName=タスク明細
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6550
+Top=1600
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="タスクコード","task_code","*UUID","NOT NULL",,"","",$FFFFFFFF,""
+Field="レコード順番","record_order","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="ステータス","status","*ステータス","NOT NULL",," 1","",$FFFFFFFF,""
+Field="項目1","item1","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目2","item2","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目3","item3","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目4","item4","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目5","item5","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目6","item6","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目7","item7","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目8","item8","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目9","item9","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目10","item10","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目11","item11","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目12","item12","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目13","item13","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目14","item14","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目15","item15","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目16","item16","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目17","item17","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目18","item18","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目19","item19","*文字列_255",,,"","",$FFFFFFFF,""
+Field="項目20","item20","*文字列_255",,,"","",$FFFFFFFF,""
+Field="異常情報","error_message","*テキスト",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$0099FF
+ModifiedDateTime=20250329154015
+Position="MAIN",6550,1600
+ZOrder=101
+
+[Entity]
+PName=io001_file_task
+LName=ファイルタスク
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=5800
+Top=1450
+Field="行ID","id","*自動採番キー","NOT NULL",0,"","",$000000FF,""
+Field="タスクコード","task_code","*UUID","NOT NULL",,"","",$FFFFFFFF,""
+Field="タスクタイプ","task_type","*タイプ","NOT NULL",,"","",$FFFFFFFF,""
+Field="受信日","receive_date","*日付","NOT NULL",,"","",$FFFFFFFF,""
+Field="処理順位","process_order","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="営業単位","business_unit","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="ファイルモジュール","file_module","*数字","NOT NULL",,"","",$FFFFFFFF,""
+Field="ファイル名称","file_name","*文字列_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="ファイルパス","file_path","*文字列_255","NOT NULL",,"","",$FFFFFFFF,""
+Field="ファイルタイプ","file_type","*タイプ","NOT NULL",,"","",$FFFFFFFF,""
+Field="検索条件","filter_conditions","*テキスト",,,"","",$FFFFFFFF,""
+Field="出力項目","export_columns","*テキスト",,,"","",$FFFFFFFF,""
+Field="ステータス","status","*ステータス","NOT NULL",,"1","",$FFFFFFFF,""
+Field="異常情報","error_message","*テキスト",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$0099FF
+ModifiedDateTime=20250329154135
+Position="MAIN",5800,1450
+ZOrder=103
+
+[Relation]
+Entity1=io001_file_task
+Entity2=io002_task_detail
+RelationType1=2
+RelationType2=3
+Fields1=task_code
+Fields2=task_code
+Cardinarity1=
+Cardinarity2=
+Position="MAIN",0,5073,4880,5117,R,R,""
+Dependence=0
+Caption=
+PName=
+ModifiedDateTime=20250329154148
+LineMode=0
+Bar1=507
+Bar2=488
+Bar3=512
+TermPos1=R
+TermPos2=R
+ZOrder=106
+
+[Entity]
+PName=base001_user
+LName=ユーザー
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4050
+Top=50
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザー識別子","uid","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="ユーザー名","username","*VARCHAR_36",,,"","",$FFFFFFFF,""
+Field="メールアドレス","email","*VARCHAR_128","NOT NULL",,"","",$FFFFFFFF,""
+Field="パスワード","password","*VARCHAR_128",,,"","",$FFFFFFFF,""
+Field="ステータス","status","*NUM_TINY","NOT NULL",,"0","0:無効, 1:有効",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251113131354
+Position="MAIN",4050,50,518,288
+ZOrder=107
+
+[Entity]
+PName=base002_user_verification
+LName=ユーザー認証
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=4700
+Top=50
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザー識別子","uid","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="認証コード","verification_code","*VARCHAR_36","NOT NULL",,"","",$FFFFFFFF,""
+Field="認証期限","expires_at","*DATETIME_FULL","NOT NULL",,"","",$FFFFFFFF,""
+Field="認証日時","verified_at","*DATETIME_FULL",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251113194920
+Position="MAIN",4700,50
+ZOrder=108
+
+[Entity]
+PName=base003_user_token
+LName=ユーザートークン
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=5350
+Top=50
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザー識別子","uid","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="アクセストークン","access_token","*VARCHAR_255","NOT NULL",,"","",$FFFFFFFF,""
+Field="リフレッシュトークン","refresh_token","*VARCHAR_255","NOT NULL",,"","",$FFFFFFFF,""
+Field="有効期限","expires_at","*DATETIME_FULL","NOT NULL",,"","",$FFFFFFFF,""
+Field="デバイスID","device_id","*VARCHAR_36","NOT NULL",,"","",$FFFFFFFF,""
+Field="デバイスタイプ","device_type","*NUM_TINY","NOT NULL",,"","",$FFFFFFFF,""
+Field="ユーザーエージェント","user_agent","*VARCHAR_128",,,"","",$FFFFFFFF,""
+Field="IPアドレス","ip_address","*VARCHAR_36",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251113131405
+Position="MAIN",5350,50
+ZOrder=109
+
+[Entity]
+PName=base004_notification
+LName=通知
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6000
+Top=50
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="通知ID","notification_id","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="タイトル","title","*VARCHAR_36","NOT NULL",,"","",$FFFFFFFF,""
+Field="本文","content","*TEXT_LONG","NOT NULL",,"","",$FFFFFFFF,""
+Field="ステータス","status","*NUM_TINY","NOT NULL",,"","",$FFFFFFFF,""
+Field="通知タイプ","type","*NUM_TINY","NOT NULL",,"","1: システム通知, 2: メール通知, 3: アプリ内通知, 4: セキュリティ通知",$FFFFFFFF,""
+Field="通知日時","notify_at","*DATETIME_FULL","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251117202300
+Position="MAIN",6000,50
+ZOrder=110
+
+[Entity]
+PName=base005_notification_read
+LName=通知既読
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6550
+Top=50
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="通知ID","notification_id","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="ユーザー識別子","uid","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="既読フラグ","is_read","*NUM_TINY",,,"","",$FFFFFFFF,""
+Field="既読日時","read_at","*DATETIME_FULL",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251115214525
+Position="MAIN",6550,50
+ZOrder=111
+
+[Entity]
+PName=base006_email_log
+LName=メールログ
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6550
+Top=350
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザー識別子","uid","*VARCHAR_36",,,"","",$000000FF,""
+Field="メールアドレス","email","*VARCHAR_128","NOT NULL",,"","",$000000FF,""
+Field="メール件名","subject","*VARCHAR_36",,,"","",$FFFFFFFF,""
+Field="メール本文","content","*TEXT_LONG",,,"","",$FFFFFFFF,""
+Field="送信状態","status","*NUM_TINY","NOT NULL",,"","0: 未送信, 1: 送信成功, 2: 送信失敗",$FFFFFFFF,""
+Field="テンプレートコード","template_code","*VARCHAR_36",,,"","",$FFFFFFFF,""
+Field="エラー内容","error_message","*TEXT_LONG",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251115215847
+Position="MAIN",6550,350
+ZOrder=112
+
+[Entity]
+PName=base007_file_metadata
+LName=ファイルメタデータ
+Comment=
+TableInnerOption=
+TableOption=
+Page=MAIN
+Left=6500
+Top=750
+Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
+Field="ユーザー識別子","uid","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="ファイルID","file_id","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
+Field="ファイル名","original_file_name","*VARCHAR_128","NOT NULL",,"","",$00000000,""
+Field="オブジェクトキー","object_key","*VARCHAR_255","NOT NULL",,"","",$00000000,""
+Field="MIMEタイプ","mime_type","*VARCHAR_255","NOT NULL",,"","",$FFFFFFFF,""
+Field="拡張子","extension","*VARCHAR_36","NOT NULL",,"","",$FFFFFFFF,""
+Field="サイズ","size","*NUM_MEDIUM","NOT NULL",,"0","",$FFFFFFFF,""
+Field="ステータス","status","*NUM_TINY","NOT NULL",,"","",$FFFFFFFF,""
+Field="ダウンロード数","download_count","*NUM_SMALL","NOT NULL",,"0","",$FFFFFFFF,""
+Field="最終ダウンロード日時","last_download_datetime","*DATETIME_FULL",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+ModifiedDateTime=20251211221747
+Position="MAIN",6500,750
+ZOrder=113

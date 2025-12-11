@@ -1,1 +1,9 @@
+// =====================================================
+// Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+// =====================================================
 rootProject.name = 'focason-cloud-starter'
+include 'focason-core'
+include 'focason-service-registry'
+include 'focason-config-server'
+include 'focason-gateway'
+include 'focason-platform-service'

@@ -1,0 +1,129 @@
+# =====================================================
+# Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+# =====================================================
+
+# -----------------------------------------------------
+# 1. Spring Boot Configuration
+# -----------------------------------------------------
+server:
+  port: ${SERVER_PORT:8081} # The server port for this service
+  address: 0.0.0.0 # Binds to all network interfaces
+
+spring:
+  application:
+    name: ${APPLICATION_NAME:base-service} # Application name (used in Eureka/Config Server)
+  main:
+    allow-bean-definition-overriding: true # Allows redefining bean definitions
+    allow-circular-references: true # Allows circular dependency injection
+
+  # RabbitMQ Configuration
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost} # RabbitMQ host address
+    port: ${RABBITMQ_PORT:5672} # RabbitMQ port
+    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ username
+    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ password
+
+  # Datasource Configuration
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHEMA:focason}?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: com.mysql.jdbc.Driver # MySQL JDBC Driver
+
+  # Jackson (JSON serialization) Configuration
+  jackson:
+    time-zone: Asia/Tokyo # Default timezone for date/time serialization
+
+  # FreeMarker Configuration
+  freemarker:
+    check-template-location: true # Check if template location exists
+    template-loader-path:
+      - "classpath:/templates/" # Default path for general templates
+      - "classpath:/templates/mail/" # Dedicated path for email templates
+
+  # JPA (Hibernate) Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect # Specifies MySQL dialect
+    open-in-view: off # Disables Open Session In View pattern
+
+  # Spring Cloud Config Client Configuration
+  cloud:
+    config:
+      name: ${CLOUD_CONFIG_NAME:management-service} # Name of the configuration file to fetch
+      label: ${GITHUB_BRANCH:main} # Git branch label (e.g., main, dev)
+      profile: ${GITHUB_PROFILE:default} # Profile to load (e.g., dev, prod)
+      discovery:
+        enabled: true # Enable discovery service lookup for Config Server
+        service-id: ${CONFIG_SERVICE_ID:configure-server} # Config Server service ID
+
+  # Mail Configuration
+  mail:
+    host: mail.privateemail.com
+    port: 587
+    username: noreply@focason.com
+    password: qazPL1225-  # Email password or App Password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true # Enables STARTTLS for secure connection
+
+  # Redis Configuration
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 3000ms # Connection timeout
+    lettuce:
+      pool:
+        max-active: 20 # Maximum number of active connections in the pool
+        max-wait: 100ms # 最大阻塞等待时间 (负值表示永不超时)
+        max-idle: 20 # 最大空闲连接数
+        min-idle: 5 # 最小空闲连接数
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Exposes Actuator endpoints for monitoring and administration
+        include: refresh, bus-refresh, health
+
+# ----------------------------------------------------
+# 2. Spring Cloud Service Discovery (Eureka) Configuration
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: ${INSTANCE_HOSTNAME:localhost} # Hostname used for registration
+  client:
+    service-url:
+      # Eureka Server registration URL, including basic auth credentials
+      defaultZone: http://${EUREKA_SERVER_USERNAME:root}:${EUREKA_SERVER_PASSWORD:password}@${EUREKA_HOSTNAME:localhost}:8761/eureka/
+
+# ----------------------------------------------------
+# 3. Logging Configuration
+# ----------------------------------------------------
+logging:
+  file:
+    name: logs/base-service.log # Path to the log file
+  level:
+    root: ${LOG_LEVEL:INFO} # Default logging level
+
+# ----------------------------------------------------
+# 4. AWS Configuration
+# ----------------------------------------------------
+cloud:
+  aws:
+    region: ${AWS_REGION:ap-northeast-1} # AWS region
+    s3:
+      file-upload:
+        bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file} # S3 bucket name for uploads
+        prefix: # Optional prefix for S3 objects
+        pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # Pre-signed URL validity in minutes (Max 10080)
+
+# ----------------------------------------------------
+# 5. Project Specific Configuration
+# ----------------------------------------------------
+focason:
+  email:
+    send-by: Focason Lab Team # Display name for sender
+    send-from: noreply@focason.com # Email address for sender

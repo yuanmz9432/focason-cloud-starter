@@ -4,6 +4,16 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/focason-config-server" />
+            <option value="$PROJECT_DIR$/focason-core" />
+            <option value="$PROJECT_DIR$/focason-gateway" />
+            <option value="$PROJECT_DIR$/focason-platform-service" />
+            <option value="$PROJECT_DIR$/focason-service-registry" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>

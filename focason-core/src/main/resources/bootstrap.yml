@@ -1,0 +1,48 @@
+# =====================================================
+# Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+# =====================================================
+
+# -----------------------------------------------------
+# 1. Spring Boot Configuration
+# -----------------------------------------------------
+spring:
+  application:
+    name: ${APPLICATION_NAME:core} # Application name
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost} # RabbitMQ server hostname
+    port: ${RABBITMQ_PORT:5672} # RabbitMQ server port
+    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ authentication username
+    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ authentication password
+  cloud:
+    config:
+      name: ${CLOUD_CONFIG_NAME:core} # Configuration file name in config server
+      label: ${GITHUB_BRANCH:main} # Git branch for configuration
+      profile: ${GITHUB_PROFILE:default} # Spring profile for configuration
+      discovery:
+        enabled: true # Enable service discovery for config server
+        service-id: ${CONFIG_SERVICE_ID:configure-server} # Config server service ID
+  mail:
+    host: mail.privateemail.com
+    port: 587
+    username: noreply@focason.com
+    password: qazPL1225
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+# -----------------------------------------------------
+# 2. AWS Cloud Configuration
+# -----------------------------------------------------
+cloud:
+  aws:
+    region: ${AWS_REGION:ap-northeast-1}
+    s3:
+      file-upload:
+        bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file}
+        prefix:
+        pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # 最大10080　一日1440
+

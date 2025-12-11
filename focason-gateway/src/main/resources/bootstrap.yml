@@ -1,0 +1,71 @@
+# =====================================================
+# Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+# =====================================================
+
+# -----------------------------------------------------
+# 1. Spring Boot Configuration
+# -----------------------------------------------------
+server:
+  port: ${SERVER_PORT:8080} # Service port number
+  servlet:
+    context-path: /gateway # Application context path
+  address: 0.0.0.0 # Server binding address (all network interfaces)
+
+spring:
+  application:
+    name: ${APPLICATION_NAME:gateway-service} # Application name
+  main:
+    allow-bean-definition-overriding: true # Allow bean definition overriding
+    web-application-type: reactive # Application type (reactive web application)
+    allow-circular-references: true # Allow circular bean references in Cloud components
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost} # RabbitMQ server hostname
+    port: ${RABBITMQ_PORT:5672} # RabbitMQ server port
+    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ authentication username
+    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ authentication password
+  cloud:
+    config:
+      name: ${CLOUD_CONFIG_NAME:gateway-service} # Configuration file name in config server
+      label: ${GITHUB_BRANCH:main} # Git branch for configuration
+      profile: ${GITHUB_PROFILE:default} # Spring profile for configuration
+      discovery:
+        enabled: true # Enable service discovery for config server
+        service-id: ${CONFIG_SERVICE_ID:configure-server} # Config server service ID
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: ["*"] # Allowed CORS origins
+            allowedHeaders: "*" # Allowed CORS headers
+            allowedMethods: # Allowed HTTP methods for CORS
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, bus-refresh, health # Actuator endpoints to expose for monitoring
+
+# ----------------------------------------------------
+# 2. Spring Cloud Service Discovery (Eureka) Configuration
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: ${INSTANCE_HOSTNAME:localhost} # Gateway instance hostname
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOSTNAME:localhost}:8761/eureka/ # Eureka server URL for registration
+
+# ----------------------------------------------------
+# 3. Logging Configuration
+# ----------------------------------------------------
+logging:
+  file:
+    name: logs/gateway-service.log # Log file path
+  level:
+    root: ${LOG_LEVEL:INFO} # Root logging level

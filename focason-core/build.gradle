@@ -1,0 +1,89 @@
+// =====================================================
+// Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+// =====================================================
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version "${springBootVersion}"
+    id "org.flywaydb.flyway"
+    id 'io.spring.dependency-management' version "${springDependencyVersion}"
+}
+apply plugin: 'org.flywaydb.flyway'
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+    // AWS JAVA SDK For Amazon S3
+    implementation 'software.amazon.awssdk:s3:2.17.271'
+    // AWS JAVA SDK For Amazon Rekognition
+    implementation 'software.amazon.awssdk:rekognition:2.17.271'
+    // AWS Cognito https://mvnrepository.com/artifact/software.amazon.awssdk/cognitoidentityprovider
+    implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.87'
+    // AWS Cognito https://mvnrepository.com/artifact/software.amazon.awssdk/cognitoidentity
+    implementation 'software.amazon.awssdk:cognitoidentity:2.20.88'
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    // Apache POI for Excel (XLSX) handling
+    implementation 'org.apache.poi:poi-ooxml:5.4.0'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+flyway {
+    url = "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes"
+    user = "${DB_USERNAME}"
+    password = "${DB_PASSWORD}"
+    locations = ["filesystem:$projectDir/database/ddl"]
+}
+
+tasks.register('cleanGen') {
+    group = 'doma-gen'
+    delete 'src/generated'
+}
+
+tasks.register('domaGen') {
+    group = 'doma-gen'
+    doLast {
+        ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
+        ant.gen(
+                url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo",
+                user: "${DB_USERNAME}",
+                password: "${DB_PASSWORD}",
+                ignoredTableNamePattern: "flyway_schema_history",
+                templatePrimaryDir: "../core/doma/template",
+                tableTypes: "TABLE, VIEW")
+                {
+                    entityConfig(
+                            overwrite: true,
+                            useListener: false,
+                            showCatalogName: true,
+                            packageName: "com.focason.core.entity",
+                            entitySuffix: "Entity",
+                            destDir: 'src/generated/main/java'
+                    )
+                    daoConfig(
+                            overwrite: true,
+                            packageName: "com.focason.core.dao",
+                            suffix: "Dao",
+                            destDir: 'src/generated/main/java')
+                    sqlConfig(
+                            generate: true,
+                            overwrite: true,
+                            destDir: 'src/generated/main/resources',
+                    )
+                }
+    }
+}

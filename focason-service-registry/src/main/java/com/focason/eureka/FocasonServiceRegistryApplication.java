@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 /**
- * EurekaApplication
+ * FocasonServiceRegistryApplication
  * <p>
  * This is the main entry point for the Focason Cloud Eureka Server.
  *
@@ -31,9 +31,9 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
  */
 @SpringBootApplication
 @EnableEurekaServer
-public class EurekaApplication
+public class FocasonServiceRegistryApplication
 {
     public static void main(String[] args) {
-        SpringApplication.run(EurekaApplication.class, args);
+        SpringApplication.run(FocasonServiceRegistryApplication.class, args);
     }
 }

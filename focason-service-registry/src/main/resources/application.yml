@@ -10,7 +10,7 @@ server:
 
 spring:
   application:
-    name: ${APPLICATION_NAME:eureka-service} # Microservice name (must match AWS ECS service name when deploying on AWS)
+    name: ${APPLICATION_NAME:focason-service-registry} # Microservice name (must match AWS ECS service name when deploying on AWS)
   security:
     user:
       name: ${EUREKA_SERVICE_USERNAME:root} # Basic authentication username
@@ -38,6 +38,6 @@ eureka:
 # ----------------------------------------------------
 logging:
   file:
-    name: logs/eureka-service.log # Log file path and name
+    name: logs/focason-service-registry.log # Log file path and name
   level:
     root: ${LOG_LEVEL:INFO} # Root logging level (default: INFO)

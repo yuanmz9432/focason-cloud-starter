@@ -1,0 +1,6 @@
+UPDATE
+    mg009_delivery_method
+SET
+    is_deleted = 1
+WHERE
+    id = /* id */1

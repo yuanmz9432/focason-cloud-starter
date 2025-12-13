@@ -62,7 +62,7 @@ tasks.register('domaGen') {
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
                 ignoredTableNamePattern: "flyway_schema_history",
-                templatePrimaryDir: "../core/doma/template",
+                templatePrimaryDir: "../focason-core/doma/template",
                 tableTypes: "TABLE, VIEW")
                 {
                     entityConfig(

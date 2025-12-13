@@ -1,7 +1,7 @@
 // =====================================================
 // Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 // =====================================================
-package com.focason.configure.configure;
+package com.focason.config.configure;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

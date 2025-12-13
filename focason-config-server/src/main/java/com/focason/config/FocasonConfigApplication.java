@@ -1,7 +1,7 @@
 // =====================================================
 // Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 // =====================================================
-package com.focason.configure;
+package com.focason.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

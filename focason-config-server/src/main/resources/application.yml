@@ -1,58 +1,42 @@
 # =====================================================
-# Copyright 2023 Focason Co.,Ltd. AllRights Reserved.
+# Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 # =====================================================
+
 server:
-  port: ${SERVER_PORT:8888} # 端口号
-  address: 0.0.0.0
+  port: ${SERVER_PORT:8888}              # Server port
+  address: 0.0.0.0                       # Bind to all network interfaces
 
 spring:
   application:
-    name: ${APPLICATION_NAME:configure-server}
+    name: ${APPLICATION_NAME:focason-config-server}  # Application name
+
   security:
     user:
-      name: ${CONFIGURE_SERVER_USERNAME:root} # basic认证用户名
-      password: ${CONFIGURE_SERVER_PASSWORD:password} # basic认证密码
+      name: ${CONFIGURE_SERVER_USERNAME:root}        # Basic auth username for Config Server
+      password: ${CONFIGURE_SERVER_PASSWORD:password} # Basic auth password
+
   rabbitmq:
-    host: ${RABBITMQ_HOST:localhost} # RabbitMQ主机名
-    port: ${RABBITMQ_PORT:5672} # RabbitMQ端口
-    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ用户名
-    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ密码
+    host: ${RABBITMQ_HOST:localhost}     # RabbitMQ host
+    port: ${RABBITMQ_PORT:5672}          # RabbitMQ port
+    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ username
+    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ password
+
   cloud:
     bus:
-      id: focason-configure-bus
-      enabled: true # 启动SpringCloud Bus消息总线服务
+      id: focason-configure-bus          # Spring Cloud Bus ID
+      enabled: true                      # Enable message bus
       refresh:
-        enabled: true # 启动SpringCloud Bus消息总线刷新服务
+        enabled: true                    # Enable config refresh via Bus
       trace:
-        enabled: true # 启动SpringCloud Bus消息总线追踪服务
+        enabled: true                    # Enable tracing for Bus events
+
     config:
       server:
         git:
-          uri: ${GITHUB_PROJECT_HOST:https://github.com/yuanmz9432/focason-cloud-config} # GitHub项目地址
-          username: ${GITHUB_USERNAME:yuanmz9432@gmail.com} # GitHub用户名
-          password: ${GITHUB_TOKEN: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} # GitHub用户令牌 GitHub → Settings → Developer Settings → Personal access tokens
-          default-label: ${GITHUB_BRANCH:main} # 配置文件所在分支
-          search-paths: ${GITHUB_ROOT_PATH:config}  # 配置文件所在根路径
-          skip-ssl-validation: true # 跳过SSL认证
-        bootstrap: true # 开启读取bootstrap配置
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: bus-refresh, health # 为Actuator开放所需监控地址
-
-# 将configure-server注册到Eureka注册中心
-eureka:
-  instance:
-    hostname: ${INSTANCE_HOSTNAME:localhost}
-  client:
-    service-url:
-      defaultZone: http://${EUREKA_HOSTNAME:localhost}:8761/eureka/
-
-# 系统日志输出级别
-logging:
-  file:
-    name: logs/configure-server.log
-  level:
-    root: ${LOG_LEVEL:INFO}
+          uri: ${GITHUB_PROJECT_HOST:https://github.com/yuanmz9432/focason-cloud-config}
+          username: ${GITHUB_USERNAME}    # Git username
+          password: ${GITHUB_TOKEN}       # ⚠ MUST be environment variable, never hard-code
+          default-label: ${GITHUB_BRANCH:main} # Git branch to read config from
+          search-paths: ${GITHUB_ROOT_PATH:config} # Directory containing config files
+          skip-ssl-validation: true       # Skip SSL validation
+        bootstrap: true

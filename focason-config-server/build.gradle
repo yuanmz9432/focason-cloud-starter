@@ -12,9 +12,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	// 启用配置中心服务器
 	implementation 'org.springframework.cloud:spring-cloud-config-server'
-	// 添加Spring Cloud Bus消息总线服务
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 }
 

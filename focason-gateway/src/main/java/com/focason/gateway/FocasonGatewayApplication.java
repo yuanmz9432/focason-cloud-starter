@@ -10,7 +10,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * GatewayApplication
+ * FocasonGatewayApplication
  * <p>
  * This is the main entry point for the Focason Cloud Gateway Server.
  *
@@ -34,9 +34,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "com.focason.core.feign")
 @SpringBootApplication
-public class GatewayApplication
+public class FocasonGatewayApplication
 {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayApplication.class, args);
+        SpringApplication.run(FocasonGatewayApplication.class, args);
     }
 }

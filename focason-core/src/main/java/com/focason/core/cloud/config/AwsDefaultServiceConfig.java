@@ -1,3 +1,6 @@
+// =====================================================
+// Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+// =====================================================
 package com.focason.core.cloud.config;
 
 
@@ -28,7 +31,7 @@ public class AwsDefaultServiceConfig
 
     @Bean
     public S3Service s3Service(S3Presigner s3Presigner, S3Client s3Client) {
-        var props = awsProps.getS3().get("file-upload");
+        var props = awsProps.getS3().get("file-config");
         return S3Service.builder()
             .s3Presigner(s3Presigner)
             .s3Client(s3Client)

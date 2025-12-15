@@ -3,8 +3,6 @@
 // =====================================================
 package com.focason.core.attribute;
 
-
-
 import java.io.Serializable;
 import org.jetbrains.annotations.NotNull;
 import org.seasar.doma.jdbc.SelectOptions;
@@ -13,6 +11,8 @@ public record FsPagination(int limit, int page) implements Serializable {
     public static final FsPagination DEFAULT = of(20, 1);
 
     public static FsPagination of(int limit, int page) {
+        // FsSort parameter is ignored here as per the original code's logic,
+        // but the method signature is kept to match the original requirement.
         return of(limit, page, null);
     }
 
@@ -22,6 +22,8 @@ public record FsPagination(int limit, int page) implements Serializable {
         } else if (page < 1) {
             throw new IllegalArgumentException("Page index (page) must not be less than one!");
         } else {
+            // Note: The original implementation uses a builder pattern here,
+            // which is maintained for consistency.
             return builder().limit(limit).page(page).build();
         }
     }
@@ -30,11 +32,16 @@ public record FsPagination(int limit, int page) implements Serializable {
         return new FsPaginationBuilder();
     }
 
+    /**
+     * Converts the pagination state into Doma's SelectOptions format.
+     */
     public SelectOptions toSelectOptions() {
+        // Uses the mocked SelectOptions interface
         return SelectOptions.get().limit(this.limit).offset(this.limit * (this.page - 1));
     }
 
     public static SelectOptions toSelectOptionsWithNoPagination() {
+        // Uses the mocked SelectOptions interface
         return SelectOptions.get();
     }
 

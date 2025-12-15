@@ -1,5 +1,7 @@
+// =====================================================
+// Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+// =====================================================
 package com.focason.core.cloud.service;
-
 
 
 import com.focason.core.exception.FsErrorCode;
@@ -7,6 +9,7 @@ import com.focason.core.exception.FsException;
 import com.focason.core.exception.FsFileNotFoundException;
 import com.focason.core.resource.FileMetadataResource;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -26,6 +29,13 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
+/**
+ * Service class for interacting with AWS S3, managing uploads, downloads, and pre-signed URLs.
+ *
+ * @author Focason Lab Team
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 @Builder
 @AllArgsConstructor
 public class S3Service
@@ -39,13 +49,19 @@ public class S3Service
     private String prefix;
     private long preSignedUrlValidMinutes;
 
+    /**
+     * Retrieves the configured prefix followed by a path separator if the prefix is not empty.
+     *
+     * @return The S3 path prefix with a trailing slash, or an empty string.
+     */
     private String getPrefix() {
         return prefix != null && !prefix.isEmpty() ? prefix + S3_PATH_SEPARATOR : "";
     }
 
     /**
-     * 証明付きURL PUTリクエスト作成
+     * Creates a pre-signed URL PUT request, including custom metadata headers.
      *
+     * @param resource File metadata resource containing details like file ID, original name, and MIME type.
      * @return {@link PresignedPutObjectRequest}
      */
     private PresignedPutObjectRequest getPresignedPutObjectRequest(FileMetadataResource resource) {
@@ -77,7 +93,7 @@ public class S3Service
             .putObjectRequest(objectRequest)
             .build();
 
-        // 4. Generate the presigned request
+        // 4. Generate the pre-signed request
         PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
 
         // Log the required headers for the client (optional, but helpful for debugging)
@@ -88,9 +104,9 @@ public class S3Service
     }
 
     /**
-     * 証明付きURL PUTリクエスト作成
+     * Creates a pre-signed URL PUT request using only the object key.
      *
-     * @param objectKey S3オブジェクトキー
+     * @param objectKey S3 object key.
      * @return {@link PresignedPutObjectRequest}
      */
     private PresignedPutObjectRequest getPresignedPutObjectRequest(String objectKey) {
@@ -108,9 +124,9 @@ public class S3Service
     }
 
     /**
-     * 証明付きURL GETリクエスト作成
+     * Creates a pre-signed URL GET request.
      *
-     * @param objectKey S3オブジェクトキー
+     * @param objectKey S3 object key.
      * @return {@link PresignedGetObjectRequest}
      */
     private PresignedGetObjectRequest getPresignedGetObjectRequest(String objectKey) {
@@ -128,10 +144,10 @@ public class S3Service
     }
 
     /**
-     * ファイルをS3にアップロードする
+     * Uploads a file to S3 from a local path.
      *
-     * @param objectKey S3オブジェクトキー
-     * @param path ローカルオブジェクトパス
+     * @param objectKey S3 object key.
+     * @param path Local object path.
      */
     public void uploadObject(String objectKey, String path) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -142,10 +158,10 @@ public class S3Service
     }
 
     /**
-     * ファイルをS3にアップロードする
+     * Uploads a file to S3 using a byte array.
      *
-     * @param objectKey S3オブジェクトキー
-     * @param bytes ファイルバイト
+     * @param objectKey S3 object key.
+     * @param bytes File bytes.
      */
     public void uploadObject(String objectKey, byte[] bytes) {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -156,10 +172,10 @@ public class S3Service
     }
 
     /**
-     * ファイルをS3からダウンロードする
+     * Downloads a file from S3 to a local destination path.
      *
-     * @param objectKey S3オブジェクトキー
-     * @param path ダウンロード先
+     * @param objectKey S3 object key.
+     * @param path Destination path for download.
      */
     public void getObject(String objectKey, String path) {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
@@ -168,22 +184,27 @@ public class S3Service
             .build();
         try {
             var s3Object = s3Client.getObjectAsBytes(getObjectRequest);
-            FileOutputStream fos = new FileOutputStream(path);
-            fos.write(s3Object.asByteArray());
-            fos.close();
+            try (FileOutputStream fos = new FileOutputStream(path)) {
+                fos.write(s3Object.asByteArray());
+            } catch (IOException e) {
+                // Re-throw IO exceptions as a general internal error.
+                throw new FsException(FsErrorCode.INTERNAL_SERVER_ERROR,
+                    "Error writing file to local path: " + e.getMessage(), e);
+            }
         } catch (NoSuchKeyException ex) {
-            // S3バケットにキーと一致するファイルが存在しない場合
+            // If the file matching the key does not exist in the S3 bucket
             throw new FsFileNotFoundException(objectKey);
         } catch (Exception ex) {
-            throw new FsException(FsErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage());
+            // Catch all other S3 or general exceptions
+            throw new FsException(FsErrorCode.INTERNAL_SERVER_ERROR, ex.getMessage(), ex);
         }
     }
 
     /**
-     * S3内にオブジェクトキーのファイル存在確認
+     * Checks for the existence of an object with the given key in S3.
      *
-     * @param objectKey S3オブジェクトキー
-     * @return S3内のファイル存在有無
+     * @param objectKey S3 object key.
+     * @return File existence status in S3.
      */
     public boolean doesObjectExist(String objectKey) {
 
@@ -192,21 +213,23 @@ public class S3Service
             .key(getPrefix() + objectKey)
             .build();
         try {
+            // Attempt a quick synchronous check, headObject is generally better but
+            // getObject also throws NoSuchKeyException.
             s3Client.getObject(getObjectRequest);
         } catch (NoSuchKeyException ex) {
-            // S3バケットにキーと一致するファイルが存在しない場合
+            // If the file matching the key does not exist in the S3 bucket
             return false;
         } catch (S3Exception e) {
-            throw new FsException(FsErrorCode.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new FsException(FsErrorCode.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
         return true;
     }
 
     /**
-     * ファイルダウンロード用の証明付きURL作成
+     * Generates a pre-signed URL for file download.
      *
-     * @param objectKey S3オブジェクトキー
-     * @return 署名付きURL or S3にファイルが存在しない場合はNULL
+     * @param objectKey S3 object key.
+     * @return Pre-signed URL, or {@code Optional.empty()} if the file does not exist in S3.
      */
     public Optional<URL> generateGetUrl(String objectKey) {
         if (doesObjectExist(objectKey)) {
@@ -216,63 +239,66 @@ public class S3Service
     }
 
     /**
-     * ファイルアップロード用の証明付きURL作成
+     * Generates a pre-signed URL for file upload, using metadata from the resource.
      *
-     * @return 署名付きURL
+     * @param resource File metadata resource.
+     * @return Pre-signed URL.
      */
     public Optional<URL> generatePutUrl(FileMetadataResource resource) {
         return Optional.of(getPresignedPutObjectRequest(resource).url());
     }
 
     /**
-     * ファイルアップロード用の証明付きURL作成
+     * Generates a pre-signed URL for file upload using a plain object key.
      *
-     * @param objectKey S3オブジェクトキー
-     * @return 署名付きURL
+     * @param objectKey S3 object key.
+     * @return Pre-signed URL.
      */
     public Optional<URL> generatePutUrl(String objectKey) {
         return Optional.of(getPresignedPutObjectRequest(objectKey).url());
     }
 
     /**
-     * ファイルアップロード用の証明付きURL作成
-     * fileNameからnewFileNameにファイル名を変更してアップロードする。
+     * Generates a pre-signed URL for file upload, changing the file name part of the object key.
      *
-     * @param objectKey S3オブジェクトキー
-     * @param newFileName 新しいファイル名
-     * @return 署名付きURL
+     * @param objectKey S3 object key.
+     * @param newFileName New file name to be used in the object key.
+     * @return Pre-signed URL.
      */
     public URL generatePutUrl(String objectKey, String newFileName) {
         return getPresignedPutObjectRequest(changeObjectKeyByNewFileName(objectKey, newFileName)).url();
     }
 
     /**
-     * S3オブジェクトキーからファイル名を変更する。
+     * Changes the file name within the S3 object key, preserving the path and extension.
      *
-     * @param objectKey S3オブジェクトキー
-     * @param newFileName 新しいファイル名
-     * @return 署名付きURL
+     * @param objectKey S3 object key.
+     * @param newFileName New file name.
+     * @return The updated S3 object key string.
      */
     private String changeObjectKeyByNewFileName(String objectKey, String newFileName) {
         String[] objectKeyList = objectKey.split(S3_PATH_SEPARATOR);
+        // Extract the file extension
         Optional<String> extension = Optional.ofNullable(objectKeyList[objectKeyList.length - 1])
             .filter(f -> f.contains("."))
             .map(f -> f.substring(f.lastIndexOf(".") + 1));
+        // Replace the file name part, appending the extension if it existed
         objectKeyList[objectKeyList.length - 1] = extension.map(s -> newFileName + "." + s).orElse(newFileName);
         return String.join(S3_PATH_SEPARATOR, objectKeyList);
     }
 
     /**
-     * 証明付きURL GETリクエスト作成
+     * Creates a pre-signed URL GET request for downloading an object with a specified filename (for browser download).
      *
-     * @param objectKey S3オブジェクトキー
-     * @param fileName ファイル名
+     * @param objectKey S3 object key.
+     * @param fileName File name to be suggested to the browser/client.
      * @return {@link PresignedGetObjectRequest}
      */
     private PresignedGetObjectRequest getPresignedGetObjectRequest(String objectKey, String fileName) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
             .bucket(bucketName)
             .key(getPrefix() + objectKey)
+            // Set the Content-Disposition header to force download and suggest a file name
             .responseContentDisposition("attachment;filename=" + fileName)
             .build();
 
@@ -284,11 +310,11 @@ public class S3Service
     }
 
     /**
-     * ファイルダウンロード用の証明付きURL作成
+     * Generates a pre-signed URL for file download, suggesting a specific filename.
      *
-     * @param objectKey S3オブジェクトキー
-     * @param originalFileName ファイル名
-     * @return 署名付きURL or S3にファイルが存在しない場合はNULL
+     * @param objectKey S3 object key.
+     * @param originalFileName File name to be used in the Content-Disposition header.
+     * @return Pre-signed URL, or {@code Optional.empty()} if the file does not exist in S3.
      */
     public Optional<URL> generateGetUrl(String objectKey, String originalFileName) {
         if (doesObjectExist(objectKey)) {
@@ -298,9 +324,9 @@ public class S3Service
     }
 
     /**
-     * ファイルをS3から削除
+     * Deletes a file from S3 if it exists.
      *
-     * @param objectKey S3オブジェクトキー
+     * @param objectKey S3 object key.
      */
     public void deleteObject(String objectKey) {
         if (doesObjectExist(objectKey)) {
@@ -313,9 +339,10 @@ public class S3Service
     }
 
     /**
-     * ファイルアップロード用の証明付きURL作成
+     * Retrieves the metadata for an S3 object (using HeadObject).
      *
-     * @return 署名付きURL
+     * @param objectKey S3 object key.
+     * @return Map containing custom metadata and standard headers (Content-Length, Content-Type).
      */
     public Map<String, String> getFileMetadata(String objectKey) {
         HeadObjectRequest request = HeadObjectRequest.builder()
@@ -326,6 +353,7 @@ public class S3Service
         HeadObjectResponse headResponse = s3Client.headObject(request);
         Map<String, String> metadata = new HashMap<>(headResponse.metadata());
 
+        // Add standard headers
         metadata.put("Content-Length", headResponse.contentLength().toString());
         metadata.put("Content-Type", headResponse.contentType());
         return metadata;

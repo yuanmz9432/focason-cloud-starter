@@ -1,13 +1,13 @@
+// =====================================================
+// Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
+// =====================================================
 package com.focason.core.cloud.config;
-
-
 
 import com.focason.core.properties.AwsProps;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,22 +22,31 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 /**
- * AWSサービス接続設定
+ * Configuration for AWS Service Connections
  *
- * @since 1.0
+ * @author Focason Lab Team
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @EnableConfigurationProperties(AwsProps.class)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Configuration
 public class AwsConfig
 {
     /**
-     * AWSプロパティ
+     * AWS properties
      */
     private final AwsProps awsProps;
 
     /**
-     * AWS環境上のS3証明付きリクエストクライアント接続
+     * Manual Constructor Injection (replaces Lombok's @RequiredArgsConstructor)
+     */
+    @Autowired
+    public AwsConfig(AwsProps awsProps) {
+        this.awsProps = awsProps;
+    }
+
+    /**
+     * Provides the S3Presigner client for generating pre-signed URLs.
      *
      * @return {@link S3Presigner}
      */
@@ -51,7 +60,7 @@ public class AwsConfig
     }
 
     /**
-     * AWS環境上のS3クライアント接続
+     * Provides the S3 client for standard AWS S3 operations.
      *
      * @return {@link S3Client}
      */
@@ -65,7 +74,7 @@ public class AwsConfig
     }
 
     /**
-     * AWS環境上のRekognitionクライアント接続
+     * Provides the Rekognition client for image and video analysis.
      *
      * @return {@link RekognitionClient}
      */
@@ -79,7 +88,7 @@ public class AwsConfig
     }
 
     /**
-     * AWS環境上のCognitoIdentityクライアント
+     * Provides the Cognito Identity Provider client.
      *
      * @return {@link CognitoIdentityProviderClient}
      */
@@ -94,7 +103,8 @@ public class AwsConfig
     }
 
     /**
-     * Generate secret hash by condition.
+     * Generate secret hash by condition. This utility method is often required for
+     * authentication flows in AWS Cognito.
      *
      * @param userId the user id.
      * @param clientId AWS Security Client ID.
@@ -112,7 +122,8 @@ public class AwsConfig
             final byte[] rawHmac = mac.doFinal(clientId.getBytes(StandardCharsets.UTF_8));
             return new String(Base64.getEncoder().encode(rawHmac));
         } catch (final Exception e) {
-            throw new RuntimeException("errors in HMAC calculation");
+            // Added 'e' to the exception constructor for better error reporting.
+            throw new RuntimeException("Errors in HMAC calculation", e);
         }
     }
 }

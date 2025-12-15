@@ -41,8 +41,7 @@ cloud:
   aws:
     region: ${AWS_REGION:ap-northeast-1}
     s3:
-      file-upload:
+      file-config:
         bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file}
         prefix:
         pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # 最大10080　一日1440
-

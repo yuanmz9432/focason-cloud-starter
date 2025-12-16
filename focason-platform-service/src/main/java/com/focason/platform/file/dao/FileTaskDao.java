@@ -2,9 +2,9 @@ package com.focason.platform.file.dao;
 
 
 
-import com.focason.platform.file.repository.FileTaskRepository;
 import com.focason.core.entity.Io001FileTaskEntity;
 import com.focason.core.entity.Io002TaskDetailEntity;
+import com.focason.platform.file.repository.FileTaskRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;

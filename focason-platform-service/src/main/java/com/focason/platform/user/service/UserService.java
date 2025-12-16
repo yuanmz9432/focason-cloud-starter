@@ -4,7 +4,6 @@
 package com.focason.platform.user.service;
 
 
-import com.focason.platform.user.repository.UserRepository;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
 import com.focason.core.domain.Switch;
@@ -15,6 +14,7 @@ import com.focason.core.exception.FsResourceNotFoundException;
 import com.focason.core.resource.UserResource;
 import com.focason.core.response.ActiveUserResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.user.repository.UserRepository;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

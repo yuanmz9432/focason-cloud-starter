@@ -6,7 +6,6 @@ package com.focason.platform.user.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import com.focason.platform.user.dao.UserDao;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
 import com.focason.core.attribute.FsSort;
@@ -14,6 +13,7 @@ import com.focason.core.dao.Base001UserEntityDao;
 import com.focason.core.dao.Base003UserTokenEntityDao;
 import com.focason.core.entity.Base001UserEntity;
 import com.focason.core.entity.Base003UserTokenEntity;
+import com.focason.platform.user.dao.UserDao;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

@@ -4,9 +4,9 @@
 package com.focason.platform.user.dao;
 
 
-import com.focason.platform.user.repository.UserRepository;
 import com.focason.core.entity.Base001UserEntity;
 import com.focason.core.entity.Base003UserTokenEntity;
+import com.focason.platform.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;

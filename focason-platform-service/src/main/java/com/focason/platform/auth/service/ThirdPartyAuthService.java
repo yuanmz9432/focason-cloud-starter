@@ -4,7 +4,6 @@
 package com.focason.platform.auth.service;
 
 
-import com.focason.platform.user.repository.UserRepository;
 import com.focason.core.domain.Switch;
 import com.focason.core.entity.Base001UserEntity;
 import com.focason.core.resource.GoogleTokenResource;
@@ -12,6 +11,7 @@ import com.focason.core.resource.GoogleUserResource;
 import com.focason.core.resource.UserResource;
 import com.focason.core.response.UserLoginResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.user.repository.UserRepository;
 import com.google.gson.JsonObject;
 import java.util.Optional;
 import javax.transaction.Transactional;

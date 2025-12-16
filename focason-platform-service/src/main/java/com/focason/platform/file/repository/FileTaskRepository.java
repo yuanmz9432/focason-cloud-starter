@@ -7,7 +7,6 @@ package com.focason.platform.file.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import com.focason.platform.file.dao.FileTaskDao;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
 import com.focason.core.attribute.FsSort;
@@ -15,6 +14,7 @@ import com.focason.core.dao.Io001FileTaskEntityDao;
 import com.focason.core.dao.Io002TaskDetailEntityDao;
 import com.focason.core.entity.Io001FileTaskEntity;
 import com.focason.core.entity.Io002TaskDetailEntity;
+import com.focason.platform.file.dao.FileTaskDao;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

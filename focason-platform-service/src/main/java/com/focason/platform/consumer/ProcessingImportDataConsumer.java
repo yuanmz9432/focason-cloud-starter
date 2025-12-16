@@ -2,11 +2,11 @@ package com.focason.platform.consumer;
 
 
 
-import com.focason.platform.file.repository.FileTaskRepository;
 import com.focason.core.domain.FileTaskStatus;
 import com.focason.core.domain.ModuleType;
 import com.focason.core.exception.FsEntityNotFoundException;
 import com.focason.core.exception.FsFileNotFoundException;
+import com.focason.platform.file.repository.FileTaskRepository;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;

@@ -4,9 +4,9 @@
 package com.focason.platform.auth.controller;
 
 
-import com.focason.platform.auth.service.ThirdPartyAuthService;
 import com.focason.core.resource.GoogleTokenResource;
 import com.focason.core.resource.GoogleUserResource;
+import com.focason.platform.auth.service.ThirdPartyAuthService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

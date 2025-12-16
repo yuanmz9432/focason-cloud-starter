@@ -2,7 +2,6 @@ package com.focason.platform.consumer;
 
 
 
-import com.focason.platform.file.repository.FileTaskRepository;
 import com.focason.core.cloud.service.S3Service;
 import com.focason.core.domain.FileTaskStatus;
 import com.focason.core.domain.FileType;
@@ -11,6 +10,7 @@ import com.focason.core.exception.FsEntityNotFoundException;
 import com.focason.core.queue.ProcessingImportedDataQueue;
 import com.focason.core.utility.FsFileToolKit;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.file.repository.FileTaskRepository;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

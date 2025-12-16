@@ -4,8 +4,6 @@
 package com.focason.platform.file.controller;
 
 
-import com.focason.platform.file.repository.FileTaskRepository;
-import com.focason.platform.file.service.FileService;
 import com.focason.core.annotation.FsConditionParam;
 import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.annotation.FsSortParam;
@@ -23,6 +21,8 @@ import com.focason.core.response.FileDownloadResponse;
 import com.focason.core.response.FileTaskSearchResponse;
 import com.focason.core.response.FileUploadResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.file.repository.FileTaskRepository;
+import com.focason.platform.file.service.FileService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -4,8 +4,6 @@
 package com.focason.platform.auth.service;
 
 
-import com.focason.platform.user.repository.UserRepository;
-import com.focason.platform.user.service.UserService;
 import com.focason.core.config.EmailQueueConfig;
 import com.focason.core.domain.DeviceType;
 import com.focason.core.domain.EmailType;
@@ -16,6 +14,8 @@ import com.focason.core.exception.*;
 import com.focason.core.resource.*;
 import com.focason.core.response.UserLoginResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.user.repository.UserRepository;
+import com.focason.platform.user.service.UserService;
 import com.google.gson.JsonElement;
 import java.time.Duration;
 import java.time.LocalDateTime;

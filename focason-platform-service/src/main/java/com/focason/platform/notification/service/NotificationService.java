@@ -4,12 +4,12 @@
 package com.focason.platform.notification.service;
 
 
-import com.focason.platform.notification.repository.NotificationRepository;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
 import com.focason.core.domain.Switch;
 import com.focason.core.resource.UserNotificationResource;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.notification.repository.NotificationRepository;
 import java.time.LocalDateTime;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;

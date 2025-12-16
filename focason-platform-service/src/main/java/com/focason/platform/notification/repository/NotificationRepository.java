@@ -6,7 +6,6 @@ package com.focason.platform.notification.repository;
 
 import static java.util.stream.Collectors.toList;
 
-import com.focason.platform.notification.dao.NotificationDao;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
 import com.focason.core.attribute.FsSort;
@@ -15,6 +14,7 @@ import com.focason.core.dao.Base005NotificationReadEntityDao;
 import com.focason.core.entity.Base004NotificationEntity;
 import com.focason.core.entity.Base005NotificationReadEntity;
 import com.focason.core.entity.UserNotificationEntity;
+import com.focason.platform.notification.dao.NotificationDao;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;

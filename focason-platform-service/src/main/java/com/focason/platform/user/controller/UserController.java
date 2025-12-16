@@ -7,8 +7,6 @@ package com.focason.platform.user.controller;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import com.focason.platform.user.repository.UserRepository;
-import com.focason.platform.user.service.UserService;
 import com.focason.core.annotation.FsConditionParam;
 import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.annotation.FsSortParam;
@@ -22,6 +20,8 @@ import com.focason.core.response.ActiveUserResponse;
 import com.focason.core.response.UserFetchResponse;
 import com.focason.core.response.UserSearchResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.user.repository.UserRepository;
+import com.focason.platform.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

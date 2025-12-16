@@ -3,7 +3,6 @@
 // =====================================================
 package com.focason.platform.consumer;
 
-import com.focason.platform.notification.repository.NotificationRepository;
 import com.focason.core.config.NotificationQueueConfig;
 import com.focason.core.domain.NotificationType;
 import com.focason.core.domain.Switch;
@@ -12,6 +11,7 @@ import com.focason.core.entity.Base005NotificationReadEntity;
 import com.focason.core.feign.UserFeignClient;
 import com.focason.core.resource.NotificationResource;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.notification.repository.NotificationRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

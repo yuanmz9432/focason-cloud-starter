@@ -12,11 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @version 1.0.0
  * @since 1.0.0
  */
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 @Builder(toBuilder = true)
 @Data
-public class AuthResource
+public class AuthResource extends FsResource
 {
     /** アクセストークン */
     private String accessToken;

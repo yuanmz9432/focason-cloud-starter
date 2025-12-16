@@ -7,7 +7,6 @@ import com.focason.core.domain.FileTaskStatus;
 import com.focason.core.domain.ModuleType;
 import com.focason.core.exception.FsEntityNotFoundException;
 import com.focason.core.exception.FsFileNotFoundException;
-import com.focason.core.resource.WarehouseResource;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;

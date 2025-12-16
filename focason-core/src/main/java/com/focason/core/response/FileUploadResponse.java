@@ -21,16 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder
 public class FileUploadResponse
 {
-    /**
-     * ファイルID
-     */
+    /** ファイルID */
     private String fileId;
-    /**
-     * オブジェクトキー
-     */
+    /** オブジェクトキー */
     private String objectKey;
-    /**
-     * 署名付きURL
-     */
+    /** 署名付きURL */
     private String presignedUrl;
 }

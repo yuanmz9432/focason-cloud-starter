@@ -21,12 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Builder
 public class UserSearchResponse
 {
-    private Integer id;
-    private String uuid;
+    /** ユーザー識別子 */
+    private String uid;
+    /** ユーザー名 */
     private String username;
+    /** メールアドレス */
     private String email;
-    private String phone;
-    private String companyCode;
-    private Integer type;
-    private Integer isVerified;
+    /** ステータス */
+    private Integer status;
 }

@@ -86,24 +86,24 @@ public class UserService
         // 1. Check for duplicate email address.
         duplicateCheck(resource.getEmail());
 
-        // 2. Generate or set user UID (sub).
-        final String sub;
+        // 2. Generate or set user UID.
+        final String uid;
         if (resource.getUid() != null) {
             // Use provided UID if available.
-            sub = resource.getUid();
+            uid = resource.getUid();
         } else {
             // Generate a new UUID if not provided.
-            sub = FsUtilityToolkit.generateUUID();
+            uid = FsUtilityToolkit.generateUUID();
         }
-        resource.setUid(sub);
+        resource.setUid(uid);
 
         // 3. Encrypt the password before persisting.
         resource.setPassword(FsUtilityToolkit.encryptPassword(resource.getPassword()));
 
         // 4. Register User entity.
         repository.create(FsUtilityToolkit.convert(resource, Base001UserEntity.class));
-        logger.info("New user created with UID: {}", sub);
-        return sub;
+        logger.info("New user created with UID: {}", uid);
+        return uid;
     }
 
     /**

@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ActiveUserResponse
 {
 
-    /**
-     * 有効UID配列
-     */
+    /** 有効UID配列 */
     private List<String> activeUids = new ArrayList<>();
 }

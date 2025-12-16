@@ -14,16 +14,15 @@ import lombok.Data;
 @Data
 public class UserUpdateRequest
 {
+    /** ユーザー識別子 */
+    private String uid;
     /** ユーザー名 */
     private String username;
     /** メールアドレス */
     private String email;
     /** パスワード */
     private String password;
-    /** ステータス:1:通常ユーザー、2:ルートユーザー */
-    private Integer type;
-    /** 部門コード配列 */
-    private String[] warehouseCodes;
-    private String[] clientCodes;
+    /** ステータス */
+    private Integer status;
 
 }

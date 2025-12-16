@@ -59,14 +59,14 @@ public class EmailConsumer
      */
     @RabbitListener(queues = EmailQueueConfig.EMAIL_SEND_QUEUE)
     public void consumeMessage(EmailResource resource) {
-        logger.info("Processing email send request for type: {}, to: {}", resource.getEmailType(), resource.getTo());
+        logger.info("Processing email send request for type: {}, to: {}", resource.emailType(), resource.to());
 
         try {
             // 1. Get the template name based on the email type
-            var template = freemarkerConfig.getTemplate(EmailType.of(resource.getEmailType()).getTemplate());
+            var template = freemarkerConfig.getTemplate(EmailType.of(resource.emailType()).getTemplate());
 
             // 2. Generate HTML content from the template and payload data
-            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, resource.getPayload());
+            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, resource.payload());
 
             // 3. Initialize and configure the MimeMessage
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -78,26 +78,26 @@ public class EmailConsumer
             String sendBy = properties.getEmail().get("send-by");
 
             helper.setFrom(new InternetAddress(sendFrom, sendBy));
-            helper.setTo(resource.getTo());
-            helper.setSubject(EmailType.of(resource.getEmailType()).getSubject());
+            helper.setTo(resource.to());
+            helper.setSubject(EmailType.of(resource.emailType()).getSubject());
             helper.setText(htmlContent, true); // true indicates that the content is HTML
 
             // 4. Send the email
             mailSender.send(mimeMessage);
-            logger.info("Email sent successfully to: {}", resource.getTo());
+            logger.info("Email sent successfully to: {}", resource.to());
 
         } catch (IOException e) {
             // Handles issues like template not found or encoding errors
             logger.error("Template/IO error during email processing: {}", e.getMessage());
-            throw new FsSendMailFailedException(resource.getTo());
+            throw new FsSendMailFailedException(resource.to());
         } catch (TemplateException e) {
             // Handles issues within the Freemarker template processing (e.g., missing variables)
             logger.error("Freemarker template error during email processing: {}", e.getMessage());
-            throw new FsSendMailFailedException(resource.getTo());
+            throw new FsSendMailFailedException(resource.to());
         } catch (MessagingException e) {
             // Handles issues during MIME message creation or the final mail sending process
             logger.error("Messaging error during email sending: {}", e.getMessage());
-            throw new FsSendMailFailedException(resource.getTo());
+            throw new FsSendMailFailedException(resource.to());
         }
     }
 }

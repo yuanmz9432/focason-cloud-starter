@@ -5,5 +5,5 @@ FROM openjdk:17-jdk-alpine
 LABEL maintainer="Focason Lab Team"
 
 EXPOSE 8081
-ADD build/libs/base-service-1.0.0-SNAPSHOT-plain.jar base-service.jar
-ENTRYPOINT ["java","-jar","/base-service.jar"]
+ADD build/libs/focason-platform-service-1.0.0-SNAPSHOT-plain.jar focason-platform-service.jar
+ENTRYPOINT ["java","-jar","/focason-platform-service.jar"]

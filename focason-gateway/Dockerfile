@@ -10,5 +10,5 @@ ENV ENVIRONMENT=development
 ENV EUREKA_HOSTNAME=focason-gateway
 
 EXPOSE 80
-ADD build/libs/gateway-service-1.0.0-SNAPSHOT.jar gateway-service.jar
-ENTRYPOINT ["java","-jar","/gateway-service.jar"]
+ADD build/libs/focason-gateway-1.0.0-SNAPSHOT.jar focason-gateway.jar
+ENTRYPOINT ["java","-jar","/focason-gateway.jar"]

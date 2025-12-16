@@ -6,38 +6,38 @@
 # 1. Spring Boot Configuration
 # -----------------------------------------------------
 server:
-  port: ${SERVER_PORT:8761} # Service port number
+  port: ${SERVER_PORT:8761}                                          # Service port number
 
 spring:
   application:
-    name: ${APPLICATION_NAME:focason-service-registry} # Microservice name (must match AWS ECS service name when deploying on AWS)
+    name: ${APPLICATION_NAME:focason-service-registry}               # Microservice name (must match AWS ECS service name when deploying on AWS)
   security:
     user:
-      name: ${EUREKA_SERVICE_USERNAME:root} # Basic authentication username
-      password: ${EUREKA_SERVICE_PASSWORD:password} # Basic authentication password
+      name: ${EUREKA_SERVICE_USERNAME:root}                          # Basic authentication username
+      password: ${EUREKA_SERVICE_PASSWORD:password}                  # Basic authentication password
 
 # ----------------------------------------------------
 # 2. Spring Cloud Service Discovery (Eureka) Configuration
 # ----------------------------------------------------
 eureka:
-  environment: ${ENVIRONMENT:development} # Deployment environment (development/production)
+  environment: ${ENVIRONMENT:development}                            # Deployment environment (development/production)
   instance:
-    hostname: ${INSTANCE_HOSTNAME:localhost} # Hostname for this Eureka instance
-    # prefer-ip-address: true # Display as IP address instead of hostname (default: false)
-    # instance-id: ${LOCAL_IPV4}:${server.port} # Custom instance display format (e.g., 192.168.0.1:8080)
+    hostname: ${INSTANCE_HOSTNAME:localhost}                         # Hostname for this Eureka instance
+#    prefer-ip-address: true                                          # Display as IP address instead of hostname (default: false)
+#    instance-id: ${LOCAL_IPV4}:${server.port}                        # Custom instance display format (e.g., 192.168.0.1:8080)
   client:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/ # Eureka Server URL for service registration
-    register-with-eureka: true # Register this instance with Eureka Server (default: true)
-    fetch-registry: false # Fetch service registry from Eureka Server (default: true, disabled for standalone server)
+    register-with-eureka: true                                       # Register this instance with Eureka Server (default: true)
+    fetch-registry: false                                            # Fetch service registry from Eureka Server (default: true, disabled for standalone server)
   server:
-    peer-node-connect-timeout-ms: 1000 # Connection timeout for peer node communication in milliseconds
+    peer-node-connect-timeout-ms: 1000                               # Connection timeout for peer node communication in milliseconds
 
 # ----------------------------------------------------
 # 3. Logging Configuration
 # ----------------------------------------------------
 logging:
   file:
-    name: logs/focason-service-registry.log # Log file path and name
+    name: logs/focason-service-registry.log                          # Log file path and name
   level:
-    root: ${LOG_LEVEL:INFO} # Root logging level (default: INFO)
+    root: ${LOG_LEVEL:INFO}                                          # Root logging level (default: INFO)

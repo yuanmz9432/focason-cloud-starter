@@ -6,80 +6,80 @@
 # 1. Spring Boot Configuration
 # -----------------------------------------------------
 server:
-  port: ${SERVER_PORT:8081} # The server port for this service
-  address: 0.0.0.0 # Binds to all network interfaces
+  port: ${SERVER_PORT:8081}                                          # The server port for this service
+  address: 0.0.0.0                                                   # Binds to all network interfaces
 
 spring:
   application:
-    name: ${APPLICATION_NAME:platform-service} # Application name (used in Eureka/Config Server)
+    name: ${APPLICATION_NAME:focason-platform-service}               # Application name (used in Eureka/Config Server)
   main:
-    allow-bean-definition-overriding: true # Allows redefining bean definitions
-    allow-circular-references: true # Allows circular dependency injection
+    allow-bean-definition-overriding: true                           # Allows redefining bean definitions
+    allow-circular-references: true                                  # Allows circular dependency injection
 
   # RabbitMQ Configuration
   rabbitmq:
-    host: ${RABBITMQ_HOST:localhost} # RabbitMQ host address
-    port: ${RABBITMQ_PORT:5672} # RabbitMQ port
-    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ username
-    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ password
+    host: ${RABBITMQ_HOST:localhost}                                 # RabbitMQ host address
+    port: ${RABBITMQ_PORT:5672}                                      # RabbitMQ port
+    username: ${RABBITMQ_USERNAME:guest}                             # RabbitMQ username
+    password: ${RABBITMQ_PASSWORD:guest}                             # RabbitMQ password
 
   # Datasource Configuration
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHEMA:focason}?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
-    driver-class-name: com.mysql.jdbc.Driver # MySQL JDBC Driver
+    driver-class-name: com.mysql.jdbc.Driver                         # MySQL JDBC Driver
 
   # Jackson (JSON serialization) Configuration
   jackson:
-    time-zone: Asia/Tokyo # Default timezone for date/time serialization
+    time-zone: Asia/Tokyo                                            # Default timezone for date/time serialization
 
   # FreeMarker Configuration
   freemarker:
-    check-template-location: true # Check if template location exists
+    check-template-location: true                                    # Check if template location exists
     template-loader-path:
-      - "classpath:/templates/" # Default path for general templates
-      - "classpath:/templates/mail/" # Dedicated path for email templates
+      - "classpath:/templates/"                                      # Default path for general templates
+      - "classpath:/templates/mail/"                                 # Dedicated path for email templates
 
   # JPA (Hibernate) Configuration
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect # Specifies MySQL dialect
-    open-in-view: off # Disables Open Session In View pattern
+    database-platform: org.hibernate.dialect.MySQLDialect            # Specifies MySQL dialect
+    open-in-view: off                                                # Disables Open Session In View pattern
 
   # Spring Cloud Config Client Configuration
   cloud:
     config:
-      name: ${CLOUD_CONFIG_NAME:platform-service} # Name of the configuration file to fetch
-      label: ${GITHUB_BRANCH:main} # Git branch label (e.g., main, dev)
-      profile: ${GITHUB_PROFILE:default} # Profile to load (e.g., dev, prod)
+      name: ${CLOUD_CONFIG_NAME:focason-platform-service}            # Name of the configuration file to fetch
+      label: ${GITHUB_BRANCH:main}                                   # Git branch label (e.g., main, dev)
+      profile: ${GITHUB_PROFILE:default}                             # Profile to load (e.g., dev, prod)
       discovery:
-        enabled: true # Enable discovery service lookup for Config Server
-        service-id: ${CONFIG_SERVICE_ID:focason-config-server} # Config Server service ID
+        enabled: true                                                # Enable discovery service lookup for Config Server
+        service-id: ${CONFIG_SERVICE_ID:focason-config-server}       # Config Server service ID
 
   # Mail Configuration
   mail:
     host: mail.privateemail.com
     port: 587
     username: noreply@focason.com
-    password: qazPL1225-  # Email password or App Password
+    password: qazPL1225-                                             # Email password or App Password
     properties:
       mail:
         smtp:
           auth: true
           starttls:
-            enable: true # Enables STARTTLS for secure connection
+            enable: true                                             # Enables STARTTLS for secure connection
 
   # Redis Configuration
   redis:
     host: 127.0.0.1
     port: 6379
-    timeout: 3000ms # Connection timeout
+    timeout: 3000ms                                                  # Connection timeout
     lettuce:
       pool:
-        max-active: 20 # Maximum number of active connections in the pool
-        max-wait: 100ms # 最大阻塞等待时间 (负值表示永不超时)
-        max-idle: 20 # 最大空闲连接数
-        min-idle: 5 # 最小空闲连接数
+        max-active: 20                                               # Maximum number of active connections in the pool
+        max-wait: 100ms                                              # Maximum blocking wait time (negative values indicate no timeout)
+        max-idle: 20                                                 # Maximum number of idle connections
+        min-idle: 5                                                  # Minimum number of idle connections
 
 management:
   endpoints:
@@ -93,7 +93,7 @@ management:
 # ----------------------------------------------------
 eureka:
   instance:
-    hostname: ${INSTANCE_HOSTNAME:localhost} # Hostname used for registration
+    hostname: ${INSTANCE_HOSTNAME:localhost}                         # Hostname used for registration
   client:
     service-url:
       # Eureka Server registration URL, including basic auth credentials
@@ -104,20 +104,20 @@ eureka:
 # ----------------------------------------------------
 logging:
   file:
-    name: logs/base-service.log # Path to the log file
+    name: logs/focason-platform-service.log                          # Path to the log file
   level:
-    root: ${LOG_LEVEL:INFO} # Default logging level
+    root: ${LOG_LEVEL:INFO}                                          # Default logging level
 
 # ----------------------------------------------------
 # 4. AWS Configuration
 # ----------------------------------------------------
 cloud:
   aws:
-    region: ${AWS_REGION:ap-northeast-1} # AWS region
+    region: ${AWS_REGION:ap-northeast-1}                             # AWS region
     s3:
       file-config:
-        bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file} # S3 bucket name for uploads
-        prefix: # Optional prefix for S3 objects
+        bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file}           # S3 bucket name for uploads
+        prefix:                                                      # Optional prefix for S3 objects
         pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # Pre-signed URL validity in minutes (Max 10080)
 
 # ----------------------------------------------------
@@ -125,5 +125,5 @@ cloud:
 # ----------------------------------------------------
 focason:
   email:
-    send-by: Focason Lab Team # Display name for sender
-    send-from: noreply@focason.com # Email address for sender
+    send-by: Focason Lab Team                                        # Display name for sender
+    send-from: noreply@focason.com                                   # Email address for sender

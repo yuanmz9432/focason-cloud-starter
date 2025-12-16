@@ -2,41 +2,53 @@
 # Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 # =====================================================
 
+# -----------------------------------------------------
+# 1. Spring Boot Configuration
+# -----------------------------------------------------
 server:
-  port: ${SERVER_PORT:8888}              # Server port
-  address: 0.0.0.0                       # Bind to all network interfaces
+  port: ${SERVER_PORT:8888}                                           # Server port
+  address: 0.0.0.0                                                    # Bind to all network interfaces
 
 spring:
   application:
-    name: ${APPLICATION_NAME:focason-config-server}  # Application name
+    name: ${APPLICATION_NAME:focason-config-server}                   # Application name
 
   security:
     user:
-      name: ${CONFIGURE_SERVER_USERNAME:root}        # Basic auth username for Config Server
-      password: ${CONFIGURE_SERVER_PASSWORD:password} # Basic auth password
+      name: ${CONFIGURE_SERVER_USERNAME:root}                         # Basic auth username for Config Server
+      password: ${CONFIGURE_SERVER_PASSWORD:password}                 # Basic auth password
 
   rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}     # RabbitMQ host
-    port: ${RABBITMQ_PORT:5672}          # RabbitMQ port
-    username: ${RABBITMQ_USERNAME:guest} # RabbitMQ username
-    password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ password
+    host: ${RABBITMQ_HOST:localhost}                                  # RabbitMQ host
+    port: ${RABBITMQ_PORT:5672}                                       # RabbitMQ port
+    username: ${RABBITMQ_USERNAME:guest}                              # RabbitMQ username
+    password: ${RABBITMQ_PASSWORD:guest}                              # RabbitMQ password
 
   cloud:
     bus:
-      id: focason-config-bus             # Spring Cloud Bus ID
-      enabled: true                      # Enable message bus
+      id: focason-config-bus                                          # Spring Cloud Bus ID
+      enabled: true                                                   # Enable message bus
       refresh:
-        enabled: true                    # Enable config refresh via Bus
+        enabled: true                                                 # Enable config refresh via Bus
       trace:
-        enabled: true                    # Enable tracing for Bus events
+        enabled: true                                                 # Enable tracing for Bus events
 
     config:
       server:
         git:
           uri: ${GITHUB_PROJECT_HOST:https://github.com/yuanmz9432/focason-cloud-config}
-          username: ${GITHUB_USERNAME}    # Git username
-          password: ${GITHUB_TOKEN}       # ⚠ MUST be environment variable, never hard-code
-          default-label: ${GITHUB_BRANCH:main} # Git branch to read config from
-          search-paths: ${GITHUB_ROOT_PATH:config} # Directory containing config files
-          skip-ssl-validation: true       # Skip SSL validation
+          username: ${GITHUB_USERNAME}                                # Git username
+          password: ${GITHUB_TOKEN}                                   # ⚠ MUST be environment variable, never hard-code
+          default-label: ${GITHUB_BRANCH:main}                        # Git branch to read config from
+          search-paths: ${GITHUB_ROOT_PATH:config}                    # Directory containing config files
+          skip-ssl-validation: true                                   # Skip SSL validation
         bootstrap: true
+
+# ----------------------------------------------------
+# 2. Logging Configuration
+# ----------------------------------------------------
+logging:
+  file:
+    name: logs/focason-config-server.log                              # Log file path
+  level:
+    root: ${LOG_LEVEL:INFO}                                           # Root logging level

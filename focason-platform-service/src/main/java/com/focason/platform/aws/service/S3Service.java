@@ -1,7 +1,7 @@
 // =====================================================
 // Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 // =====================================================
-package com.focason.core.cloud.service;
+package com.focason.platform.aws.service;
 
 
 import com.focason.core.exception.FsErrorCode;

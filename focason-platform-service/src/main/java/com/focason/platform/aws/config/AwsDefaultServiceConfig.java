@@ -1,12 +1,12 @@
 // =====================================================
 // Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 // =====================================================
-package com.focason.core.cloud.config;
+package com.focason.platform.aws.config;
 
 
 
-import com.focason.core.cloud.service.S3Service;
 import com.focason.core.properties.AwsProps;
+import com.focason.platform.aws.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

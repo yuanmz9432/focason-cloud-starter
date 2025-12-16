@@ -8,7 +8,7 @@ import org.seasar.doma.Select;
 import org.seasar.doma.boot.ConfigAutowireable;
 
 /**
- * FileTaskDao
+ * FileDao
  *
  * @author Focason Lab Team
  * @version 1.0.0

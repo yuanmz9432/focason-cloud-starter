@@ -6,7 +6,6 @@ package com.focason.platform.file.service;
 
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
-import com.focason.core.cloud.service.S3Service;
 import com.focason.core.domain.*;
 import com.focason.core.entity.Base007FileMetadataEntity;
 import com.focason.core.entity.Io001FileTaskEntity;
@@ -18,6 +17,7 @@ import com.focason.core.resource.FileMetadataResource;
 import com.focason.core.resource.FileResource;
 import com.focason.core.resource.FileTaskResource;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.aws.service.S3Service;
 import com.focason.platform.file.repository.FileRepository;
 import com.focason.platform.file.repository.FileTaskRepository;
 import java.time.LocalDate;

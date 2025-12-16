@@ -13,7 +13,7 @@ server:
 
 spring:
   application:
-    name: ${APPLICATION_NAME:gateway-service} # Application name
+    name: ${APPLICATION_NAME:focason-gateway} # Application name
   main:
     allow-bean-definition-overriding: true # Allow bean definition overriding
     web-application-type: reactive # Application type (reactive web application)
@@ -25,12 +25,12 @@ spring:
     password: ${RABBITMQ_PASSWORD:guest} # RabbitMQ authentication password
   cloud:
     config:
-      name: ${CLOUD_CONFIG_NAME:gateway-service} # Configuration file name in config server
+      name: ${CLOUD_CONFIG_NAME:focason-gateway} # Configuration file name in config server
       label: ${GITHUB_BRANCH:main} # Git branch for configuration
       profile: ${GITHUB_PROFILE:default} # Spring profile for configuration
       discovery:
         enabled: true # Enable service discovery for config server
-        service-id: ${CONFIG_SERVICE_ID:configure-server} # Config server service ID
+        service-id: ${CONFIG_SERVICE_ID:focason-config-server} # Config server service ID
     gateway:
       globalcors:
         corsConfigurations:
@@ -66,6 +66,6 @@ eureka:
 # ----------------------------------------------------
 logging:
   file:
-    name: logs/gateway-service.log # Log file path
+    name: logs/focason-gateway.log # Log file path
   level:
     root: ${LOG_LEVEL:INFO} # Root logging level

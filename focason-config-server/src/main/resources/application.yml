@@ -23,7 +23,7 @@ spring:
 
   cloud:
     bus:
-      id: focason-configure-bus          # Spring Cloud Bus ID
+      id: focason-config-bus             # Spring Cloud Bus ID
       enabled: true                      # Enable message bus
       refresh:
         enabled: true                    # Enable config refresh via Bus

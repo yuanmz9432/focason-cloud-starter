@@ -10,7 +10,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * BaseServiceApplication
+ * FocasonPlatformServiceApplication
  * <p>
  * The main entry point for the Base Service Spring Boot application.
  * <p>
@@ -29,7 +29,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "com.focason.core.feign")
 @SpringBootApplication(scanBasePackages = "com.focason")
-public class BaseServiceApplication
+public class FocasonPlatformServiceApplication
 {
     /**
      * Main method that starts the Spring Boot application.
@@ -37,9 +37,9 @@ public class BaseServiceApplication
      * @param args Command line arguments.
      */
     public static void main(String[] args) {
-        SpringApplication springApplication = new SpringApplication(BaseServiceApplication.class);
+        SpringApplication springApplication = new SpringApplication(FocasonPlatformServiceApplication.class);
         // Allows overriding bean definitions, which can be useful in complex configurations or testing.
         springApplication.setAllowBeanDefinitionOverriding(true);
-        SpringApplication.run(BaseServiceApplication.class, args);
+        SpringApplication.run(FocasonPlatformServiceApplication.class, args);
     }
 }

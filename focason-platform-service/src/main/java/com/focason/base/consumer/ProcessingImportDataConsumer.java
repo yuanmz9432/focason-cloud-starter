@@ -48,13 +48,6 @@ public class ProcessingImportDataConsumer
                 var importDetails = fileTaskRepository.findImportDetails(taskCode);
                 importDetails.forEach((entity) -> {
                     try {
-                        var warehouseResource = WarehouseResource.builder()
-                            .companyCode(entity.getItem1())
-                            .warehouseName(entity.getItem2())
-                            .warehouseStatus(Integer.valueOf(entity.getItem3()))
-                            .remark(entity.getItem4()).build();
-
-                        // warehouseService.create(warehouseResource);
                         entity.setStatus(FileTaskStatus.PROCESSED.getValue());
                     } catch (Exception e) {
                         importTask.setStatus(FileTaskStatus.ERROR.getValue());

@@ -2,7 +2,6 @@ package com.focason.core.request;
 
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -13,11 +12,10 @@ import lombok.Data;
  * @since 1.0.0
  */
 @Data
-@AllArgsConstructor
 public class RefreshTokenRequest
 {
     /** ユーザー識別子 */
-    private String sub;
+    private String uid;
     /** デバイスID */
     private String deviceId;
 }

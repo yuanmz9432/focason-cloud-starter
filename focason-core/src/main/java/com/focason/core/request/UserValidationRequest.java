@@ -2,7 +2,6 @@ package com.focason.core.request;
 
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -13,7 +12,6 @@ import lombok.Data;
  * @since 1.0.0
  */
 @Data
-@AllArgsConstructor
 public class UserValidationRequest
 {
     /** メールアドレス */

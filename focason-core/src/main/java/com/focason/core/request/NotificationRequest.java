@@ -2,10 +2,7 @@ package com.focason.core.request;
 
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * NotificationRequest
@@ -15,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since 1.0.0
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class NotificationRequest
 {
+    /** 通知対象（UID配列） */
     private String[] targets;
+    /** タイトル */
     private String title;
+    /** 内容 */
     private String content;
+    /** ステータス */
     private Integer status;
+    /** タイプ */
     private Integer type;
 }

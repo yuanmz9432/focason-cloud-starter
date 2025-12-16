@@ -14,32 +14,18 @@ import lombok.Data;
 @Data
 public class FileExportTaskRequest
 {
-    /**
-     * 営業単位
-     */
+    /** 営業単位 */
     private String businessUnit;
-    /**
-     * モジュール
-     */
+    /** モジュール */
     private Integer fileModule;
-    /**
-     * ファイル名称
-     */
+    /** ファイル名称 */
     private String fileName;
-    /**
-     * ファイルパス
-     */
+    /** ファイルパス */
     private String filePath;
-    /**
-     * ファイルタイプ
-     */
+    /** ファイルタイプ */
     private Integer fileType;
-    /**
-     * 検索条件
-     */
+    /** 検索条件 */
     private String filterConditions;
-    /**
-     * 出力項目
-     */
+    /** 出力項目 */
     private String exportColumns;
 }

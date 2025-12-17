@@ -1,5 +1,7 @@
 package com.focason.core.response;
 
+import java.time.LocalDateTime;
+
 /**
  * UserLoginResponse
  *
@@ -13,8 +15,7 @@ package com.focason.core.response;
  * @version 1.0.0
  * @since 1.0.0
  */
-public record UserLoginResponse(String accessToken,Long expiresIn,Long expiresAt,String refreshToken,String deviceId,User user){
-
+public record UserLoginResponse(String accessToken,Long expiresIn,LocalDateTime expiresAt,String refreshToken,String deviceId,User user){
 /**
  * User
  *

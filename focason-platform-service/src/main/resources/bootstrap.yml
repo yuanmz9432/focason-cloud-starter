@@ -114,11 +114,35 @@ logging:
 cloud:
   aws:
     region: ${AWS_REGION:ap-northeast-1}                             # AWS region
+    # S3 Configuration
     s3:
       file-config:
         bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file}           # S3 bucket name for uploads
         prefix:                                                      # Optional prefix for S3 objects
         pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # Pre-signed URL validity in minutes (Max 10080)
+    # SQS Configuration (supports multiple queues)
+    sqs:
+      # Default queue
+      default-queue:
+        queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/your-queue-name
+        max-number-of-messages: 10
+        wait-time-seconds: 20
+        visibility-timeout: 30
+        message-retention-period: 345600  # 4 days
+        enable-dead-letter-queue: false
+        dead-letter-queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/your-dlq-name
+        max-receive-count: 3
+      # Another queue example
+      notification-queue:
+        queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/notification-queue
+        max-number-of-messages: 5
+        wait-time-seconds: 10
+        visibility-timeout: 60
+    # Cognito Configuration (existing)
+    cognito:
+      user-pool-id: ${COGNITO_USER_POOL_ID:your-user-pool-id}
+      client-id: ${COGNITO_CLIENT_ID:your-client-id}
+      client-secret: ${COGNITO_CLIENT_SECRET:your-client-secret}
 
 # ----------------------------------------------------
 # 5. Project Specific Configuration

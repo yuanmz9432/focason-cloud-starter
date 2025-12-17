@@ -101,6 +101,11 @@ public class FsUtilityToolkit
         }
 
         try {
+            // Check if target type is a Record
+            if (targetType.isRecord()) {
+                return convertToRecord(source, targetType);
+            }
+
             // 1. Instantiate the target object using default constructor
             T target = targetType.getDeclaredConstructor().newInstance();
 
@@ -140,6 +145,66 @@ public class FsUtilityToolkit
             throw new RuntimeException(
                 "Failed to convert objects due to reflection or instantiation error: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Converts a source object to a Record type by matching field names to record components.
+     *
+     * @param source The source object
+     * @param targetType The target Record class
+     * @param <S> Source type
+     * @param <T> Target Record type
+     * @return A new instance of the target Record with mapped values
+     * @throws Exception if conversion fails
+     */
+    private static <S, T> T convertToRecord(S source, Class<T> targetType) throws Exception {
+        // Get record components (equivalent to fields in normal classes)
+        var recordComponents = targetType.getRecordComponents();
+        Object[] args = new Object[recordComponents.length];
+        Class<?>[] paramTypes = new Class<?>[recordComponents.length];
+
+        // For each record component, get the corresponding value from source
+        for (int i = 0; i < recordComponents.length; i++) {
+            var component = recordComponents[i];
+            String componentName = component.getName();
+            Class<?> componentType = component.getType();
+            paramTypes[i] = componentType;
+
+            // Try to get value from source using getter method
+            Object value = null;
+            try {
+                // Try standard getter (e.g., getName)
+                String getterName = "get" + Character.toUpperCase(componentName.charAt(0))
+                    + componentName.substring(1);
+                var getter = source.getClass().getMethod(getterName);
+                value = getter.invoke(source);
+            } catch (NoSuchMethodException e) {
+                // Try boolean getter (e.g., isActive)
+                try {
+                    String booleanGetterName = "is" + Character.toUpperCase(componentName.charAt(0))
+                        + componentName.substring(1);
+                    var getter = source.getClass().getMethod(booleanGetterName);
+                    value = getter.invoke(source);
+                } catch (NoSuchMethodException ex) {
+                    // Try direct field access
+                    try {
+                        var field = findField(source.getClass(), componentName);
+                        if (field != null) {
+                            field.setAccessible(true);
+                            value = field.get(source);
+                        }
+                    } catch (Exception fieldEx) {
+                        logger.warn("Could not get value for component {}: {}", componentName, fieldEx.getMessage());
+                    }
+                }
+            }
+
+            args[i] = value;
+        }
+
+        // Find and invoke the canonical constructor
+        var constructor = targetType.getDeclaredConstructor(paramTypes);
+        return constructor.newInstance(args);
     }
 
     /**

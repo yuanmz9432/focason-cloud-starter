@@ -60,9 +60,10 @@ public class GatewayConfig
      * </p>
      *
      * <ul>
-     * <li>**eureka-service**: Routes requests to {@code /api/v1/eureka/**} and strips the first three path
+     * <li>**focason-service-registry**: Routes requests to {@code /api/v1/eureka/**} and strips the first three path
      * segments.</li>
-     * <li>**base-service**: Routes various core API paths (auth, users, files, notifications) and applies the
+     * <li>**focason-platform-service**: Routes various core API paths (auth, users, files, notifications) and applies
+     * the
      * authentication filter.</li>
      * </ul>
      *
@@ -72,13 +73,13 @@ public class GatewayConfig
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
-            .route("eureka-service",
+            .route("focason-service-registry",
                 r -> r.path("/api/v1/eureka/**").filters(f -> f.filter(authenticationTokenFilter).stripPrefix(3))
-                    .uri("lb://eureka-service"))
-            .route("base-service",
+                    .uri("lb://focason-service-registry"))
+            .route("focason-platform-service",
                 r -> r.path("/api/v1/notifications/**", "/api/v1/auth/**", "/api/v1/users/**", "/api/v1/files/**")
                     .filters(f -> f.filter(authenticationTokenFilter))
-                    .uri("lb://base-service"))
+                    .uri("lb://focason-platform-service"))
             .build();
     }
 

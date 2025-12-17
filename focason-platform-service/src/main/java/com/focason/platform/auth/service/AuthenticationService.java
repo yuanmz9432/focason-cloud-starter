@@ -179,10 +179,9 @@ public class AuthenticationService
     @Transactional
     public UserLoginResponse generateLoginResponse(UserResource resource) {
         // Generate access token and refresh token.
-        var expiresAtDateTime = FsUtilityToolkit.generateExpirationTime(TokenType.ACCESS_TOKEN);
+        var expiresAt = FsUtilityToolkit.generateExpirationTime(TokenType.ACCESS_TOKEN);
         var expiresIn = FsUtilityToolkit.ACCESS_TOKEN_EXPIRATION_TIME;
-        var expiresAt = FsUtilityToolkit.toTokyoEpochSeconds(expiresAtDateTime);
-        var accessToken = FsUtilityToolkit.generateAccessToken(resource, expiresAtDateTime);
+        var accessToken = FsUtilityToolkit.generateAccessToken(resource, expiresAt);
         var refreshToken = FsUtilityToolkit.generateAccessToken(resource,
             FsUtilityToolkit.generateExpirationTime(TokenType.REFRESH_TOKEN));
         var deviceId = resource.getDeviceId() != null ? resource.getDeviceId() : FsUtilityToolkit.generateUUID();
@@ -193,7 +192,7 @@ public class AuthenticationService
         entity.setUid(resource.getUid());
         entity.setAccessToken(accessToken);
         entity.setRefreshToken(refreshToken);
-        entity.setExpiresAt(expiresAtDateTime);
+        entity.setExpiresAt(expiresAt);
         entity.setDeviceId(deviceId);
         entity.setDeviceType(deviceType);
         userRepository.saveUserToken(entity);

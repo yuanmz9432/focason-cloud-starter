@@ -63,7 +63,7 @@ public final class ID<E> implements Serializable
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            ID<?> id = (ID<?>) o;
+            ID<?> id = (ID) o;
             return this.value.equals(id.value);
         } else {
             return false;

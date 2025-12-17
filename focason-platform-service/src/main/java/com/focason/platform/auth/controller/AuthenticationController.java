@@ -131,7 +131,7 @@ public class AuthenticationController
     @RequestMapping(method = RequestMethod.POST, value = SEND_VERIFICATION_CODE_URL)
     public ResponseEntity<Void> sendVerificationCode(@RequestBody SendVerificationCodeRequest request) {
         logger.debug("sendVerificationCode request: {}", request);
-        service.sendVerificationCode(request.getEmail());
+        service.sendVerificationCode(request.email());
         return ResponseEntity.ok().build();
     }
 
@@ -172,7 +172,7 @@ public class AuthenticationController
     @RequestMapping(method = RequestMethod.POST, value = FORGOT_PASSWORD_URL)
     public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         logger.debug("forgotPassword request: {}", request);
-        service.forgotPassword(request.getEmail());
+        service.forgotPassword(request.email());
         return ResponseEntity.ok().build();
     }
 

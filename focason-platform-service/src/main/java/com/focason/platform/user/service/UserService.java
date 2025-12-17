@@ -156,6 +156,6 @@ public class UserService
      */
     @Transactional
     public ActiveUserResponse getActiveUids() {
-        return ActiveUserResponse.builder().activeUids(repository.findActiveUids()).build();
+        return new ActiveUserResponse(repository.findActiveUids());
     }
 }

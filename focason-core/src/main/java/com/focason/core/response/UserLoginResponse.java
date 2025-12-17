@@ -1,44 +1,26 @@
 package com.focason.core.response;
 
-
-
-import lombok.Builder;
-import lombok.Data;
-
 /**
  * UserLoginResponse
  *
+ * @param accessToken アクセストークン（認証用トークン）
+ * @param expiresIn アクセストークンの有効期間（秒）
+ * @param expiresAt アクセストークンの有効期限タイムスタンプ（秒）
+ * @param refreshToken リフレッシュトークン（アクセストークンを再発行するためのトークン）
+ * @param deviceId デバイスID
+ * @param user ユーザー情報
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@Data
-@Builder
-public class UserLoginResponse
-{
-    /** アクセストークン（認証用トークン） */
-    private String accessToken;
-    /** アクセストークンの有効期間（秒） */
-    private Long expiresIn;
-    /** アクセストークンの有効期限タイムスタンプ（秒） */
-    private Long expiresAt;
-    /** リフレッシュトークン（アクセストークンを再発行するためのトークン） */
-    private String refreshToken;
-    /** デバイスID */
-    private String deviceId;
-    /** ユーザー情報 */
-    private User user;
+public record UserLoginResponse(String accessToken,Long expiresIn,Long expiresAt,String refreshToken,String deviceId,User user){
 
-    @Data
-    static public class User
-    {
-        /** 行ID */
-        private Integer id;
-        /** ユーザー識別子 */
-        private String uid;
-        /** 名前 */
-        private String username;
-        /** メールアドレス */
-        private String email;
-    }
-}
+/**
+ * User
+ *
+ * @param id 行ID
+ * @param uid ユーザー識別子
+ * @param username 名前
+ * @param email メールアドレス
+ */
+public record User(Integer id,String uid,String username,String email){}}

@@ -1,30 +1,13 @@
 package com.focason.core.response;
 
-
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
  * RefreshTokenResponse
  *
+ * @param accessToken アクセストークン
+ * @param expiresIn アクセストークン有効期間
+ * @param refreshToken リフレッシュトークン
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@NoArgsConstructor
-@AllArgsConstructor(onConstructor = @__(@Autowired))
-@Data
-@Builder
-public class RefreshTokenResponse
-{
-    /** アクセストークン */
-    private String accessToken;
-    /** アクセストークン有効期間 */
-    private Long expiresIn;
-    /** リフレッシュトークン */
-    private String refreshToken;
-}
+public record RefreshTokenResponse(String accessToken,Long expiresIn,String refreshToken){}

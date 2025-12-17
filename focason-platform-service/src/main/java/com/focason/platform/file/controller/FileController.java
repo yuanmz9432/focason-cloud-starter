@@ -90,11 +90,7 @@ public class FileController
 
         // 3. Generate the presigned PUT URL using the full object key and mandatory metadata
         return s3Service.generatePutUrl(resource)
-            .map(url -> ResponseEntity.ok(FileUploadResponse.builder()
-                .fileId(resource.getFileId())
-                .objectKey(objectKey)
-                .presignedUrl(url.toString())
-                .build()))
+            .map(url -> ResponseEntity.ok(new FileUploadResponse(resource.getFileId(), objectKey, url.toString())))
             .orElseThrow(() -> new FsFileNotFoundException(originalFileName));
     }
 
@@ -111,9 +107,7 @@ public class FileController
         var originalFileName = fileService.download(objectKey);
         // 2. Delegate to S3Service to generate the time-limited GET URL
         return s3Service.generateGetUrl(objectKey, originalFileName)
-            .map(url -> ResponseEntity.ok(FileDownloadResponse.builder()
-                .presignedUrl(url.toString())
-                .build()))
+            .map(url -> ResponseEntity.ok(new FileDownloadResponse(url.toString())))
             .orElseThrow(() -> new FsFileNotFoundException(objectKey));
     }
 

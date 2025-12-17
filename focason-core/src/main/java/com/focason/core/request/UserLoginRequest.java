@@ -1,25 +1,14 @@
 package com.focason.core.request;
 
-
-
-import lombok.Data;
-
 /**
  * UserLoginRequest
  *
+ * @param email メールアドレス
+ * @param password パスワード
+ * @param deviceId デバイスID
+ * @param deviceType デバイスタイプ
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@Data
-public class UserLoginRequest
-{
-    /** メールアドレス */
-    private String email;
-    /** パスワード */
-    private String password;
-    /** デバイスID */
-    private String deviceId;
-    /** デバイスタイプ */
-    private Integer deviceType;
-}
+public record UserLoginRequest(String email,String password,String deviceId,Integer deviceType){}

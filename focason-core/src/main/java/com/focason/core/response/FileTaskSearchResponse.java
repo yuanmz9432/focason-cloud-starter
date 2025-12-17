@@ -1,73 +1,24 @@
 package com.focason.core.response;
 
-
-
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * FileTaskSearchResponse
  *
+ * @param id 行ID
+ * @param taskCode タスクコード
+ * @param taskType タスクタイプ
+ * @param receiveDate 受信日
+ * @param processOrder 処理順位
+ * @param businessUnit 営業単位
+ * @param fileModule モジュール
+ * @param fileName ファイル名称
+ * @param filePath ファイルパス
+ * @param fileType ファイルタイプ
+ * @param status ステータス
+ * @param errorMessage 異常情報
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@NoArgsConstructor
-@AllArgsConstructor(onConstructor = @__(@Autowired))
-@Data
-@Builder
-public class FileTaskSearchResponse
-{
-    /**
-     * 行ID
-     */
-    private Integer id;
-    /**
-     * タスクコード
-     */
-    private String taskCode;
-    /**
-     * タスクタイプ
-     */
-    private Integer taskType;
-    /**
-     * 受信日
-     */
-    private LocalDate receiveDate;
-    /**
-     * 処理順位
-     */
-    private Integer processOrder;
-    /**
-     * 営業単位
-     */
-    private String businessUnit;
-    /**
-     * モジュール
-     */
-    private Integer fileModule;
-    /**
-     * ファイル名称
-     */
-    private String fileName;
-    /**
-     * ファイルパス
-     */
-    private String filePath;
-    /**
-     * ファイルタイプ
-     */
-    private Integer fileType;
-    /**
-     * ステータス
-     */
-    private Integer status;
-    /**
-     * 異常情報
-     */
-    private String errorMessage;
-}
+public record FileTaskSearchResponse(Integer id,String taskCode,Integer taskType,LocalDate receiveDate,Integer processOrder,String businessUnit,Integer fileModule,String fileName,String filePath,Integer fileType,Integer status,String errorMessage){}

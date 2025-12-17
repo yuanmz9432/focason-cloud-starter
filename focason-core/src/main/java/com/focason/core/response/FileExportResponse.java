@@ -1,29 +1,15 @@
 package com.focason.core.response;
 
-
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
  * FileExportResponse
  *
+ * @param id ID
+ * @param clientCode クライアントコード
+ * @param warehouseCodes 倉庫コード配列
+ * @param warehouseCode 倉庫コード
+ * @param clientCodes クライアントコード配列
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@NoArgsConstructor
-@AllArgsConstructor(onConstructor = @__(@Autowired))
-@Data
-@Builder
-public class FileExportResponse
-{
-    private Integer id;
-    private String clientCode;
-    private String[] warehouseCodes;
-    private String warehouseCode;
-    private String[] clientCodes;
-}
+public record FileExportResponse(Integer id,String clientCode,String[]warehouseCodes,String warehouseCode,String[]clientCodes){}

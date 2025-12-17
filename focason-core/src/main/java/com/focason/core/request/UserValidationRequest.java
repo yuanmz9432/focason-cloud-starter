@@ -1,21 +1,12 @@
 package com.focason.core.request;
 
-
-
-import lombok.Data;
-
 /**
  * UserValidationRequest
  *
+ * @param email メールアドレス
+ * @param uid ユーザー識別子
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@Data
-public class UserValidationRequest
-{
-    /** メールアドレス */
-    private String email;
-    /** ユーザー識別子 */
-    private String uid;
-}
+public record UserValidationRequest(String email,String uid){}

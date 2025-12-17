@@ -1,23 +1,13 @@
 package com.focason.core.request;
 
-
-
-import lombok.Data;
-
 /**
  * UserRegisterRequest
  *
+ * @param email メールアドレス
+ * @param password パスワード
+ * @param verificationCode 認証コード
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@Data
-public class UserRegisterRequest
-{
-    /** メールアドレス */
-    private String email;
-    /** パスワード */
-    private String password;
-    /** 認証コード */
-    private String verificationCode;
-}
+public record UserRegisterRequest(String email,String password,String verificationCode){}

@@ -79,10 +79,10 @@ public class NotificationConsumer
                 var response = userFeignClient.getActiveUserIds();
 
                 // 确保响应体和用户列表非空
-                if (response.getBody() != null && response.getBody().getActiveUids() != null
-                    && !response.getBody().getActiveUids().isEmpty()) {
+                if (response.getBody() != null && response.getBody().activeUids() != null
+                    && !response.getBody().activeUids().isEmpty()) {
                     notificationReadEntities =
-                        getBase005NotificationReadEntities(response.getBody().getActiveUids(), notificationId);
+                        getBase005NotificationReadEntities(response.getBody().activeUids(), notificationId);
                 }
 
                 if (notificationReadEntities != null) {

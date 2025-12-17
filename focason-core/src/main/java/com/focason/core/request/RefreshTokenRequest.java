@@ -1,21 +1,12 @@
 package com.focason.core.request;
 
-
-
-import lombok.Data;
-
 /**
  * RefreshTokenRequest
  *
+ * @param uid ユーザー識別子
+ * @param deviceId デバイスID
  * @author Focason Lab Team
  * @version 1.0.0
  * @since 1.0.0
  */
-@Data
-public class RefreshTokenRequest
-{
-    /** ユーザー識別子 */
-    private String uid;
-    /** デバイスID */
-    private String deviceId;
-}
+public record RefreshTokenRequest(String uid,String deviceId){}

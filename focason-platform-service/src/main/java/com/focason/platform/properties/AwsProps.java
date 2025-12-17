@@ -4,6 +4,8 @@ package com.focason.platform.properties;
 
 import java.util.Map;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 /**
  * AWS Configuration Properties
@@ -17,6 +19,8 @@ import lombok.Data;
  * @since 1.0.0
  */
 @Data
+@Component
+@ConfigurationProperties(prefix = "focason.cloud.aws")
 public class AwsProps
 {
     /**
@@ -30,12 +34,12 @@ public class AwsProps
     private Map<String, S3Props> s3;
 
     /**
-     * Cognito configuration
-     */
-    private CognitoProps cognito;
-
-    /**
      * SQS queue configurations (supports multiple queues)
      */
     private Map<String, SqsProps> sqs;
+
+    /**
+     * Cognito configuration
+     */
+    private CognitoProps cognito;
 }

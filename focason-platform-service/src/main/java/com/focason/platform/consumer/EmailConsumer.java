@@ -7,7 +7,7 @@ import com.focason.core.config.EmailQueueConfig;
 import com.focason.core.domain.EmailType;
 import com.focason.core.exception.FsSendMailFailedException;
 import com.focason.core.resource.EmailResource;
-import com.focason.platform.properties.FsProperties;
+import com.focason.platform.properties.EmailProps;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class EmailConsumer
     private final Configuration freemarkerConfig;
 
     /** Application properties containing configuration details like send-from address. */
-    private final FsProperties properties;
+    private final EmailProps emailProps;
 
     /**
      * Consumes messages from the dedicated email sending queue.
@@ -74,8 +74,8 @@ public class EmailConsumer
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
 
             // Get sender info from application properties, ensuring consistency
-            String sendFrom = properties.getEmail().getSendFrom();
-            String sendBy = properties.getEmail().getSendBy();
+            String sendFrom = emailProps.getSendFrom();
+            String sendBy = emailProps.getSendBy();
 
             helper.setFrom(new InternetAddress(sendFrom, sendBy));
             helper.setTo(resource.to());

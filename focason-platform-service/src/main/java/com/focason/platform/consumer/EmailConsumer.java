@@ -74,8 +74,8 @@ public class EmailConsumer
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
 
             // Get sender info from application properties, ensuring consistency
-            String sendFrom = properties.getEmail().get("send-from");
-            String sendBy = properties.getEmail().get("send-by");
+            String sendFrom = properties.getEmail().getSendFrom();
+            String sendBy = properties.getEmail().getSendBy();
 
             helper.setFrom(new InternetAddress(sendFrom, sendBy));
             helper.setTo(resource.to());

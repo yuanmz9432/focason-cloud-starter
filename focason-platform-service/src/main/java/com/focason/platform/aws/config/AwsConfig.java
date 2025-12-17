@@ -4,13 +4,13 @@
 package com.focason.platform.aws.config;
 
 import com.focason.platform.properties.AwsProps;
+import com.focason.platform.properties.FsProperties;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,21 +29,27 @@ import software.amazon.awssdk.services.sqs.SqsClient;
  * @version 1.0.0
  * @since 1.0.0
  */
-@EnableConfigurationProperties(AwsProps.class)
 @Configuration
 public class AwsConfig
 {
     /**
-     * AWS properties
+     * Focason properties (contains AWS configuration under cloud.aws)
      */
-    private final AwsProps awsProps;
+    private final FsProperties fsProperties;
 
     /**
      * Manual Constructor Injection (replaces Lombok's @RequiredArgsConstructor)
      */
     @Autowired
-    public AwsConfig(AwsProps awsProps) {
-        this.awsProps = awsProps;
+    public AwsConfig(FsProperties fsProperties) {
+        this.fsProperties = fsProperties;
+    }
+
+    /**
+     * Helper method to get AWS properties
+     */
+    private AwsProps getAwsProps() {
+        return fsProperties.getCloud().getAws();
     }
 
     /**
@@ -56,7 +62,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public S3Presigner s3Presigner() {
         return S3Presigner.builder()
-            .region(Region.of(awsProps.getRegion()))
+            .region(Region.of(getAwsProps().getRegion()))
             .build();
     }
 
@@ -70,7 +76,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public S3Client s3Client() {
         return S3Client.builder()
-            .region(Region.of(awsProps.getRegion()))
+            .region(Region.of(getAwsProps().getRegion()))
             .build();
     }
 
@@ -84,7 +90,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public RekognitionClient rekClient() {
         return RekognitionClient.builder()
-            .region(Region.of(awsProps.getRegion()))
+            .region(Region.of(getAwsProps().getRegion()))
             .build();
     }
 
@@ -98,7 +104,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public CognitoIdentityProviderClient cognitoIdentityProviderClient() {
         return CognitoIdentityProviderClient.builder()
-            .region(Region.of(awsProps.getRegion()))
+            .region(Region.of(getAwsProps().getRegion()))
             .credentialsProvider(ProfileCredentialsProvider.create())
             .build();
     }
@@ -113,7 +119,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public SqsClient sqsClient() {
         return SqsClient.builder()
-            .region(Region.of(awsProps.getRegion()))
+            .region(Region.of(getAwsProps().getRegion()))
             .build();
     }
 

@@ -1,4 +1,4 @@
-package com.focason.core.properties;
+package com.focason.platform.properties;
 
 
 
@@ -10,11 +10,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 public class AwsProps
 {
-    public static final String PREFIX = "cloud.aws";
+    public static final String PREFIX = "focason.cloud.aws";
 
     private String region;
 
     private Map<String, S3Props> s3;
 
     private CognitoProps cognito;
+
+    private Map<String, SqsProps> sqs;
 }

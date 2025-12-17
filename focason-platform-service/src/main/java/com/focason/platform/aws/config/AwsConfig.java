@@ -3,7 +3,7 @@
 // =====================================================
 package com.focason.platform.aws.config;
 
-import com.focason.core.properties.AwsProps;
+import com.focason.platform.properties.AwsProps;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.crypto.Mac;
@@ -20,6 +20,7 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.sqs.SqsClient;
 
 /**
  * Configuration for AWS Service Connections
@@ -99,6 +100,20 @@ public class AwsConfig
         return CognitoIdentityProviderClient.builder()
             .region(Region.of(awsProps.getRegion()))
             .credentialsProvider(ProfileCredentialsProvider.create())
+            .build();
+    }
+
+    /**
+     * Provides the SQS client for AWS Simple Queue Service operations.
+     *
+     * @return {@link SqsClient}
+     */
+    @Lazy
+    @Bean
+    @ConditionalOnMissingBean
+    public SqsClient sqsClient() {
+        return SqsClient.builder()
+            .region(Region.of(awsProps.getRegion()))
             .build();
     }
 

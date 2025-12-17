@@ -1,4 +1,4 @@
-package com.focason.core.properties;
+package com.focason.platform.properties;
 
 
 

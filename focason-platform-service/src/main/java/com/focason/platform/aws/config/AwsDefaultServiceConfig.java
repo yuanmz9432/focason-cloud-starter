@@ -5,8 +5,8 @@ package com.focason.platform.aws.config;
 
 
 
-import com.focason.core.properties.AwsProps;
 import com.focason.platform.aws.service.S3Service;
+import com.focason.platform.properties.AwsProps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

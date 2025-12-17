@@ -33,8 +33,10 @@ dependencies {
     implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.87'
     // AWS Cognito
     implementation 'software.amazon.awssdk:cognitoidentity:2.20.88'
+    // AWS SQS
+    implementation 'software.amazon.awssdk:sqs:2.17.271'
 
-	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
+    // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
 	implementation 'org.springframework.security:spring-security-core'
 }
 

@@ -50,10 +50,9 @@ public final class FsResultSet<T> implements Serializable
     public boolean equals(final Object o) {
         if (o == this) {
             return true;
-        } else if (!(o instanceof FsResultSet)) {
+        } else if (!(o instanceof FsResultSet<?> other)) {
             return false;
         } else {
-            FsResultSet<?> other = (FsResultSet) o;
             Object this$data = this.getData();
             Object other$data = other.getData();
             if (this$data == null) {

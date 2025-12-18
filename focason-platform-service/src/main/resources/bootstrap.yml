@@ -55,6 +55,9 @@ spring:
       discovery:
         enabled: true                                                # Enable discovery service lookup for Config Server
         service-id: ${CONFIG_SERVICE_ID:focason-config-server}       # Config Server service ID
+    aws:
+      region:
+        static: ap-northeast-1
 
   # Mail Configuration
   mail:
@@ -70,16 +73,17 @@ spring:
             enable: true                                             # Enables STARTTLS for secure connection
 
   # Redis Configuration
-  redis:
-    host: ${REDIS_HOST:127.0.0.1}
-    port: 6379
-    timeout: 3000ms                                                  # Connection timeout
-    lettuce:
-      pool:
-        max-active: 20                                               # Maximum number of active connections in the pool
-        max-wait: 100ms                                              # Maximum blocking wait time (negative values indicate no timeout)
-        max-idle: 20                                                 # Maximum number of idle connections
-        min-idle: 5                                                  # Minimum number of idle connections
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: 6379
+      timeout: 3000ms                                                  # Connection timeout
+      lettuce:
+        pool:
+          max-active: 20                                               # Maximum number of active connections in the pool
+          max-wait: 100ms                                              # Maximum blocking wait time (negative values indicate no timeout)
+          max-idle: 20                                                 # Maximum number of idle connections
+          min-idle: 5                                                  # Minimum number of idle connections
 
 management:
   endpoints:
@@ -134,7 +138,7 @@ focason:
       # SQS Configuration (supports multiple queues)
       sqs:
         # Email send queue
-        email-send-queue:
+        focason-email-send-queue:
           queue-url: https://sqs.ap-northeast-1.amazonaws.com/442426889980/focason-email-send-queue
           max-number-of-messages: 10
           wait-time-seconds: 20
@@ -149,8 +153,3 @@ focason:
 #          max-number-of-messages: 5
 #          wait-time-seconds: 10
 #          visibility-timeout: 60
-      # Cognito Configuration (existing)
-      cognito:
-        user-pool-id: ${COGNITO_USER_POOL_ID:your-user-pool-id}
-        client-id: ${COGNITO_CLIENT_ID:your-client-id}
-        client-secret: ${COGNITO_CLIENT_SECRET:your-client-secret}

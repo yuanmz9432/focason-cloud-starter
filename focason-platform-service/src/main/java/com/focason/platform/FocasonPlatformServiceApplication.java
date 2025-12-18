@@ -6,7 +6,6 @@ package com.focason.platform;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
@@ -16,7 +15,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * <p>
  * This application is configured to:
  * <ul>
- * <li>Register itself as a client with Eureka Discovery Service (via {@link EnableEurekaClient}).</li>
  * <li>Enable Feign Clients for declarative REST communication with other microservices
  * (via {@link EnableFeignClients}).</li>
  * <li>Automatically configure Spring Boot features and component scanning starting from the base package
@@ -26,7 +24,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @author Focason Lab Team
  * @since 0.0.1
  */
-@EnableEurekaClient
 @EnableFeignClients(basePackages = "com.focason.core.feign")
 // @EnableScheduling
 @SpringBootApplication(scanBasePackages = "com.focason")

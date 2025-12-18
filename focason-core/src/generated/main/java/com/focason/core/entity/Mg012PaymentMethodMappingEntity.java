@@ -6,13 +6,13 @@ package com.focason.core.entity;
 import org.seasar.doma.*;
 
 /**
- * 支払方法マッピング
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "mg012_payment_method_mapping")
+@Table(name = "mg012_payment_method_mapping")
 public class Mg012PaymentMethodMappingEntity extends FsEntity
 {
     /** 行ID */

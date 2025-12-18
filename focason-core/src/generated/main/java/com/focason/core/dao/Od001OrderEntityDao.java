@@ -12,7 +12,7 @@ import org.seasar.doma.Update;
 import org.seasar.doma.boot.ConfigAutowireable;
 
 /**
- * 受注のDao（※自動生成のため、改修不可！）
+ * のDao（※自動生成のため、改修不可！）
  *
  * @since 1.0.0
  * @author Focason Lab Team

@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import org.seasar.doma.*;
 
 /**
- * 受注分割
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "od003_order_split")
+@Table(name = "od003_order_split")
 public class Od003OrderSplitEntity extends FsEntity
 {
     /** 行ID */

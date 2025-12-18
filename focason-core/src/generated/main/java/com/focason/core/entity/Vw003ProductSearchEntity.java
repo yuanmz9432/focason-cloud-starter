@@ -7,13 +7,13 @@ import java.math.BigDecimal;
 import org.seasar.doma.*;
 
 /**
- * VIEW
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "vw003_product_search")
+@Table(name = "vw003_product_search")
 public class Vw003ProductSearchEntity extends FsEntity
 {
     /** 行ID */

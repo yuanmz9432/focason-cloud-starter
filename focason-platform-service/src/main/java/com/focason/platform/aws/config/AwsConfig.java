@@ -14,10 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-import software.amazon.awssdk.services.rekognition.RekognitionClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.sqs.SqsClient;
@@ -77,35 +74,6 @@ public class AwsConfig
     public S3Client s3Client() {
         return S3Client.builder()
             .region(Region.of(awsProps().getRegion()))
-            .build();
-    }
-
-    /**
-     * Provides the Rekognition client for image and video analysis.
-     *
-     * @return {@link RekognitionClient}
-     */
-    @Lazy
-    @Bean
-    @ConditionalOnMissingBean
-    public RekognitionClient rekClient() {
-        return RekognitionClient.builder()
-            .region(Region.of(awsProps().getRegion()))
-            .build();
-    }
-
-    /**
-     * Provides the Cognito Identity Provider client.
-     *
-     * @return {@link CognitoIdentityProviderClient}
-     */
-    @Lazy
-    @Bean
-    @ConditionalOnMissingBean
-    public CognitoIdentityProviderClient cognitoIdentityProviderClient() {
-        return CognitoIdentityProviderClient.builder()
-            .region(Region.of(awsProps().getRegion()))
-            .credentialsProvider(ProfileCredentialsProvider.create())
             .build();
     }
 

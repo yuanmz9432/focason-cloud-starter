@@ -25,16 +25,10 @@ dependencies {
     // Template Engine.
     implementation 'org.freemarker:freemarker:2.3.32'
     implementation project(':focason-core')
-    // AWS S3
-    implementation 'software.amazon.awssdk:s3:2.17.271'
-    // AWS Rekognition
-    implementation 'software.amazon.awssdk:rekognition:2.17.271'
-    // AWS Cognito
-    implementation 'software.amazon.awssdk:cognitoidentityprovider:2.20.87'
-    // AWS Cognito
-    implementation 'software.amazon.awssdk:cognitoidentity:2.20.88'
-    // AWS SQS
-    implementation 'software.amazon.awssdk:sqs:2.17.271'
+    
+    // Spring Cloud AWS 3.x (provides S3 and SQS clients)
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
 
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
 	implementation 'org.springframework.security:spring-security-core'
@@ -43,5 +37,6 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+		mavenBom "io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudAwsVersion}"
 	}
 }

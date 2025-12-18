@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
@@ -34,6 +35,9 @@ public class WebSecurityConfigure
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         // Disable CSRF (Cross-Site Request Forgery) protection
         // Disable HTTP Basic authentication
-        return httpSecurity.csrf().disable().httpBasic().disable().build();
+        return httpSecurity
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .build();
     }
 }

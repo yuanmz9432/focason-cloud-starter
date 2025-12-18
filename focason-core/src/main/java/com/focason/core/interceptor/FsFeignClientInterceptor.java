@@ -4,7 +4,7 @@
 package com.focason.core.interceptor;
 
 import feign.RequestInterceptor;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.RequestContextHolder;

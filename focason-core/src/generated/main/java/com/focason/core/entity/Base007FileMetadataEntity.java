@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import org.seasar.doma.*;
 
 /**
- * ファイルメタデータ
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "base007_file_metadata")
+@Table(name = "base007_file_metadata")
 public class Base007FileMetadataEntity extends FsEntity
 {
     /** 行ID */

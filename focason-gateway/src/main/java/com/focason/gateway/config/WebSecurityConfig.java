@@ -57,10 +57,10 @@ public class WebSecurityConfig implements WebMvcConfigurer
      */
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        return http.httpBasic().disable() // Disables Basic Auth
+        return http.httpBasic(httpBasic -> httpBasic.disable()) // Disables Basic Auth
             .cors(Customizer.withDefaults()) // Enables CORS
-            .formLogin().disable() // Disables form-based login
-            .csrf().disable() // Disables CSRF protection
+            .formLogin(formLogin -> formLogin.disable()) // Disables form-based login
+            .csrf(csrf -> csrf.disable()) // Disables CSRF protection
             .build();
     }
 }

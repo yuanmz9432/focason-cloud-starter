@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import org.seasar.doma.*;
 
 /**
- * 受注操作履歴
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "od101_order_operation_log")
+@Table(name = "od101_order_operation_log")
 public class Od101OrderOperationLogEntity extends FsEntity
 {
     /** 行ID */

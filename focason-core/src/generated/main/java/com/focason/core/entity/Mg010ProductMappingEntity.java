@@ -6,13 +6,13 @@ package com.focason.core.entity;
 import org.seasar.doma.*;
 
 /**
- * 商品マッピング
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "mg010_product_mapping")
+@Table(name = "mg010_product_mapping")
 public class Mg010ProductMappingEntity extends FsEntity
 {
     /** 行ID */

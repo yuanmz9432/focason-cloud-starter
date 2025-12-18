@@ -5,8 +5,8 @@ package com.focason.platform.config;
 
 import com.focason.core.utility.FsContext;
 import com.focason.core.utility.FsUtilityToolkit;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;

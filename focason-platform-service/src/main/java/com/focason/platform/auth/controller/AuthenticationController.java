@@ -82,7 +82,7 @@ public class AuthenticationController
     @RequestMapping(method = RequestMethod.POST, value = LOGIN_URL)
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         logger.debug("login request: {}", request);
-        var queue = sqsServiceManager.getQueueUrl("email-send-queue");
+        var queue = sqsServiceManager.getQueueUrl("focason-email-send-queue");
 
         logger.info("email: {}", queue.toString());
         return ResponseEntity.ok(service.login(FsUtilityToolkit.convert(request, UserResource.class)));

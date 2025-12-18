@@ -19,12 +19,12 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
-    // JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    // JWT (updated for Spring Boot 3.x)
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
     // Apache POI for Excel (XLSX) handling
-    implementation 'org.apache.poi:poi-ooxml:5.4.0'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5' // Updated for Spring Boot 3.x compatibility
 }
 
 dependencyManagement {
@@ -50,17 +50,17 @@ tasks.register('domaGen') {
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
         ant.gen(
-                url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo",
+                url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=false&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                ignoredTableNamePattern: "flyway_schema_history",
+                ignoredTableNamePattern: "flyway_schema_history|.*Summary.*|.*By.*|sys_.*|performance_schema\\..*|information_schema\\..*|mysql\\..*",
                 templatePrimaryDir: "../focason-core/doma/template",
                 tableTypes: "TABLE, VIEW")
                 {
                     entityConfig(
                             overwrite: true,
                             useListener: false,
-                            showCatalogName: true,
+                            showCatalogName: false,
                             packageName: "com.focason.core.entity",
                             entitySuffix: "Entity",
                             destDir: 'src/generated/main/java'

@@ -6,13 +6,13 @@ package com.focason.core.entity;
 import org.seasar.doma.*;
 
 /**
- * メールログ
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "base006_email_log")
+@Table(name = "base006_email_log")
 public class Base006EmailLogEntity extends FsEntity
 {
     /** 行ID */

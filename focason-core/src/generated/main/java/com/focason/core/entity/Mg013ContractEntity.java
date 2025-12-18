@@ -7,13 +7,13 @@ import java.time.LocalDate;
 import org.seasar.doma.*;
 
 /**
- * 契約
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "mg013_contract")
+@Table(name = "mg013_contract")
 public class Mg013ContractEntity extends FsEntity
 {
     /** 行ID */

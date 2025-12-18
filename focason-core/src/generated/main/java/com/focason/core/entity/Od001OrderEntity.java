@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 import org.seasar.doma.*;
 
 /**
- * 受注
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "od001_order")
+@Table(name = "od001_order")
 public class Od001OrderEntity extends FsEntity
 {
     /** 行ID */

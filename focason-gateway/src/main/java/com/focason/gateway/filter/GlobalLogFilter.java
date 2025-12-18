@@ -76,7 +76,7 @@ public class GlobalLogFilter implements GlobalFilter
 
         // 請求基本情報 (Basic request information)
         String requestInfo = String.format("IP: %s | %s | %s",
-            ip, request.getMethodValue(), request.getURI().getPath());
+            ip, request.getMethod(), request.getURI().getPath());
         exchange.getAttributes().put(REQUEST_INFO, requestInfo);
 
         // レスポンス (Response processing)

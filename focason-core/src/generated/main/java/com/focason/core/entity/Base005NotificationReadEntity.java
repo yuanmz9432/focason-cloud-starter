@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import org.seasar.doma.*;
 
 /**
- * 通知既読
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "base005_notification_read")
+@Table(name = "base005_notification_read")
 public class Base005NotificationReadEntity extends FsEntity
 {
     /** 行ID */

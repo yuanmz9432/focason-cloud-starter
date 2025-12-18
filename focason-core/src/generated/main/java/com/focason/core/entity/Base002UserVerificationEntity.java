@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import org.seasar.doma.*;
 
 /**
- * ユーザー認証
+ * 
  *
  * @since 1.0.0
  * @author Focason Lab Team
  */
 @Entity
-@Table(catalog = "focason", name = "base002_user_verification")
+@Table(name = "base002_user_verification")
 public class Base002UserVerificationEntity extends FsEntity
 {
     /** 行ID */

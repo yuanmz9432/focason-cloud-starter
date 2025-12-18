@@ -11,6 +11,7 @@ import com.focason.core.response.RefreshTokenResponse;
 import com.focason.core.response.UserLoginResponse;
 import com.focason.core.utility.FsUtilityToolkit;
 import com.focason.platform.auth.service.AuthenticationService;
+import com.focason.platform.aws.service.SqsServiceManager;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class AuthenticationController
     private final String RESET_PASSWORD_URL = "/api/v1/auth/reset-password";
     private final String VALIDATE_USER_URL = "/api/v1/auth/validate-user";
 
+    /** Application properties containing configuration details like send-from address. */
+    private final SqsServiceManager sqsServiceManager;
+
     /**
      * Handles user login process.
      *
@@ -78,6 +82,9 @@ public class AuthenticationController
     @RequestMapping(method = RequestMethod.POST, value = LOGIN_URL)
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         logger.debug("login request: {}", request);
+        var queue = sqsServiceManager.getQueueUrl("email-send-queue");
+
+        logger.info("email: {}", queue.toString());
         return ResponseEntity.ok(service.login(FsUtilityToolkit.convert(request, UserResource.class)));
     }
 

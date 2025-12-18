@@ -133,22 +133,22 @@ focason:
           pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # Pre-signed URL validity in minutes (Max 10080)
       # SQS Configuration (supports multiple queues)
       sqs:
-        # Default queue
-        default-queue:
-          queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/your-queue-name
+        # Email send queue
+        email-send-queue:
+          queue-url: https://sqs.ap-northeast-1.amazonaws.com/442426889980/focason-email-send-queue
           max-number-of-messages: 10
           wait-time-seconds: 20
           visibility-timeout: 30
           message-retention-period: 345600  # 4 days
           enable-dead-letter-queue: false
-          dead-letter-queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/your-dlq-name
+          dead-letter-queue-url: https://sqs.ap-northeast-1.amazonaws.com/442426889980/focason-email-send-queue-dlq
           max-receive-count: 3
         # Another queue example
-        notification-queue:
-          queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/notification-queue
-          max-number-of-messages: 5
-          wait-time-seconds: 10
-          visibility-timeout: 60
+#        notification-queue:
+#          queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/notification-queue
+#          max-number-of-messages: 5
+#          wait-time-seconds: 10
+#          visibility-timeout: 60
       # Cognito Configuration (existing)
       cognito:
         user-pool-id: ${COGNITO_USER_POOL_ID:your-user-pool-id}

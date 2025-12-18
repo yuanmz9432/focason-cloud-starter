@@ -28,6 +28,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @EnableEurekaClient
 @EnableFeignClients(basePackages = "com.focason.core.feign")
+// @EnableScheduling
 @SpringBootApplication(scanBasePackages = "com.focason")
 public class FocasonPlatformServiceApplication
 {

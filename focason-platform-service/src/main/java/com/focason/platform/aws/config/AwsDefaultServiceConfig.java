@@ -43,6 +43,14 @@ public class AwsDefaultServiceConfig
             .build();
     }
 
+    /**
+     * Create a generic SqsService that can work with multiple queues.
+     * The service doesn't bind to a specific queue, allowing you to specify
+     * the queue URL when calling methods.
+     *
+     * @param sqsClient The SQS client
+     * @return SqsService instance
+     */
     @Bean
     public SqsService sqsService(SqsClient sqsClient) {
         var sqsMap = cloudProps.getAws().getSqs();
@@ -50,15 +58,16 @@ public class AwsDefaultServiceConfig
             throw new IllegalStateException("SQS configuration is missing");
         }
 
-        // Get the first SQS configuration (you can modify this to support multiple queues)
-        var props = sqsMap.values().iterator().next();
+        // Get the first SQS configuration as default (for backward compatibility)
+        // All methods now support optional queueUrl parameter
+        var defaultProps = sqsMap.values().iterator().next();
 
         return SqsService.builder()
             .sqsClient(sqsClient)
-            .queueUrl(props.getQueueUrl())
-            .maxNumberOfMessages(props.getMaxNumberOfMessages())
-            .waitTimeSeconds(props.getWaitTimeSeconds())
-            .visibilityTimeout(props.getVisibilityTimeout())
+            .queueUrl(defaultProps.getQueueUrl()) // Default queue URL (can be overridden in method calls)
+            .maxNumberOfMessages(defaultProps.getMaxNumberOfMessages())
+            .waitTimeSeconds(defaultProps.getWaitTimeSeconds())
+            .visibilityTimeout(defaultProps.getVisibilityTimeout())
             .build();
     }
 }

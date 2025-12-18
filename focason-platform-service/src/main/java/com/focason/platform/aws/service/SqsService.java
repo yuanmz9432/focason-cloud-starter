@@ -43,7 +43,18 @@ public class SqsService
      * @return Message ID if successful
      */
     public Optional<String> sendMessage(String messageBody) {
-        return sendMessage(messageBody, null, null);
+        return sendMessage(messageBody, null, null, null);
+    }
+
+    /**
+     * Send a simple text message to a specific queue.
+     *
+     * @param messageBody The message content
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Message ID if successful
+     */
+    public Optional<String> sendMessage(String messageBody, String targetQueueUrl) {
+        return sendMessage(messageBody, null, null, targetQueueUrl);
     }
 
     /**
@@ -56,9 +67,29 @@ public class SqsService
      */
     public Optional<String> sendMessage(String messageBody, Integer delaySeconds,
         Map<String, MessageAttributeValue> messageAttributes) {
+        return sendMessage(messageBody, delaySeconds, messageAttributes, null);
+    }
+
+    /**
+     * Send a message with optional delay, attributes, and target queue.
+     *
+     * @param messageBody The message content
+     * @param delaySeconds Delay before the message becomes available (0-900 seconds)
+     * @param messageAttributes Optional message attributes
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Message ID if successful
+     */
+    public Optional<String> sendMessage(String messageBody, Integer delaySeconds,
+        Map<String, MessageAttributeValue> messageAttributes, String targetQueueUrl) {
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return Optional.empty();
+            }
+
             SendMessageRequest.Builder requestBuilder = SendMessageRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .messageBody(messageBody);
 
             if (delaySeconds != null) {
@@ -70,10 +101,10 @@ public class SqsService
             }
 
             SendMessageResponse response = sqsClient.sendMessage(requestBuilder.build());
-            logger.info("Message sent successfully. MessageId: {}", response.messageId());
+            logger.info("Message sent successfully to queue: {}. MessageId: {}", queue, response.messageId());
             return Optional.of(response.messageId());
         } catch (SqsException e) {
-            logger.error("Failed to send message to queue: {}", queueUrl, e);
+            logger.error("Failed to send message to queue: {}", targetQueueUrl != null ? targetQueueUrl : queueUrl, e);
             return Optional.empty();
         }
     }
@@ -86,9 +117,21 @@ public class SqsService
      * @return Message ID if successful
      */
     public Optional<String> sendObject(Object object, Integer delaySeconds) {
+        return sendObject(object, delaySeconds, null);
+    }
+
+    /**
+     * Send an object as JSON message to a specific queue.
+     *
+     * @param object The object to send
+     * @param delaySeconds Optional delay
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Message ID if successful
+     */
+    public Optional<String> sendObject(Object object, Integer delaySeconds, String targetQueueUrl) {
         try {
             String json = objectMapper.writeValueAsString(object);
-            return sendMessage(json, delaySeconds, null);
+            return sendMessage(json, delaySeconds, null, targetQueueUrl);
         } catch (JsonProcessingException e) {
             logger.error("Failed to serialize object to JSON", e);
             return Optional.empty();
@@ -102,7 +145,18 @@ public class SqsService
      * @return Message ID if successful
      */
     public Optional<String> sendObject(Object object) {
-        return sendObject(object, null);
+        return sendObject(object, null, null);
+    }
+
+    /**
+     * Send an object as JSON message to a specific queue (no delay).
+     *
+     * @param object The object to send
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Message ID if successful
+     */
+    public Optional<String> sendObject(Object object, String targetQueueUrl) {
+        return sendObject(object, null, targetQueueUrl);
     }
 
     /**
@@ -112,6 +166,17 @@ public class SqsService
      * @return Map of message IDs (entry ID -> message ID)
      */
     public Map<String, String> sendBatchMessages(List<String> messages) {
+        return sendBatchMessages(messages, null);
+    }
+
+    /**
+     * Send multiple messages in a batch to a specific queue (up to 10 messages).
+     *
+     * @param messages List of message bodies
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Map of message IDs (entry ID -> message ID)
+     */
+    public Map<String, String> sendBatchMessages(List<String> messages, String targetQueueUrl) {
         if (messages == null || messages.isEmpty() || messages.size() > 10) {
             logger.error("Batch size must be between 1 and 10. Provided: {}",
                 messages != null ? messages.size() : 0);
@@ -119,6 +184,12 @@ public class SqsService
         }
 
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return Map.of();
+            }
+
             List<SendMessageBatchRequestEntry> entries = messages.stream()
                 .map(msg -> SendMessageBatchRequestEntry.builder()
                     .id(String.valueOf(messages.indexOf(msg)))
@@ -127,7 +198,7 @@ public class SqsService
                 .collect(Collectors.toList());
 
             SendMessageBatchRequest batchRequest = SendMessageBatchRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .entries(entries)
                 .build();
 
@@ -155,7 +226,17 @@ public class SqsService
      * @return List of messages
      */
     public List<Message> receiveMessages() {
-        return receiveMessages(maxNumberOfMessages, waitTimeSeconds);
+        return receiveMessages(maxNumberOfMessages, waitTimeSeconds, null);
+    }
+
+    /**
+     * Receive messages from a specific queue.
+     *
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return List of messages
+     */
+    public List<Message> receiveMessages(String targetQueueUrl) {
+        return receiveMessages(maxNumberOfMessages, waitTimeSeconds, targetQueueUrl);
     }
 
     /**
@@ -166,9 +247,27 @@ public class SqsService
      * @return List of messages
      */
     public List<Message> receiveMessages(Integer maxMessages, Integer waitTimeSeconds) {
+        return receiveMessages(maxMessages, waitTimeSeconds, null);
+    }
+
+    /**
+     * Receive messages with custom parameters from a specific queue.
+     *
+     * @param maxMessages Maximum number of messages to receive (1-10)
+     * @param waitTimeSeconds Long polling wait time (0-20 seconds)
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return List of messages
+     */
+    public List<Message> receiveMessages(Integer maxMessages, Integer waitTimeSeconds, String targetQueueUrl) {
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return List.of();
+            }
+
             ReceiveMessageRequest receiveRequest = ReceiveMessageRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .maxNumberOfMessages(maxMessages != null ? maxMessages : this.maxNumberOfMessages)
                 .waitTimeSeconds(waitTimeSeconds != null ? waitTimeSeconds : this.waitTimeSeconds)
                 .visibilityTimeout(visibilityTimeout)
@@ -176,10 +275,11 @@ public class SqsService
                 .build();
 
             ReceiveMessageResponse response = sqsClient.receiveMessage(receiveRequest);
-            logger.debug("Received {} messages from queue", response.messages().size());
+            logger.debug("Received {} messages from queue: {}", response.messages().size(), queue);
             return response.messages();
         } catch (SqsException e) {
-            logger.error("Failed to receive messages from queue: {}", queueUrl, e);
+            logger.error("Failed to receive messages from queue: {}",
+                targetQueueUrl != null ? targetQueueUrl : queueUrl, e);
             return List.of();
         }
     }
@@ -192,7 +292,19 @@ public class SqsService
      * @return List of deserialized objects with their receipt handles
      */
     public <T> List<SqsMessageWrapper<T>> receiveObjects(Class<T> clazz) {
-        List<Message> messages = receiveMessages();
+        return receiveObjects(clazz, null);
+    }
+
+    /**
+     * Receive and deserialize messages as objects from a specific queue.
+     *
+     * @param clazz The class type to deserialize to
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @param <T> The type parameter
+     * @return List of deserialized objects with their receipt handles
+     */
+    public <T> List<SqsMessageWrapper<T>> receiveObjects(Class<T> clazz, String targetQueueUrl) {
+        List<Message> messages = receiveMessages(targetQueueUrl);
         return messages.stream()
             .map(msg -> {
                 try {
@@ -214,9 +326,26 @@ public class SqsService
      * @return true if successful
      */
     public boolean deleteMessage(String receiptHandle) {
+        return deleteMessage(receiptHandle, null);
+    }
+
+    /**
+     * Delete a message from a specific queue.
+     *
+     * @param receiptHandle The receipt handle of the message
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return true if successful
+     */
+    public boolean deleteMessage(String receiptHandle, String targetQueueUrl) {
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return false;
+            }
+
             DeleteMessageRequest deleteRequest = DeleteMessageRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .receiptHandle(receiptHandle)
                 .build();
 
@@ -236,6 +365,17 @@ public class SqsService
      * @return Number of successfully deleted messages
      */
     public int deleteBatchMessages(List<String> receiptHandles) {
+        return deleteBatchMessages(receiptHandles, null);
+    }
+
+    /**
+     * Delete multiple messages in a batch from a specific queue (up to 10 messages).
+     *
+     * @param receiptHandles List of receipt handles
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Number of successfully deleted messages
+     */
+    public int deleteBatchMessages(List<String> receiptHandles, String targetQueueUrl) {
         if (receiptHandles == null || receiptHandles.isEmpty() || receiptHandles.size() > 10) {
             logger.error("Batch size must be between 1 and 10. Provided: {}",
                 receiptHandles != null ? receiptHandles.size() : 0);
@@ -243,6 +383,12 @@ public class SqsService
         }
 
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return 0;
+            }
+
             List<DeleteMessageBatchRequestEntry> entries = receiptHandles.stream()
                 .map(handle -> DeleteMessageBatchRequestEntry.builder()
                     .id(String.valueOf(receiptHandles.indexOf(handle)))
@@ -251,7 +397,7 @@ public class SqsService
                 .collect(Collectors.toList());
 
             DeleteMessageBatchRequest batchRequest = DeleteMessageBatchRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .entries(entries)
                 .build();
 
@@ -276,9 +422,27 @@ public class SqsService
      * @return true if successful
      */
     public boolean changeMessageVisibility(String receiptHandle, int visibilityTimeout) {
+        return changeMessageVisibility(receiptHandle, visibilityTimeout, null);
+    }
+
+    /**
+     * Change message visibility timeout for a specific queue.
+     *
+     * @param receiptHandle The receipt handle
+     * @param visibilityTimeout New visibility timeout in seconds
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return true if successful
+     */
+    public boolean changeMessageVisibility(String receiptHandle, int visibilityTimeout, String targetQueueUrl) {
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return false;
+            }
+
             ChangeMessageVisibilityRequest request = ChangeMessageVisibilityRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .receiptHandle(receiptHandle)
                 .visibilityTimeout(visibilityTimeout)
                 .build();
@@ -298,9 +462,25 @@ public class SqsService
      * @return Map of queue attributes
      */
     public Map<QueueAttributeName, String> getQueueAttributes() {
+        return getQueueAttributes(null);
+    }
+
+    /**
+     * Get approximate number of messages in a specific queue.
+     *
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Map of queue attributes
+     */
+    public Map<QueueAttributeName, String> getQueueAttributes(String targetQueueUrl) {
         try {
+            String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+            if (queue == null) {
+                logger.error("Queue URL is not specified");
+                return Map.of();
+            }
+
             GetQueueAttributesRequest request = GetQueueAttributesRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .attributeNames(QueueAttributeName.ALL)
                 .build();
 
@@ -318,7 +498,17 @@ public class SqsService
      * @return Number of messages
      */
     public int getApproximateNumberOfMessages() {
-        Map<QueueAttributeName, String> attributes = getQueueAttributes();
+        return getApproximateNumberOfMessages(null);
+    }
+
+    /**
+     * Get approximate number of messages available in a specific queue.
+     *
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return Number of messages
+     */
+    public int getApproximateNumberOfMessages(String targetQueueUrl) {
+        Map<QueueAttributeName, String> attributes = getQueueAttributes(targetQueueUrl);
         return Integer.parseInt(attributes.getOrDefault(QueueAttributeName.APPROXIMATE_NUMBER_OF_MESSAGES, "0"));
     }
 
@@ -328,16 +518,32 @@ public class SqsService
      * @return true if successful
      */
     public boolean purgeQueue() {
+        return purgeQueue(null);
+    }
+
+    /**
+     * Purge all messages from a specific queue (use with caution!).
+     *
+     * @param targetQueueUrl The target queue URL (if null, uses default queueUrl)
+     * @return true if successful
+     */
+    public boolean purgeQueue(String targetQueueUrl) {
+        String queue = targetQueueUrl != null ? targetQueueUrl : queueUrl;
+        if (queue == null) {
+            logger.error("Queue URL is not specified");
+            return false;
+        }
+
         try {
             PurgeQueueRequest request = PurgeQueueRequest.builder()
-                .queueUrl(queueUrl)
+                .queueUrl(queue)
                 .build();
 
             sqsClient.purgeQueue(request);
-            logger.warn("Queue purged: {}", queueUrl);
+            logger.warn("Queue purged: {}", queue);
             return true;
         } catch (SqsException e) {
-            logger.error("Failed to purge queue", e);
+            logger.error("Failed to purge queue: {}", queue, e);
             return false;
         }
     }

@@ -9,7 +9,14 @@ plugins {
     id 'io.spring.dependency-management' version "${springDependencyVersion}"
 }
 apply plugin: 'org.flywaydb.flyway'
+// 放在 plugins 和 dependencies 之后即可
+bootJar {
+    enabled = false
+}
 
+jar {
+    enabled = true
+}
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'

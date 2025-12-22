@@ -3,15 +3,25 @@
 // =====================================================
 package com.focason.platform.consumer;
 
-import com.focason.platform.aws.service.SqsService;
-import com.focason.platform.aws.service.SqsServiceManager;
+import com.focason.core.domain.EmailType;
+import com.focason.core.exception.FsSendMailFailedException;
+import com.focason.core.resource.EmailResource;
+import com.focason.platform.properties.EmailProps;
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
 import io.awspring.cloud.sqs.annotation.SqsListener;
-import java.util.List;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.sqs.model.Message;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 /**
  * Email SQS Consumer
@@ -28,97 +38,56 @@ import software.amazon.awssdk.services.sqs.model.Message;
 public class EmailSqsConsumer
 {
     private static final Logger logger = LoggerFactory.getLogger(EmailSqsConsumer.class);
-    private static final String QUEUE_NAME = "focason-email-send-queue";
+    public static final String QUEUE_NAME = "focason-email-send-queue";
 
-    private final SqsService sqsService;
-    private final SqsServiceManager sqsServiceManager;
-
+    /** Mail sender provided by Spring Boot autoconfiguration. */
+    private final JavaMailSender mailSender;
+    /** Freemarker configuration bean, pre-configured to load email templates. */
+    private final Configuration freemarkerConfig;
+    /** Application properties containing configuration details like send-from address. */
+    private final EmailProps emailProps;
 
     @SqsListener(QUEUE_NAME)
-    public void listen(Object task) {
-        logger.info("接收到任务: {}", task.toString());
-        // 执行业务逻辑
-    }
-    /**
-     * Automatically polls the email-send-queue every 5 seconds.
-     * You can adjust the polling interval by changing the fixedDelay value.
-     */
-    // @Scheduled(fixedDelay = 5000) // Poll every 5 seconds
-    // @SqsListener(QUEUE_NAME)
-    // public void consumeEmailMessages() {
-    // sqsServiceManager.getQueueUrl(QUEUE_NAME)
-    // .ifPresentOrElse(
-    // queueUrl -> {
-    // List<Message> messages = sqsService.receiveMessages(queueUrl);
-    // if (!messages.isEmpty()) {
-    // logger.info("Received {} message(s) from email-send-queue", messages.size());
-    // }
-    //
-    // messages.forEach(message -> {
-    // try {
-    // logger.info("Processing message from email-send-queue:");
-    // logger.info(" MessageId: {}", message.messageId());
-    // logger.info(" Body: {}", message.body());
-    // logger.info(" Attributes: {}", message.attributes());
-    //
-    // // TODO: Process your message here
-    // // Example: Parse JSON and handle email sending logic
-    // // EmailResource emailResource = objectMapper.readValue(message.body(),
-    // // EmailResource.class);
-    // // processEmail(emailResource);
-    //
-    // // Delete message after successful processing
-    // boolean deleted = sqsService.deleteMessage(message.receiptHandle(), queueUrl);
-    // if (deleted) {
-    // logger.info("Message {} deleted successfully", message.messageId());
-    // } else {
-    // logger.warn("Failed to delete message {}", message.messageId());
-    // }
-    // } catch (Exception e) {
-    // logger.error("Error processing message {}: {}", message.messageId(), e.getMessage(), e);
-    // // Message will become visible again after visibility timeout
-    // // You may want to implement retry logic or send to DLQ here
-    // }
-    // });
-    // },
-    // () -> logger.warn("Queue '{}' not found in configuration", QUEUE_NAME));
-    // }
+    public void consumeMessage(EmailResource resource) {
+        logger.info("Processing email send request for type: {}, to: {}", resource.emailType(), resource.to());
 
-    /**
-     * Manually receive messages from the queue.
-     * This method can be called from a REST endpoint or other services.
-     *
-     * @return List of received messages
-     */
-    public List<Message> receiveMessages() {
-        return sqsServiceManager.getQueueUrl(QUEUE_NAME)
-            .map(queueUrl -> {
-                List<Message> messages = sqsService.receiveMessages(queueUrl);
-                logger.info("Manually received {} message(s) from email-send-queue", messages.size());
-                return messages;
-            })
-            .orElseGet(() -> {
-                logger.warn("Queue '{}' not found in configuration", QUEUE_NAME);
-                return List.of();
-            });
-    }
+        try {
+            // 1. Get the template name based on the email type
+            var template = freemarkerConfig.getTemplate(EmailType.of(resource.emailType()).getTemplate());
 
-    /**
-     * Manually receive and process a single message.
-     * Useful for testing or manual triggers.
-     */
-    public void processSingleMessage() {
-        sqsServiceManager.getQueueUrl(QUEUE_NAME)
-            .ifPresent(queueUrl -> {
-                List<Message> messages = sqsService.receiveMessages(queueUrl);
-                if (!messages.isEmpty()) {
-                    Message message = messages.get(0);
-                    logger.info("Processing single message: {}", message.body());
-                    // Process message...
-                    sqsService.deleteMessage(message.receiptHandle(), queueUrl);
-                } else {
-                    logger.info("No messages available in email-send-queue");
-                }
-            });
+            // 2. Generate HTML content from the template and payload data
+            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, resource.payload());
+
+            // 3. Initialize and configure the MimeMessage
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            // Use MimeMessageHelper for easy MIME message creation, setting multipart=true
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, StandardCharsets.UTF_8.name());
+
+            // Get sender info from application properties, ensuring consistency
+            String sendFrom = emailProps.getSendFrom();
+            String sendBy = emailProps.getSendBy();
+
+            helper.setFrom(new InternetAddress(sendFrom, sendBy));
+            helper.setTo(resource.to());
+            helper.setSubject(EmailType.of(resource.emailType()).getSubject());
+            helper.setText(htmlContent, true); // true indicates that the content is HTML
+
+            // 4. Send the email
+            mailSender.send(mimeMessage);
+            logger.info("Email sent successfully to: {}", resource.to());
+
+        } catch (IOException e) {
+            // Handles issues like template not found or encoding errors
+            logger.error("Template/IO error during email processing: {}", e.getMessage());
+            throw new FsSendMailFailedException(resource.to());
+        } catch (TemplateException e) {
+            // Handles issues within the Freemarker template processing (e.g., missing variables)
+            logger.error("Freemarker template error during email processing: {}", e.getMessage());
+            throw new FsSendMailFailedException(resource.to());
+        } catch (MessagingException e) {
+            // Handles issues during MIME message creation or the final mail sending process
+            logger.error("Messaging error during email sending: {}", e.getMessage());
+            throw new FsSendMailFailedException(resource.to());
+        }
     }
 }

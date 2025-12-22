@@ -36,7 +36,7 @@ public class WebSecurityConfig
      * In this stateless setup, it's primarily used to populate MDC from request headers
      * (as configured in {@link FsSecurityContextRepository}).
      */
-    private final FsSecurityContextRepository fsSecurityContextRepository;
+    // private final FsSecurityContextRepository fsSecurityContextRepository;
 
     /**
      * Defines the security filter chain, configuring security settings for HTTP requests.
@@ -50,8 +50,8 @@ public class WebSecurityConfig
         return http
             // 1. Context Repository Configuration: Integrate the custom stateless context repository
             // 用于将会话上下文（如认证信息）的存取替换为自定义的逻辑，在这里主要是用于从Header中读取信息并放入MDC。
-            .securityContext(securityContext -> securityContext
-                .securityContextRepository(fsSecurityContextRepository))
+            // .securityContext(securityContext -> securityContext
+            // .securityContextRepository(fsSecurityContextRepository))
 
             // 2. Authorization Rules
             .authorizeHttpRequests(auth -> auth

@@ -4,7 +4,6 @@
 package com.focason.platform.aws.config;
 
 import com.focason.platform.properties.AwsProps;
-import com.focason.platform.properties.CloudProps;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import javax.crypto.Mac;
@@ -32,21 +31,14 @@ public class AwsConfig
     /**
      * Focason properties (contains AWS configuration under cloud.aws)
      */
-    private final CloudProps cloudProps;
+    private final AwsProps awsProps;
 
     /**
      * Manual Constructor Injection (replaces Lombok's @RequiredArgsConstructor)
      */
     @Autowired
-    public AwsConfig(CloudProps cloudProps) {
-        this.cloudProps = cloudProps;
-    }
-
-    /**
-     * Helper method to get AWS properties
-     */
-    private AwsProps awsProps() {
-        return cloudProps.getAws();
+    public AwsConfig(AwsProps awsProps) {
+        this.awsProps = awsProps;
     }
 
     /**
@@ -59,7 +51,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public S3Presigner s3Presigner() {
         return S3Presigner.builder()
-            .region(Region.of(awsProps().getRegion()))
+            .region(Region.of(awsProps.getRegion()))
             .build();
     }
 
@@ -73,7 +65,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public S3Client s3Client() {
         return S3Client.builder()
-            .region(Region.of(awsProps().getRegion()))
+            .region(Region.of(awsProps.getRegion()))
             .build();
     }
 
@@ -87,7 +79,7 @@ public class AwsConfig
     @ConditionalOnMissingBean
     public SqsClient sqsClient() {
         return SqsClient.builder()
-            .region(Region.of(awsProps().getRegion()))
+            .region(Region.of(awsProps.getRegion()))
             .build();
     }
 

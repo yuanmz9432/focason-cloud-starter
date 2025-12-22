@@ -28,7 +28,7 @@ spring:
     url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_SCHEMA:focason}?useSSL=false&autoReconnect=true&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:password}
-    driver-class-name: com.mysql.jdbc.Driver                         # MySQL JDBC Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver                         # MySQL JDBC Driver (8.x)
 
   # Jackson (JSON serialization) Configuration
   jackson:
@@ -63,8 +63,8 @@ spring:
   mail:
     host: ${MAIL_HOST:mail.privateemail.com}
     port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:noreply@focason.com}
-    password: ${MAIL_PASSWORD:qazPL1225-}                            # Email password or App Password
+    username: ${MAIL_USERNAME}                                       # Email password or App Password
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -135,21 +135,3 @@ focason:
           bucket-name: ${AWS_BUCKET_NAME:focason-cloud-file}         # S3 bucket name for uploads
           prefix:                                                    # Optional prefix for S3 objects
           pre-signed-url-valid-minutes: ${PRESIGNED_URL_VALID_MINUTES:1440} # Pre-signed URL validity in minutes (Max 10080)
-      # SQS Configuration (supports multiple queues)
-      sqs:
-        # Email send queue
-        focason-email-send-queue:
-          queue-url: https://sqs.ap-northeast-1.amazonaws.com/442426889980/focason-email-send-queue
-          max-number-of-messages: 10
-          wait-time-seconds: 20
-          visibility-timeout: 30
-          message-retention-period: 345600  # 4 days
-          enable-dead-letter-queue: false
-          dead-letter-queue-url: https://sqs.ap-northeast-1.amazonaws.com/442426889980/focason-email-send-queue-dlq
-          max-receive-count: 3
-        # Another queue example
-#        notification-queue:
-#          queue-url: https://sqs.ap-northeast-1.amazonaws.com/123456789012/notification-queue
-#          max-number-of-messages: 5
-#          wait-time-seconds: 10
-#          visibility-timeout: 60

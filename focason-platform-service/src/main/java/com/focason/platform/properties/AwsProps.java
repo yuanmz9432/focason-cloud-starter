@@ -20,9 +20,10 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "focason.cloud.aws")
+@ConfigurationProperties(prefix = AwsProps.PREFIX)
 public class AwsProps
 {
+    public static final String PREFIX = "focason.cloud.aws";
     /**
      * AWS Region (e.g., ap-northeast-1, us-east-1)
      */
@@ -32,14 +33,4 @@ public class AwsProps
      * S3 bucket configurations (supports multiple buckets)
      */
     private Map<String, S3Props> s3;
-
-    /**
-     * SQS queue configurations (supports multiple queues)
-     */
-    private Map<String, SqsProps> sqs;
-
-    /**
-     * Cognito configuration
-     */
-    private CognitoProps cognito;
 }

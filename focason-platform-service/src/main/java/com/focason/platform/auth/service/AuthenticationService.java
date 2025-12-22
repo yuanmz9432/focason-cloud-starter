@@ -4,7 +4,6 @@
 package com.focason.platform.auth.service;
 
 
-import com.focason.core.config.EmailQueueConfig;
 import com.focason.core.domain.DeviceType;
 import com.focason.core.domain.EmailType;
 import com.focason.core.domain.Switch;
@@ -14,9 +13,11 @@ import com.focason.core.exception.*;
 import com.focason.core.resource.*;
 import com.focason.core.response.UserLoginResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.consumer.EmailSqsConsumer;
 import com.focason.platform.user.repository.UserRepository;
 import com.focason.platform.user.service.UserService;
 import com.google.gson.JsonElement;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -63,6 +64,7 @@ public class AuthenticationService
     final private UserService userService;
     private final UserRepository userRepository;
     private final RabbitTemplate rabbitTemplate;
+    private final SqsTemplate sqsTemplate;
     private RedisTemplate<String, Object> redisTemplate;
 
     /**
@@ -160,7 +162,8 @@ public class AuthenticationService
             .payload(payload)
             .build();
         // Send email message to the RabbitMQ queue.
-        rabbitTemplate.convertAndSend(EmailQueueConfig.EMAIL_SEND_QUEUE, message);
+        // rabbitTemplate.convertAndSend(EmailQueueConfig.EMAIL_SEND_QUEUE, message);
+        sqsTemplate.send(message);
         // Save verification code to redis with 10-minute expiry.
         redisTemplate.opsForValue().set("code:email:" + email, verificationCode, Duration.ofMinutes(10));
     }
@@ -344,7 +347,7 @@ public class AuthenticationService
             .payload(payload)
             .build();
         // Send email to RabbitMQ queue.
-        rabbitTemplate.convertAndSend(EmailQueueConfig.EMAIL_SEND_QUEUE, message);
+        rabbitTemplate.convertAndSend(EmailSqsConsumer.QUEUE_NAME, message);
         // Save UID to redis for link validation with 30-minute expiry.
         redisTemplate.opsForValue().set("reset-password:email:" + email, user.getUid(), Duration.ofMinutes(30));
     }

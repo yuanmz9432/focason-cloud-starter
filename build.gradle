@@ -67,15 +67,15 @@ subprojects {
     }
 
     dependencies {
+        // Spring Boot
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
         // lombok
         compileOnly 'org.projectlombok:lombok:1.18.26'
-//        implementation 'org.projectlombok:lombok:1.18.26'
         annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
         // MySQL
         implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-//        implementation 'mysql:mysql-connector-java:8.0.33'
         runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 
         // Doma2
@@ -97,13 +97,6 @@ subprojects {
             removeUnusedImports()
         }
     }
-
-//    tasks.withType(JavaCompile).configureEach {
-//        options.encoding = 'UTF-8'
-//        doFirst {
-//            println "AnnotationProcessorPath for $name is ${options.getAnnotationProcessorPath().getFiles()}"
-//        }
-//    }
 
     // 【DOMA4019】のため
     tasks.register('copyDomaResources', Sync) {

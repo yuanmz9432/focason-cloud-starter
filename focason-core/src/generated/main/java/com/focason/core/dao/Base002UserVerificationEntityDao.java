@@ -1,4 +1,4 @@
-/* Copyright 2023 Focason Co.,Ltd. AllRights Reserved. */
+/* Copyright 2025 Focason Co.,Ltd. AllRights Reserved. */
 package com.focason.core.dao;
 
 

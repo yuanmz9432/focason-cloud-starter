@@ -67,25 +67,25 @@ subprojects {
     }
 
     dependencies {
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         // lombok
         compileOnly 'org.projectlombok:lombok:1.18.26'
-        implementation 'org.projectlombok:lombok:1.18.26'
+//        implementation 'org.projectlombok:lombok:1.18.26'
         annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-        // DBアクセス関連
+        // MySQL
+        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//        implementation 'mysql:mysql-connector-java:8.0.33'
+        runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+
+        // Doma2
         implementation 'org.seasar.doma:doma-core:2.53.0'
         implementation 'org.seasar.doma.boot:doma-spring-boot-starter:1.6.0'
-        implementation 'mysql:mysql-connector-java:5.1.49'
-        implementation 'com.h2database:h2:2.1.214'
-
-        runtimeOnly 'mysql:mysql-connector-java:5.1.49'
-        domaGenRuntime 'mysql:mysql-connector-java:5.1.49'
+        domaGenRuntime 'mysql:mysql-connector-java:8.0.33'
         domaGenRuntime 'org.seasar.doma:doma-gen:2.28.0'
-        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-
         annotationProcessor 'org.seasar.doma:doma-processor:2.53.0'
-        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor' // Version managed by Spring Boot
-        // JsonObject https://mvnrepository.com/artifact/com.google.code.gson/gson
+
+        // JsonObject
         implementation 'com.google.code.gson:gson:2.10.1'
     }
 
@@ -98,12 +98,12 @@ subprojects {
         }
     }
 
-    tasks.withType(JavaCompile).configureEach {
-        options.encoding = 'UTF-8'
-        doFirst {
-            println "AnnotationProcessorPath for $name is ${options.getAnnotationProcessorPath().getFiles()}"
-        }
-    }
+//    tasks.withType(JavaCompile).configureEach {
+//        options.encoding = 'UTF-8'
+//        doFirst {
+//            println "AnnotationProcessorPath for $name is ${options.getAnnotationProcessorPath().getFiles()}"
+//        }
+//    }
 
     // 【DOMA4019】のため
     tasks.register('copyDomaResources', Sync) {

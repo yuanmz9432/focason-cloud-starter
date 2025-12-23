@@ -163,7 +163,7 @@ public class AuthenticationService
             .build();
         // Send email message to the RabbitMQ queue.
         // rabbitTemplate.convertAndSend(EmailQueueConfig.EMAIL_SEND_QUEUE, message);
-        sqsTemplate.send(message);
+        sqsTemplate.send(EmailSqsConsumer.QUEUE_NAME, message);
         // Save verification code to redis with 10-minute expiry.
         redisTemplate.opsForValue().set("code:email:" + email, verificationCode, Duration.ofMinutes(10));
     }

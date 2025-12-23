@@ -52,10 +52,10 @@ flyway {
     locations = ["filesystem:$projectDir/database/ddl"]
 }
 
-tasks.register('cleanGen') {
-    group = 'doma-gen'
-    delete 'src/generated'
-}
+//tasks.register('cleanGen') {
+//    group = 'doma-gen'
+//    delete 'src/generated'
+//}
 
 tasks.register('domaGen') {
     group = 'doma-gen'

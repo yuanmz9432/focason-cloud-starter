@@ -51,6 +51,11 @@ allprojects {
             }
         }
     }
+
+    // 在构建前运行 spotlessCheck，且不触发 cleanGen
+    tasks.named("build") {
+        dependsOn("spotlessApply")
+    }
 }
 
 subprojects {

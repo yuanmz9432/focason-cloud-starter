@@ -2,14 +2,18 @@
 // Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 // =====================================================
 
+buildscript {
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:6.2.2'
+    }
+}
 plugins {
     id 'java'
     id 'org.springframework.boot' version "${springBootVersion}"
-    id "org.flywaydb.flyway"
     id 'io.spring.dependency-management' version "${springDependencyVersion}"
 }
 apply plugin: 'org.flywaydb.flyway'
-// 放在 plugins 和 dependencies 之后即可
+
 bootJar {
     enabled = false
 }
@@ -17,6 +21,7 @@ bootJar {
 jar {
     enabled = true
 }
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'

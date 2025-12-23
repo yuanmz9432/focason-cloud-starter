@@ -10,17 +10,16 @@ plugins {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+	implementation 'com.h2database:h2:2.2.224'
+	implementation project(':focason-core')
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
-	implementation project(':focason-core')
-	implementation 'com.h2database:h2:2.2.224' // Updated
 
 	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
-	// JWT (updated for Spring Boot 3.x)
+	// JWT
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'

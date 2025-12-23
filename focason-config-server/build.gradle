@@ -12,9 +12,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.cloud:spring-cloud-config-server'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation 'com.h2database:h2:2.2.224'
+
+	implementation 'org.springframework.cloud:spring-cloud-config-server'
 }
 
 dependencyManagement {

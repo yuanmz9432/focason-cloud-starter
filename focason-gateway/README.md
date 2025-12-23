@@ -1,93 +1,149 @@
-# Focason Cloud Gateway
+## Focason Gateway
 
-Focason Cloud API Gateway Service 是整个微服务架构的唯一入口点。它基于 Spring Cloud Gateway（WebFlux
-响应式堆栈）构建，负责处理所有的外部流量，执行路由转发、身份认证、安全控制、流量监控和异常处理等核心任务。
+The `focason-gateway` module is the API gateway for the Focason Cloud platform.  
+It is built on **Spring Cloud Gateway (WebFlux)** and acts as the single entry point for all external HTTP traffic.  
+The gateway is responsible for routing, authentication, security, logging, and error handling.
 
-## 1. 核心特性
+---
 
-本 Gateway 服务集成了以下关键功能：
+### 1. Responsibilities
 
-| 模块/功能   | 描述                                                                      | 对应的实现类/配置                                               |
-|---------|:------------------------------------------------------------------------|:--------------------------------------------------------|
-| 微服务注册   | 注册到 Eureka 注册中心，允许配置中心通过服务 ID 发现本服务。                                    | `GatewayApplication.java, application.yaml`             |
-| 动态路由    | 配置灵活的路由规则，将外部请求转发到下游微服务（如 `eureka-service`, `base-service`）并应用过滤器。      | `GatewayConfig.java`                                    |
-| JWT 认证  | 全局身份认证过滤器，负责解析、校验 JWT 令牌的有效性和过期时间。                                      | `AuthenticationTokenFilter.java`                        |
-| 用户状态校验  | **有状态的用户校验**，通过 Feign 调用 Auth Service，确保令牌对应的用户在系统中是活跃且合法的（防止被禁用后仍能访问）。 | `AuthenticationTokenFilter.java` (调用 `AuthFeignClient`) |
-| 全局安全配置  | 基于 WebFlux 的安全配置，禁用 CSRF、Basic 认证和表单登录。                                 | `WebSecurityConfig.java`                                |
-| 全局日志监控  | 记录每个请求的 IP、方法、路径、响应状态码和处理耗时，用于性能监控。                                     | `GlobalLogFilter.java`                                  |
-| 统一异常处理  | 捕获 Gateway 层面以及 Feign 调用下游服务时抛出的异常，统一封装为标准格式返回给客户端。                     | `GlobalLogFilter.java`                                  |
-| 全局 CORS | 配置跨域资源共享策略，允许前端应用访问。                                                    | `GatewayConfig.java` / `application.yaml`               |
-| 配置中心集成  | 通过 Eureka 发现配置中心 (`configure-server`)，拉取配置信息。                           | `application.yaml`                                      |
+- **Single entry point** for frontend and external clients
+- **JWT-based authentication** and user validation
+- **Header propagation** of user identity to downstream services
+- **Centralized logging** and error handling
+- **Routing** to:
+  - `focason-service-registry` (Eureka)
+  - `focason-platform-service` (core business APIs)
+- **CORS configuration** for web frontends
 
-## 2. 环境配置 (`application.yaml`)
+---
 
-Gateway 服务依赖于一系列环境变量进行配置。
+### 2. Key Components
 
-| 环境变量                | 默认值                | 描述                                 |
-|---------------------|:-------------------|:-----------------------------------|
-| `SERVER_PORT`       | `8080`             | 网关服务的 HTTP 监听端口。                   |
-| `APPLICATION_NAME`  | `gateway-service`  | Spring 应用名和 Eureka 服务 ID。          |
-| `EUREKA_HOSTNAME`   | `localhost`        | Eureka Server 的主机名。                |
-| `RABBITMQ_HOST`     | `localhost`        | RabbitMQ 消息队列主机名。                  |
-| `RABBITMQ_USERNAME` | `guest`            | RabbitMQ 用户名。                      |
-| `RABBITMQ_PASSWORD` | `guest`            | RabbitMQ 密码。                       |
-| `CONFIG_SERVICE_ID` | `configure-server` | Spring Cloud Config Server 的服务 ID。 |
-| `LOG_LEVEL`         | `INFO`             | 根日志级别。                             |
+- **`FocasonGatewayApplication`**  
+  Main Spring Boot application entry point.
 
-## 3. 路由规则概览 (`GatewayConfig.java`)
+- **`GatewayConfig`**  
+  - Defines routing rules via `RouteLocator`:
+    - `/api/v1/eureka/**` → `lb://focason-service-registry`
+    - `/api/v1/notifications/**`, `/api/v1/auth/**`, `/api/v1/users/**`, `/api/v1/files/**` → `lb://focason-platform-service`
+  - Configures global CORS (`CorsWebFilter`).
+  - Registers HTTP message converters (`HttpMessageConverters`) for JSON and other formats.
 
-以下是主要的路由和过滤器配置：
+- **`AuthenticationTokenFilter`**  
+  - Global filter for **JWT authentication**.
+  - Workflow:
+    1. Check if the request path matches a **whitelist pattern** (no auth required).
+    2. Validate the `Authorization` header (presence and JWT structure).
+    3. Decode JWT payload to extract:
+       - `sub` (user ID)
+       - `email`
+       - `exp` (expiration time)
+    4. Validate token expiration.
+    5. Call Auth Service via Feign to verify whether the user is still **legal and active**.
+    6. Inject user identity into headers:
+       - `X-User-Id`
+       - `X-User-Email`
+    7. Forward the request to downstream services.
 
-| Route ID         | Path Pattern                                                                                      | 目标服务 (Eureka ID)      | 应用的过滤器                      |
-|------------------|:--------------------------------------------------------------------------------------------------|:----------------------|-----------------------------|
-| `eureka-service` | `/api/v1/eureka/**`                                                                               | `lb://eureka-service` | `AuthenticationTokenFilter` |
-| `base-service`   | `/api/v1/notifications/**` <br/>`/api/v1/auth/**` <br/>`/api/v1/users/**` <br/>`/api/v1/files/**` | `lb://base-service`   | `AuthenticationTokenFilter` |
+- **`GlobalLogFilter`**  
+  - Logs incoming requests, response status, and latency for observability and debugging.
 
-## 4. 身份认证与白名单
+- **`GatewayExceptionHandler`**  
+  - Global exception handler at the gateway layer.
+  - Converts internal errors into consistent, client-friendly error responses.
 
-### 4.1 认证流程 (`AuthenticationTokenFilter.java`)
+- **`FeignExceptionHandler`**  
+  - Captures and logs exceptions thrown by Feign clients used within the gateway.
 
-1. **白名单检查**: 检查请求路径是否在豁免列表中。
+---
 
-2. **令牌检查**: 检查 `Authorization` Header 是否存在。
+### 3. Configuration (`bootstrap.yml` / `application.yml`)
 
-3. **JWT 解析**: 解析令牌结构和载荷（payload）。
+Key environment variables (via `application.yml` or environment):
 
-4. **过期检查**: 校验 JWT 是否过期。
+| Variable              | Default              | Description                                        |
+|-----------------------|----------------------|----------------------------------------------------|
+| `SERVER_PORT`         | `8080`               | HTTP port for the gateway                          |
+| `APPLICATION_NAME`    | `gateway-service`    | Spring application name / Eureka service ID        |
+| `EUREKA_HOSTNAME`     | `localhost`          | Hostname of Eureka Server                          |
+| `RABBITMQ_HOST`       | `localhost`          | RabbitMQ host                                      |
+| `RABBITMQ_USERNAME`   | `guest`              | RabbitMQ username                                  |
+| `RABBITMQ_PASSWORD`   | `guest`              | RabbitMQ password                                  |
+| `CONFIG_SERVICE_ID`   | `configure-server`   | Service ID of Spring Cloud Config Server           |
+| `LOG_LEVEL`           | `INFO`               | Root logging level                                 |
 
-5. **用户状态校验**: 通过 Feign 调用 Auth Service 校验用户是否合法（即时封禁）。
+---
 
-6. **Header 注入**: 将 `uid` 和 `email` 注入到请求头 (`X-User-ID`, `X-User-Email`)，传递给下游服务。
+### 4. Routing Overview (`GatewayConfig`)
 
-### 4.2 白名单路径 (`AUTH_WHITE_PATTERNS`)
+| Route ID                   | Path Pattern                                                                                      | Target Service (Eureka ID)       | Applied Filter                |
+|----------------------------|:--------------------------------------------------------------------------------------------------|:---------------------------------|-------------------------------|
+| `focason-service-registry` | `/api/v1/eureka/**`                                                                               | `lb://focason-service-registry` | `AuthenticationTokenFilter`   |
+| `focason-platform-service` | `/api/v1/notifications/**`<br>`/api/v1/auth/**`<br>`/api/v1/users/**`<br>`/api/v1/files/**`       | `lb://focason-platform-service` | `AuthenticationTokenFilter`   |
 
-以下路径无需携带有效的 Access Token 即可访问：
+---
 
-* `/api/v1/auth/register`
+### 5. Authentication & Whitelist
 
-* `/api/v1/auth/login`
+#### 5.1 Authentication Flow (`AuthenticationTokenFilter`)
 
-* `/api/v1/auth/refresh-token`
+1. **Whitelist check** – if the request path is whitelisted, bypass authentication.
+2. **Token presence** – ensure the `Authorization` header exists.
+3. **JWT parsing** – validate token structure and decode payload.
+4. **Expiration check** – ensure the token has not expired.
+5. **User validation** – call Auth Service via Feign to confirm user is still valid (not disabled or deleted).
+6. **Header injection** – add `X-User-Id` and `X-User-Email` to the outgoing request headers.
 
-* `/api/v1/auth/verify-code` 等认证相关核心路径。
+#### 5.2 Whitelist Patterns (`AUTH_WHITE_PATTERNS`)
 
-* `/api/v1/auth/oauth/**` (所有 OAuth 回调)。
+Requests to the following paths do **not** require a valid access token:
 
-* `/api/v1/eureka.*` (所有 Eureka 客户端相关的路径)。
+- `/api/v1/auth/register`
+- `/api/v1/auth/login`
+- `/api/v1/auth/refresh-token`
+- `/api/v1/auth/verify-code`
+- `/api/v1/auth/oauth/**` (all OAuth callbacks)
+- `/api/v1/eureka.*` (all Eureka-related endpoints)
 
-## 5. 快速启动
+---
 
-1. **启动依赖服务**: 确保您的 configure-server (Config Server) 和 eureka-server (Discovery Server) 正在运行。
+### 6. CORS
 
-2. **配置环境变量**: 根据 application.yml 中的配置，设置相应的环境变量，特别是 RabbitMQ 和 Eureka 的连接信息。
+Configured in `GatewayConfig` via `CorsWebFilter`:
+- Allows trusted frontend origins (e.g. local development, production domain).
+- Allows common HTTP methods: `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`.
+- Allows all headers and supports credentials.
 
-3. **运行应用**:
-    ```shell
-    # 编译 & 打包
-    ./gradlew clean build
-    
-    # 运行
-    java -jar build/libs/gateway-service.jar
-    ```
+---
 
-4. 访问: 网关服务将运行在 http://localhost:8080 (取决于 SERVER_PORT)。
+### 7. Quick Start
+
+1. **Start dependencies**  
+   Make sure the following services are running:
+   - Config Server: `focason-config-server`
+   - Service Registry (Eureka): `focason-service-registry`
+
+2. **Configure environment variables**  
+   Set the environment variables for RabbitMQ, Eureka, and Config Server as needed.
+
+3. **Build & run**  
+
+   ```bash
+   # From project root
+   ./gradlew :focason-gateway:clean :focason-gateway:build
+
+   # Run with Gradle
+   ./gradlew :focason-gateway:bootRun
+   ```
+
+   Or run the generated jar:
+
+   ```bash
+   java -jar focason-gateway/build/libs/focason-gateway-*.jar
+   ```
+
+4. **Access**  
+   Gateway will listen on `http://localhost:8080` (or the port defined by `SERVER_PORT`).
+

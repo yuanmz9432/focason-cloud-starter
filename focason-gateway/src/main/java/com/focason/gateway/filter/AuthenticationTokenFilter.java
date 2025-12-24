@@ -9,6 +9,7 @@ import com.focason.core.exception.FsEntryPointUnauthorizedException;
 import com.focason.core.exception.FsIllegalAccessTokenException;
 import com.focason.core.exception.FsIllegalUserException;
 import com.focason.core.feign.AuthFeignClient;
+import com.focason.core.request.TokenValidationRequest;
 import com.focason.core.request.UserValidationRequest;
 import com.focason.core.utility.FsContext;
 import com.focason.core.utility.FsUtilityToolkit;
@@ -153,7 +154,8 @@ public class AuthenticationTokenFilter implements GatewayFilter
             throw new FsIllegalAccessTokenException();
         }
 
-        // 2.1. Check token is existed. TODO
+        // 2.1. Check token exists in database
+        validateTokenExists(accessToken);
 
         // 3. Get payload
         final JsonObject payload = FsUtilityToolkit.decodeJwtPayload(accessToken);
@@ -188,6 +190,27 @@ public class AuthenticationTokenFilter implements GatewayFilter
         // 6. Set UID, Email into request headers
         return request.mutate().header(FsContext.X_USER_ID_HEADER, uid).header(FsContext.X_USER_EMAIL_HEADER, email)
             .build();
+    }
+
+    /**
+     * Validates if the access token exists in the database by calling the Auth Service.
+     *
+     * <p>
+     * This is a stateful check that ensures the token has not been revoked
+     * (e.g., after logout) and still exists in the system.
+     * </p>
+     *
+     * @param accessToken The access token to validate.
+     * @throws FsIllegalAccessTokenException if the token does not exist in the database.
+     */
+    private void validateTokenExists(String accessToken) {
+        logger.debug("Validating token existence in database.");
+        var response = authFeignClient.validateToken(new TokenValidationRequest(accessToken));
+        if (Boolean.FALSE.equals(response.getBody())) {
+            logger.warn("Access token not found in database");
+            throw new FsIllegalAccessTokenException("Token does not exist or has been revoked");
+        }
+        logger.debug("Token validated successfully");
     }
 
     /**

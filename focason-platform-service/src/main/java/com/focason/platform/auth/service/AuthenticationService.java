@@ -321,6 +321,25 @@ public class AuthenticationService
     }
 
     /**
+     * Validates if an access token exists in the database.
+     *
+     * <p>
+     * This method is typically used by gateway services to verify if a token
+     * is still valid and has not been revoked (e.g., after logout).
+     * </p>
+     *
+     * @param accessToken The access token string to validate.
+     * @return {@code true} if the token exists in the database; otherwise {@code false}.
+     */
+    @Transactional
+    public boolean validateAccessToken(@NotNull String accessToken) {
+        // Remove "Bearer " prefix if present
+        String token = accessToken.replace("Bearer ", "").trim();
+        // Find token in database
+        return userRepository.findUserTokenByAccessToken(token).isPresent();
+    }
+
+    /**
      * Initiates the "Forgot Password" process.
      *
      * <p>

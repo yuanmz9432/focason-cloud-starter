@@ -62,6 +62,7 @@ public class AuthenticationController
     private final String FORGOT_PASSWORD_URL = "/api/v1/auth/forgot-password";
     private final String RESET_PASSWORD_URL = "/api/v1/auth/reset-password";
     private final String VALIDATE_USER_URL = "/api/v1/auth/validate-user";
+    private final String VALIDATE_TOKEN_URL = "/api/v1/auth/validate-token";
 
 
     /**
@@ -211,5 +212,23 @@ public class AuthenticationController
     public ResponseEntity<Boolean> validateUser(@RequestBody UserValidationRequest request) {
         logger.debug("validateUser request: {}", request);
         return ResponseEntity.ok(service.validateUser(FsUtilityToolkit.convert(request, UserResource.class)));
+    }
+
+    /**
+     * Validates if an access token exists in the database.
+     *
+     * <p>
+     * This endpoint is used by gateway services to verify if a token
+     * is still valid and has not been revoked (e.g., after logout).
+     * </p>
+     *
+     * @param request The validation request containing the access token.
+     * @return {@link ResponseEntity} containing a boolean result: true if token exists, false otherwise.
+     * @apiNote HTTP Status: 200 OK.
+     */
+    @RequestMapping(method = RequestMethod.POST, value = VALIDATE_TOKEN_URL)
+    public ResponseEntity<Boolean> validateToken(@RequestBody com.focason.core.request.TokenValidationRequest request) {
+        logger.debug("validateToken request received");
+        return ResponseEntity.ok(service.validateAccessToken(request.accessToken()));
     }
 }

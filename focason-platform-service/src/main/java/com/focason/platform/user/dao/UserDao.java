@@ -88,4 +88,14 @@ public interface UserDao
      */
     @Select
     Optional<Base003UserTokenEntity> selectUserToken(String uid, String deviceId);
+
+    /**
+     * Finds a user token entity by access token. This is typically used for
+     * validating if an access token exists in the database.
+     *
+     * @param accessToken The access token string.
+     * @return An Optional containing the {@link Base003UserTokenEntity} if found.
+     */
+    @Select
+    Optional<Base003UserTokenEntity> selectUserTokenByAccessToken(String accessToken);
 }

@@ -128,6 +128,16 @@ public class UserRepository
     }
 
     /**
+     * Finds a user token entity by access token.
+     *
+     * @param accessToken The access token string.
+     * @return An Optional containing the {@link Base003UserTokenEntity} if found.
+     */
+    public Optional<Base003UserTokenEntity> findUserTokenByAccessToken(String accessToken) {
+        return userDao.selectUserTokenByAccessToken(accessToken);
+    }
+
+    /**
      * Updates an existing user token entity.
      *
      * @param entity The {@link Base003UserTokenEntity} to update.

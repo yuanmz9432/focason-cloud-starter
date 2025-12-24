@@ -3,7 +3,6 @@
 // =====================================================
 package com.focason.platform.consumer;
 
-import com.focason.core.config.NotificationQueueConfig;
 import com.focason.core.domain.NotificationType;
 import com.focason.core.domain.Switch;
 import com.focason.core.entity.Base004NotificationEntity;
@@ -12,6 +11,7 @@ import com.focason.core.feign.UserFeignClient;
 import com.focason.core.resource.NotificationResource;
 import com.focason.core.utility.FsUtilityToolkit;
 import com.focason.platform.notification.repository.NotificationRepository;
+import io.awspring.cloud.sqs.annotation.SqsListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,6 @@ import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -36,9 +35,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class NotificationConsumer
+public class NotificationSqsConsumer
 {
-    final Logger logger = LoggerFactory.getLogger(NotificationConsumer.class);
+    final Logger logger = LoggerFactory.getLogger(NotificationSqsConsumer.class);
+    public static final String QUEUE_NAME = "focason-notification-send-queue";
 
     /** Spring's utility for sending messages to STOMP destinations. */
     private final SimpMessagingTemplate messagingTemplate;
@@ -57,7 +57,7 @@ public class NotificationConsumer
      *
      * @param resource The notification resource containing content and target information.
      */
-    @RabbitListener(queues = NotificationQueueConfig.NOTIFICATION_SEND_QUEUE)
+    @SqsListener(QUEUE_NAME)
     public void consumeMessage(NotificationResource resource) {
 
         logger.info("Receive a notification message: {}", resource);

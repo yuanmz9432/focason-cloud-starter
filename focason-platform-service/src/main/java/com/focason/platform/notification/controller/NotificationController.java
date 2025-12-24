@@ -9,13 +9,14 @@ import com.focason.core.annotation.FsSortParam;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.attribute.FsResultSet;
 import com.focason.core.attribute.FsSort;
-import com.focason.core.config.NotificationQueueConfig;
 import com.focason.core.request.NotificationRequest;
 import com.focason.core.resource.NotificationResource;
 import com.focason.core.response.NotificationSearchResponse;
 import com.focason.core.utility.FsUtilityToolkit;
+import com.focason.platform.consumer.NotificationSqsConsumer;
 import com.focason.platform.notification.repository.NotificationRepository;
 import com.focason.platform.notification.service.NotificationService;
+import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -44,6 +45,7 @@ public class NotificationController
 
     /** RabbitTemplate for sending asynchronous messages to the notification queue. */
     private final RabbitTemplate rabbitTemplate;
+    private final SqsTemplate sqsTemplate;
 
     /** Service layer for business logic related to notification search and read status management. */
     private final NotificationService service;
@@ -60,7 +62,7 @@ public class NotificationController
      * <p>
      * This endpoint serializes the request and sends it to a RabbitMQ Exchange.
      * The actual processing (persistence and WebSocket delivery) is handled by
-     * {@link com.focason.platform.consumer.NotificationConsumer}.
+     * {@link NotificationSqsConsumer}.
      * </p>
      *
      * @param request The notification content and details.
@@ -69,8 +71,7 @@ public class NotificationController
     @RequestMapping(method = RequestMethod.POST, value = BROADCAST_URL)
     public ResponseEntity<Void> broadcast(@RequestBody NotificationRequest request) {
         // Write a message to RabbitMQ.
-        rabbitTemplate.convertAndSend(NotificationQueueConfig.NOTIFICATION_EXCHANGE,
-            NotificationQueueConfig.NOTIFICATION_SEND_ROUTING_KEY,
+        sqsTemplate.send(NotificationSqsConsumer.QUEUE_NAME,
             FsUtilityToolkit.convert(request, NotificationResource.class));
         return ResponseEntity.noContent().build();
     }
@@ -87,8 +88,7 @@ public class NotificationController
     @RequestMapping(method = RequestMethod.POST, value = SEND_TO_USER_URL)
     public ResponseEntity<Void> sendToUsers(@RequestBody NotificationRequest request) {
         // Write a message to RabbitMQ.
-        rabbitTemplate.convertAndSend(NotificationQueueConfig.NOTIFICATION_EXCHANGE,
-            NotificationQueueConfig.NOTIFICATION_SEND_ROUTING_KEY,
+        sqsTemplate.send(NotificationSqsConsumer.QUEUE_NAME,
             FsUtilityToolkit.convert(request, NotificationResource.class));
         return ResponseEntity.noContent().build();
     }

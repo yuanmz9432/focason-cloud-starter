@@ -9,7 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.focason.core.exception.FsErrorCode;
 import com.focason.core.exception.FsErrorResource;
 import com.focason.core.exception.FsException;
+import com.focason.core.utility.FsExceptionToolKit;
+import com.focason.core.utility.FsUtilityToolkit;
 import feign.FeignException;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.slf4j.Logger;
@@ -21,6 +24,7 @@ import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -28,14 +32,12 @@ import reactor.core.publisher.Mono;
  * GatewayExceptionHandler
  * <p>
  * Global exception handler for the Spring Cloud Gateway (Reactive Stack).
- *
  * <p>
  * This component captures exceptions thrown during the gateway filtering and routing process,
  * converts them into a standardized JSON error response format (FsErrorResource), and writes
  * the response back to the client. It handles custom {@link FsException} types,
  * {@link FeignException} (downstream service communication errors), and generic errors.
  * </p>
- *
  * <p>
  * Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
  * </p>
@@ -49,7 +51,7 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class GatewayExceptionHandler implements ErrorWebExceptionHandler
 {
-    final Logger logger = LoggerFactory.getLogger(GatewayExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(GatewayExceptionHandler.class);
     private final ObjectMapper objectMapper;
 
     /**
@@ -62,7 +64,9 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler
     @Override
     @NonNull
     public Mono<Void> handle(ServerWebExchange exchange, @NonNull Throwable ex) {
-        logger.error("Gateway Exception Handler caught exception: {}", ex.getMessage(), ex);
+        logger.error("Gateway Exception Handler caught exception: path={}, error={}",
+            exchange.getRequest().getPath(), ex.getMessage());
+
         final ServerHttpResponse response = exchange.getResponse();
 
         if (response.isCommitted()) {
@@ -72,70 +76,159 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         // Determine error details (code, message, HTTP status) based on the exception type
-        ErrorDetail errorDetail = resolveErrorDetail(ex);
+        ErrorDetail errorDetail = resolveErrorDetail(ex, exchange);
 
-        response.setStatusCode(errorDetail.httpStatus);
+        response.setStatusCode(errorDetail.httpStatus());
 
         return response.writeWith(Mono.fromSupplier(() -> {
             DataBufferFactory bufferFactory = response.bufferFactory();
             try {
                 // Return the standardized error response
                 return bufferFactory.wrap(
-                    objectMapper.writeValueAsBytes(
-                        FsErrorResource.builder()
-                            .code(errorDetail.code)
-                            .message(errorDetail.message)
-                            .build()));
+                    objectMapper.writeValueAsBytes(errorDetail.errorResource()));
             } catch (JsonProcessingException e) {
                 logger.error("Error serializing response body: {}", e.getMessage());
-                return bufferFactory.wrap(new byte[0]);
+                // Fallback to a simple error response
+                try {
+                    FsErrorResource fallback = FsErrorResource.of(
+                        FsErrorCode.INTERNAL_SERVER_ERROR.getValue(),
+                        "An error occurred while processing your request");
+                    return bufferFactory.wrap(objectMapper.writeValueAsBytes(fallback));
+                } catch (JsonProcessingException ex2) {
+                    logger.error("Failed to create fallback error response");
+                    return bufferFactory.wrap(new byte[0]);
+                }
             }
         }));
     }
 
     /**
-     * Internal helper class to hold resolved error details.
+     * Internal helper record to hold resolved error details.
      */
-    private record ErrorDetail(String code, String message, HttpStatus httpStatus) {}
+    private record ErrorDetail(FsErrorResource errorResource, HttpStatus httpStatus) {}
 
     /**
      * Resolves the appropriate error code, message, and HTTP status based on the exception.
      *
      * @param ex The thrown exception.
+     * @param exchange The server web exchange (for extracting request path and trace ID).
      * @return {@link ErrorDetail} containing standardized error information.
      */
-    private ErrorDetail resolveErrorDetail(@NonNull Throwable ex) {
+    private ErrorDetail resolveErrorDetail(@NonNull Throwable ex, ServerWebExchange exchange) {
+        String path = exchange.getRequest().getPath().value();
+        String traceId = extractTraceId(exchange);
+
+        // Handle custom FsException
         if (ex instanceof FsException fsException) {
             String code = fsException.getCode().getValue();
-            // Assuming FsErrorCode uses a format like "E401001", where 401 is the HTTP status
-            try {
-                int httpStatusCode = Integer.parseInt(code.substring(1, 4));
-                return new ErrorDetail(code, fsException.getMessage(), HttpStatus.valueOf(httpStatusCode));
-            } catch (Exception e) {
-                logger.warn("FsException code format is invalid: {}. Falling back to default 500.", code);
-                return new ErrorDetail(code, fsException.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            HttpStatus httpStatus = FsExceptionToolKit.extractHttpStatus(code, HttpStatus.INTERNAL_SERVER_ERROR);
+
+            FsErrorResource errorResource = FsExceptionToolKit.createErrorResource(
+                code, fsException.getMessage(), path, traceId);
+
+            return new ErrorDetail(errorResource, httpStatus);
         }
 
+        // Handle FeignException (downstream service errors)
         if (ex instanceof FeignException feignEx) {
-            // For Feign exceptions, typically the downstream service has returned an error.
-            // We propagate the HTTP status, and use a generic Feign client error code.
-            // Note: If the Feign response body contains FsErrorResource, that should ideally be parsed here.
-            // For now, we use a generic Gateway code for Feign issues.
-            String gatewayFeignErrorCode = "G500001"; // Generic Gateway Feign Client Error
-            HttpStatus status = HttpStatus.resolve(feignEx.status());
+            return handleFeignException(feignEx, path, traceId);
+        }
 
-            return new ErrorDetail(
-                gatewayFeignErrorCode,
-                "Downstream service error: " + feignEx.getMessage(),
-                status != null ? status : HttpStatus.INTERNAL_SERVER_ERROR);
+        // Handle ResponseStatusException (Spring WebFlux)
+        if (ex instanceof ResponseStatusException statusEx) {
+            HttpStatus httpStatus = HttpStatus.resolve(statusEx.getStatusCode().value());
+            if (httpStatus == null) {
+                httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+
+            FsErrorCode errorCode = FsExceptionToolKit.mapHttpStatusToErrorCode(httpStatus);
+            FsErrorResource errorResource = FsExceptionToolKit.createErrorResource(
+                errorCode.getValue(),
+                statusEx.getReason() != null ? statusEx.getReason() : httpStatus.getReasonPhrase(),
+                path,
+                traceId);
+
+            return new ErrorDetail(errorResource, httpStatus);
         }
 
         // Default handling for unexpected or generic exceptions
         logger.error("Unexpected exception occurred in Gateway: ", ex);
-        return new ErrorDetail(
+
+        FsErrorResource errorResource = FsExceptionToolKit.createErrorResource(
             FsErrorCode.INTERNAL_SERVER_ERROR.getValue(),
-            FsErrorCode.INTERNAL_SERVER_ERROR.name(),
-            HttpStatus.INTERNAL_SERVER_ERROR);
+            "An internal error occurred",
+            path,
+            traceId);
+
+        return new ErrorDetail(errorResource, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handles FeignException by attempting to parse error resource from response body.
+     *
+     * @param feignEx Feign exception
+     * @param path Request path
+     * @param traceId Trace ID
+     * @return ErrorDetail with parsed or default error information
+     */
+    private ErrorDetail handleFeignException(FeignException feignEx, String path, String traceId) {
+        // Try to parse FsErrorResource from Feign response body
+        FsErrorResource errorResource = null;
+        if (feignEx.contentUTF8() != null && !feignEx.contentUTF8().isEmpty()) {
+            try {
+                errorResource = FsExceptionToolKit.parseErrorResource(
+                    feignEx.contentUTF8().getBytes(), objectMapper);
+            } catch (Exception e) {
+                logger.debug("Failed to parse error resource from Feign exception: {}", e.getMessage());
+            }
+        }
+
+        // If parsing failed, create a generic error
+        if (errorResource == null) {
+            HttpStatus httpStatus = HttpStatus.resolve(feignEx.status());
+            if (httpStatus == null) {
+                httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+
+            FsErrorCode errorCode = FsExceptionToolKit.mapHttpStatusToErrorCode(httpStatus);
+            errorResource = FsExceptionToolKit.createErrorResource(
+                errorCode.getValue(),
+                "Downstream service error: " + (feignEx.getMessage() != null ? feignEx.getMessage() : "Unknown error"),
+                path,
+                traceId);
+        } else {
+            // Update path and traceId if error resource was parsed
+            errorResource = errorResource.toBuilder()
+                .path(path)
+                .traceId(traceId)
+                .timestamp(FsUtilityToolkit.toTokyoEpochSeconds(LocalDateTime.now()))
+                .build();
+        }
+
+        HttpStatus httpStatus = FsExceptionToolKit.extractHttpStatus(
+            errorResource.code(),
+            HttpStatus.resolve(feignEx.status()) != null
+                ? HttpStatus.resolve(feignEx.status())
+                : HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ErrorDetail(errorResource, httpStatus);
+    }
+
+    /**
+     * Extracts trace ID from request headers.
+     * Supports common tracing headers: X-Trace-Id, X-Request-Id, X-Correlation-Id
+     *
+     * @param exchange Server web exchange
+     * @return Trace ID or null if not found
+     */
+    private String extractTraceId(ServerWebExchange exchange) {
+        String traceId = exchange.getRequest().getHeaders().getFirst("X-Trace-Id");
+        if (traceId == null) {
+            traceId = exchange.getRequest().getHeaders().getFirst("X-Request-Id");
+        }
+        if (traceId == null) {
+            traceId = exchange.getRequest().getHeaders().getFirst("X-Correlation-Id");
+        }
+        return traceId;
     }
 }

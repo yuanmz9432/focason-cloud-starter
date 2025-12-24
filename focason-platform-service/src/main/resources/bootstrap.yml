@@ -111,6 +111,10 @@ logging:
     name: logs/focason-platform-service.log                          # Path to the log file
   level:
     root: ${LOG_LEVEL:INFO}                                          # Default logging level
+    # Doma SQL logging - only print SQL in DEBUG mode
+    # When root is INFO, SQL logs are suppressed
+    # When root is DEBUG (set LOG_LEVEL=DEBUG), SQL logs will be printed
+    org.seasar.doma: ${DOMA_LOG_LEVEL:DEBUG}
 
 
 # ----------------------------------------------------

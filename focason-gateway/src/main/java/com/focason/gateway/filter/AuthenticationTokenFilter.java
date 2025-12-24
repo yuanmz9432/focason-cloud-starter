@@ -153,6 +153,8 @@ public class AuthenticationTokenFilter implements GatewayFilter
             throw new FsIllegalAccessTokenException();
         }
 
+        // 2.1. Check token is existed. TODO
+
         // 3. Get payload
         final JsonObject payload = FsUtilityToolkit.decodeJwtPayload(accessToken);
         // 3.1. Get user's UID

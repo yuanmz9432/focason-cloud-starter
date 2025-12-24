@@ -16,4 +16,7 @@ public interface AuthFeignClient
 {
     @PostMapping("/validate-user")
     ResponseEntity<Boolean> validateUser(@RequestBody UserValidationRequest request);
+
+    @PostMapping("/validate-user")
+    ResponseEntity<Boolean> findAccessToken(@RequestBody UserValidationRequest request);
 }

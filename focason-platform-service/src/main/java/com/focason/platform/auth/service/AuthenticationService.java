@@ -148,10 +148,13 @@ public class AuthenticationService
     @Transactional
     public void sendVerificationCode(String email) {
         // Find user.
-        var user = userRepository.findUserByEmail(email);
-        // If user is valid, return message.
-        if (user.isPresent() && user.get().getStatus().equals(Switch.ON.getValue()))
-            throw new FsUserVerifiedException();
+        // Find user by email.
+        userRepository.findUserByEmail(email)
+            .ifPresent(item -> {
+                // If user is valid, return message.
+                if (item.getStatus().equals(Switch.ON.getValue()))
+                    throw new FsUserVerifiedException();
+            });
 
         // Generate verification code.
         var verificationCode = FsUtilityToolkit.generate6DigitVerificationCode();

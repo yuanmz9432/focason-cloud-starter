@@ -208,7 +208,6 @@ Page=MAIN
 Left=2200
 Top=1750
 Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
-Field="ユーザー識別子","uid","*VARCHAR_36","NOT NULL",,"","",$000000FF,""
 Field="メールアドレス","email","*VARCHAR_128","NOT NULL",,"","",$000000FF,""
 Field="メール件名","subject","*VARCHAR_36",,,"","",$FFFFFFFF,""
 Field="メール本文","content","*TEXT_LONG",,,"","",$FFFFFFFF,""
@@ -292,28 +291,6 @@ Bar3=333
 TermPos1=R
 TermPos2=R
 ZOrder=115
-
-[Relation]
-Entity1=base001_user
-Entity2=base006_email_log
-RelationType1=2
-RelationType2=3
-Fields1=uid
-Fields2=uid
-Cardinarity1=
-Cardinarity2=
-Position="MAIN",0,4773,5227,4734,R,R,""
-Dependence=0
-Caption=
-PName=
-ModifiedDateTime=20251228145505
-LineMode=0
-Bar1=477
-Bar2=523
-Bar3=473
-TermPos1=R
-TermPos2=R
-ZOrder=116
 
 [Relation]
 Entity1=base001_user

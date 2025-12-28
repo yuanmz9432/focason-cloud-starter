@@ -62,10 +62,10 @@ tasks.register('domaGen') {
     doLast {
         ant.taskdef(resource: 'domagentask.properties', classpath: configurations.domaGenRuntime.asPath)
         ant.gen(
-                url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=false&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo",
+                url: "jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_SCHEMA}?useSSL=false&useInformationSchema=true&characterEncoding=UTF-8&useUnicode=yes&allowPublicKeyRetrieval=true&serverTimezone=Asia/Tokyo",
                 user: "${DB_USERNAME}",
                 password: "${DB_PASSWORD}",
-                ignoredTableNamePattern: "flyway_schema_history|.*Summary.*|.*By.*|sys_.*|performance_schema\\..*|information_schema\\..*|mysql\\..*",
+                tableNamePattern: "^base00.*",
                 templatePrimaryDir: "../focason-core/doma/template",
                 tableTypes: "TABLE, VIEW")
                 {

@@ -3,7 +3,10 @@
 // =====================================================
 package com.focason.platform.consumer;
 
+import com.focason.core.dao.Base006EmailLogEntityDao;
 import com.focason.core.domain.EmailType;
+import com.focason.core.domain.Switch;
+import com.focason.core.entity.Base006EmailLogEntity;
 import com.focason.core.exception.FsSendMailFailedException;
 import com.focason.core.resource.EmailResource;
 import com.focason.platform.properties.EmailProps;
@@ -46,6 +49,8 @@ public class EmailSqsConsumer
     private final Configuration freemarkerConfig;
     /** Application properties containing configuration details like send-from address. */
     private final EmailProps emailProps;
+    /** Application properties containing configuration details like send-from address. */
+    private final Base006EmailLogEntityDao base006EmailLogEntityDao;
 
     @SqsListener(QUEUE_NAME)
     public void consumeMessage(EmailResource resource) {
@@ -75,6 +80,12 @@ public class EmailSqsConsumer
             // 4. Send the email
             mailSender.send(mimeMessage);
             logger.info("Email sent successfully to: {}", resource.to());
+
+            var entity = new Base006EmailLogEntity();
+            entity.setEmail(resource.to());
+            entity.setSubject(EmailType.of(resource.emailType()).getSubject());
+            entity.setStatus(Switch.ON.getValue());
+            base006EmailLogEntityDao.insert(entity);
 
         } catch (IOException e) {
             // Handles issues like template not found or encoding errors

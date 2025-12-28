@@ -4,12 +4,9 @@ package com.focason.core.entity;
 
 
 import org.seasar.doma.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
- * 
+ * メールログ
  *
  * @since 1.0.0
  * @author Focason Lab Team
@@ -22,9 +19,6 @@ public class Base006EmailLogEntity extends FsEntity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-    /** ユーザー識別子 */
-    @Column(name = "uid")
-    String uid;
     /** メールアドレス */
     @Column(name = "email")
     String email;
@@ -60,24 +54,6 @@ public class Base006EmailLogEntity extends FsEntity
      */
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    /**
-     * Returns the uid.
-     *
-     * @return the uid
-     */
-    public String getUid() {
-        return uid;
-    }
-
-    /**
-     * Sets the uid.
-     *
-     * @param uid the uid
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     /**

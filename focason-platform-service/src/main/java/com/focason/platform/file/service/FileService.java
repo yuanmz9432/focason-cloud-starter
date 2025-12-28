@@ -4,11 +4,8 @@
 package com.focason.platform.file.service;
 
 
-import com.focason.core.attribute.FsPagination;
-import com.focason.core.attribute.FsResultSet;
 import com.focason.core.domain.*;
 import com.focason.core.entity.Base007FileMetadataEntity;
-import com.focason.core.entity.Io001FileTaskEntity;
 import com.focason.core.exception.FsFileNotFoundException;
 import com.focason.core.exception.FsValidationErrorException;
 import com.focason.core.queue.FileExportMessage;
@@ -19,8 +16,6 @@ import com.focason.core.resource.FileTaskResource;
 import com.focason.core.utility.FsUtilityToolkit;
 import com.focason.platform.aws.service.S3Service;
 import com.focason.platform.file.repository.FileRepository;
-import com.focason.platform.file.repository.FileTaskRepository;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -50,7 +45,6 @@ public class FileService
 {
     final Logger logger = LoggerFactory.getLogger(FileService.class);
 
-    private final FileTaskRepository fileTaskRepository;
     private final FileRepository repository;
     private final RabbitTemplate rabbitTemplate;
     private final S3Service s3Service;
@@ -102,36 +96,6 @@ public class FileService
     }
 
     /**
-     * Creates a new file processing task (e.g., for bulk import).
-     *
-     * @param resource The details of the file task to be created.
-     * @return The created {@link FileTaskResource} with updated internal fields.
-     */
-    @Transactional
-    public FileTaskResource createFileTask(FileTaskResource resource) {
-
-        var entity = FsUtilityToolkit.convert(resource, Io001FileTaskEntity.class);
-
-        if (entity.getTaskCode() == null) {
-            entity.setTaskCode(FsUtilityToolkit.generateUUID());
-        }
-        if (entity.getFilePath() == null) {
-            // Generate the file path (S3 object key) if not provided
-            var objectKey = generateObjectKey(FsUtilityToolkit.convert(resource, FileResource.class));
-            entity.setFilePath(objectKey);
-        }
-        entity.setReceiveDate(LocalDate.now());
-        // TODO Use Redis or another atomic counter service to ensure unique, sequential process order
-        entity.setProcessOrder(1);
-        entity.setStatus(FileTaskStatus.PENDING.getValue());
-
-        // Persist the import task record
-        fileTaskRepository.save(entity);
-
-        return FsUtilityToolkit.convert(entity, FileTaskResource.class);
-    }
-
-    /**
      * Sends a file task message to the appropriate Message Queue (MQ) after the database transaction commits.
      * This ensures atomicity: task record is created *before* the processing message is sent.
      *
@@ -175,21 +139,6 @@ public class FileService
                     FsUtilityToolkit.convertObjectToJson(finalMessageQueue));
             }
         });
-    }
-
-    /**
-     * Searches file task records based on provided conditions, pagination, and sorting.
-     *
-     * @param condition The search conditions.
-     * @param pagination The pagination information.
-     * @param sort The sorting criteria.
-     * @return A {@link FsResultSet} containing the found {@link FileTaskResource} and total count.
-     */
-    public FsResultSet<FileTaskResource> search(FileTaskRepository.Condition condition, FsPagination pagination,
-        FileTaskRepository.Sort sort) {
-        var resultSet = fileTaskRepository.findAll(condition, pagination, sort);
-        var resources = FsUtilityToolkit.convert(resultSet.getData(), FileTaskResource.class);
-        return new FsResultSet<>(resources, resultSet.getCount());
     }
 
     /**

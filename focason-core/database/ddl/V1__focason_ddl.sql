@@ -50,9 +50,8 @@ drop table if exists `base006_email_log` cascade;
 create table `base006_email_log`
 (
     `id`            INT(11) auto_increment not null comment '行ID',
-    `uid`           VARCHAR(36)  not null comment 'ユーザー識別子',
     `email`         VARCHAR(128) not null comment 'メールアドレス',
-    `subject`       VARCHAR(36) comment 'メール件名',
+    `subject`       VARCHAR(255) comment 'メール件名',
     `content`       TEXT comment 'メール本文',
     `status`        INT(1) not null comment '送信状態:0: 未送信, 1: 送信成功, 2: 送信失敗',
     `template_code` VARCHAR(36) comment 'テンプレートコード',

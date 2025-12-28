@@ -4,24 +4,14 @@
 package com.focason.platform.file.controller;
 
 
-import com.focason.core.annotation.FsConditionParam;
-import com.focason.core.annotation.FsPaginationParam;
-import com.focason.core.annotation.FsSortParam;
-import com.focason.core.attribute.FsPagination;
-import com.focason.core.attribute.FsResultSet;
-import com.focason.core.attribute.FsSort;
 import com.focason.core.domain.FileMimeType;
 import com.focason.core.exception.FsFileNotFoundException;
-import com.focason.core.request.FileTaskCreateRequest;
 import com.focason.core.request.FileUploadRequest;
 import com.focason.core.resource.FileMetadataResource;
-import com.focason.core.resource.FileTaskResource;
 import com.focason.core.response.FileDownloadResponse;
-import com.focason.core.response.FileTaskSearchResponse;
 import com.focason.core.response.FileUploadResponse;
 import com.focason.core.utility.FsUtilityToolkit;
 import com.focason.platform.aws.service.S3Service;
-import com.focason.platform.file.repository.FileTaskRepository;
 import com.focason.platform.file.service.FileService;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -127,61 +117,5 @@ public class FileController
         // Convert the request DTO to the internal resource model and delegate creation
         fileService.create(FsUtilityToolkit.convert(request, FileMetadataResource.class));
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Creates a new file processing task (e.g., for bulk import, data analysis).
-     *
-     * <p>
-     * This workflow outlines the typical asynchronous file processing:
-     * <ol>
-     * <li>Client uploads file to S3 (via presigned URL).</li>
-     * <li>Client calls back to persist metadata.</li>
-     * <li>Client calls this task endpoint to initiate processing.</li>
-     * <li>Backend creates a task record.</li>
-     * <li>Backend sends a message to the Message Queue (e.g., Kafka/SQS).</li>
-     * <li>A dedicated consumer service picks up the message and executes the task (validation, parsing, DB
-     * insertion).</li>
-     * </ol>
-     * </p>
-     *
-     * @param request The request containing details for the file task to be created.
-     * @return A standard empty response upon successful task initiation.
-     */
-    @RequestMapping(method = RequestMethod.POST, value = FILE_TASK_URL)
-    public ResponseEntity<Void> createImportTask(@RequestBody FileTaskCreateRequest request) {
-        // 1. Create task record in the database
-        var resource = fileService.createFileTask(FsUtilityToolkit.convert(request, FileTaskResource.class));
-
-        // 2. Send message to the message queue to trigger asynchronous processing
-        fileService.sendMessageQueue(resource);
-        return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Search file processing tasks based on specified conditions.
-     *
-     * @param condition The search condition DTO, automatically resolved from request parameters.
-     * @param pagination The pagination parameters (page, size).
-     * @param fsSort The sorting criteria.
-     * @return The result set of matching file tasks, including pagination count.
-     */
-    @RequestMapping(method = RequestMethod.GET, value = FILE_SEARCH_URL)
-    public ResponseEntity<FsResultSet<FileTaskSearchResponse>> search(
-        @FsConditionParam FileTaskRepository.Condition condition,
-        @FsPaginationParam FsPagination pagination,
-        @FsSortParam(allowedValues = {}) FsSort fsSort) {
-        if (condition == null) {
-            condition = FileTaskRepository.Condition.DEFAULT;
-        }
-        var sort = FileTaskRepository.Sort.fromFsSort(fsSort);
-
-        // Delegate search and retrieve the result set
-        var fileTaskResource = fileService.search(condition, pagination, sort);
-
-        // Convert the internal resource list to the search response DTO list
-        return ResponseEntity.ok(new FsResultSet<>(
-            FsUtilityToolkit.convert(fileTaskResource.getData(), FileTaskSearchResponse.class),
-            fileTaskResource.getCount()));
     }
 }

@@ -1,6 +1,0 @@
-UPDATE
-    sp004_shipment_split
-SET
-    is_deleted = 1
-WHERE
-    id = /* id */1

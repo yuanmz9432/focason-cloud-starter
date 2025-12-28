@@ -4,6 +4,9 @@ package com.focason.core.entity;
 
 
 import org.seasar.doma.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 

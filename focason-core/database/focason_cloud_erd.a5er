@@ -209,7 +209,7 @@ Left=2200
 Top=1750
 Field="行ID","id","*SEQ_NO","NOT NULL",0,"","",$FFFFFFFF,""
 Field="メールアドレス","email","*VARCHAR_128","NOT NULL",,"","",$000000FF,""
-Field="メール件名","subject","*VARCHAR_36",,,"","",$FFFFFFFF,""
+Field="メール件名","subject","*VARCHAR_255",,,"","",$FFFFFFFF,""
 Field="メール本文","content","*TEXT_LONG",,,"","",$FFFFFFFF,""
 Field="送信状態","status","*NUM_TINY","NOT NULL",,"","0: 未送信, 1: 送信成功, 2: 送信失敗",$FFFFFFFF,""
 Field="テンプレートコード","template_code","*VARCHAR_36",,,"","",$FFFFFFFF,""
@@ -217,7 +217,7 @@ Field="エラー内容","error_message","*TEXT_LONG",,,"","",$FFFFFFFF,""
 EffectMode=None
 Color=$000000
 BkColor=$FFFFFF
-ModifiedDateTime=20251115215847
+ModifiedDateTime=20251228170304
 Position="MAIN",2200,1750
 ZOrder=112
 

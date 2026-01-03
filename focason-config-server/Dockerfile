@@ -1,7 +1,7 @@
 # =====================================================
 # Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 # =====================================================
-FROM amazoncorretto:11-alpine
+FROM amazoncorretto:17
 LABEL maintainer="Focason Lab Team"
 
 EXPOSE 8888

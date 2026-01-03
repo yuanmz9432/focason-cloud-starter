@@ -7,7 +7,7 @@
 CLUSTER_NAME="focason-cloud-cluster" # 替换为你的 ECS 集群名
 AWS_REGION="ap-northeast-1"          # 替换为你的 AWS 区域
 ACTION=$1                            # 启动或停止，传递 "start" 或 "stop"
-SERVICES=("focason-service-registry" "focason-config-server" "focason-gateway")     # 替换为你的服务列表
+SERVICES=("focason-service-registry" "focason-config-server" "focason-gateway" "focason-platform-service")     # 替换为你的服务列表
 
 export AWS_PAGER=""
 

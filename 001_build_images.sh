@@ -13,6 +13,7 @@ declare -A modules=(
     ["focason-service-registry"]="focason-service-registry"
     ["focason-config-server"]="focason-config-server"
     ["focason-gateway"]="focason-gateway"
+    ["focason-platform-service"]="focason-platform-service"
 )
 
 # 获取当前时间戳，用于创建旧镜像的标签

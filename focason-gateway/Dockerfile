@@ -1,7 +1,7 @@
 # =====================================================
 # Copyright 2025 Focason Co.,Ltd. AllRights Reserved.
 # =====================================================
-FROM openjdk:17-jdk-alpine
+FROM amazoncorretto:17
 LABEL maintainer="Focason Lab Team"
 
 ENV SERVER_PORT=80

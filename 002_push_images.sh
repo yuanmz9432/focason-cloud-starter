@@ -31,7 +31,7 @@ timestamp=$(date +%Y%m%d%H%M)
 # 推送每个模块的镜像到 ECR
 for module in "${!modules[@]}"
 do
-    echo "Pushing Docker image for $ECR_REPO_PREFIX/$module"
+    echo " 🛠️ Pushing Docker image for $ECR_REPO_PREFIX/$module"
 
     # 定义 ECR 镜像名称
     ECR_IMAGE="$ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_PREFIX/$module"
@@ -40,15 +40,15 @@ do
     docker tag "$ECR_REPO_PREFIX/$module:latest" "$ECR_IMAGE:latest"
     docker tag "$ECR_REPO_PREFIX/$module:latest" "$ECR_IMAGE:$timestamp"
 
-    echo "Pushing image $ECR_IMAGE to ECR"
+    echo " ⭐ Pushing image $ECR_IMAGE to ECR"
     docker push "$ECR_IMAGE:latest"
     docker push "$ECR_IMAGE:$timestamp"
 
     if [ $? -ne 0 ]; then
-        echo "Failed to push image $ECR_IMAGE to ECR."
+        echo " ❌ Failed to push image $ECR_IMAGE to ECR."
         exit 1
     fi
 
 done
 
-echo "All Docker images have been pushed successfully."
+echo " ✅ All Docker images have been pushed successfully."

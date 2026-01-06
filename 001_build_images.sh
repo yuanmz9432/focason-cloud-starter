@@ -30,7 +30,7 @@ do
     # 检查是否存在当前的latest镜像，并给它加上时间戳标签
     if docker image inspect "$ECR_REPO_PREFIX/$module:latest" >/dev/null 2>&1
     then
-        echo "Tagging existing image $ECR_REPO_PREFIX/$module:latest to $module:$timestamp"
+        echo " ⭐ Tagging existing image $ECR_REPO_PREFIX/$module:latest to $module:$timestamp"
         docker tag "$ECR_REPO_PREFIX/$module:latest" "$module:$timestamp"
     fi
 

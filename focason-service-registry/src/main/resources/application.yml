@@ -28,7 +28,7 @@ eureka:
   client:
     service-url:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/ # Eureka Server URL for service registration
-    register-with-eureka: true                                       # Register this instance with Eureka Server (default: true)
+    register-with-eureka: false                                       # Register this instance with Eureka Server (default: true)
     fetch-registry: false                                            # Fetch service registry from Eureka Server (default: true, disabled for standalone server)
   server:
     peer-node-connect-timeout-ms: 1000                               # Connection timeout for peer node communication in milliseconds

@@ -15,6 +15,8 @@ import io.awspring.cloud.sqs.annotation.SqsListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -79,10 +81,10 @@ public class NotificationSqsConsumer
                 var response = userFeignClient.getActiveUserIds();
 
                 // 确保响应体和用户列表非空
-                if (response.getBody() != null && response.getBody().activeUids() != null
-                    && !response.getBody().activeUids().isEmpty()) {
+                if (Objects.requireNonNull(response.getBody()).activeUids() != null
+                    && !Objects.requireNonNull(Objects.requireNonNull(response.getBody()).activeUids()).isEmpty()) {
                     notificationReadEntities =
-                        getBase005NotificationReadEntities(response.getBody().activeUids(), notificationId);
+                        getBase005NotificationReadEntities(Objects.requireNonNull(Objects.requireNonNull(response.getBody()).activeUids()), notificationId);
                 }
 
                 if (notificationReadEntities != null) {
@@ -109,7 +111,7 @@ public class NotificationSqsConsumer
                     // DEBUG: 降低日志级别，避免大量单播时的日志风暴
                     logger.debug("Sending UNICAST notification to UID: {}", notificationReadEntity.getUid());
                     // 发送 WebSocket 消息到用户专属队列
-                    messagingTemplate.convertAndSendToUser(notificationReadEntity.getUid(), "/queue/notifications",
+                    messagingTemplate.convertAndSendToUser(Objects.requireNonNull(notificationReadEntity.getUid()), "/queue/notifications",
                         resource);
                 });
                 logger.info("UNICAST notification sent successfully to {} targets.", notificationReadEntities.size());

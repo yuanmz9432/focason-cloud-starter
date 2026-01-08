@@ -18,6 +18,8 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +63,7 @@ public class EmailSqsConsumer
             var template = freemarkerConfig.getTemplate(EmailType.of(resource.emailType()).getTemplate());
 
             // 2. Generate HTML content from the template and payload data
-            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, resource.payload());
+            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(Objects.requireNonNull(template), Objects.requireNonNull(resource.payload()));
 
             // 3. Initialize and configure the MimeMessage
             MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -73,8 +75,8 @@ public class EmailSqsConsumer
             String sendBy = emailProps.getSendBy();
 
             helper.setFrom(new InternetAddress(sendFrom, sendBy));
-            helper.setTo(resource.to());
-            helper.setSubject(EmailType.of(resource.emailType()).getSubject());
+            helper.setTo(Objects.requireNonNull(resource.to()));
+            helper.setSubject(Objects.requireNonNull(EmailType.of(resource.emailType()).getSubject()));
             helper.setText(htmlContent, true); // true indicates that the content is HTML
 
             // 4. Send the email

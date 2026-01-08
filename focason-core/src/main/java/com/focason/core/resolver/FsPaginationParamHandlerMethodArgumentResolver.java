@@ -9,6 +9,8 @@ import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.attribute.FsPagination;
 import com.focason.core.exception.FsValidationErrorException;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -18,14 +20,14 @@ public class FsPaginationParamHandlerMethodArgumentResolver implements HandlerMe
 {
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(@NonNull MethodParameter parameter) {
         return parameter.getParameterType().isAssignableFrom(FsPagination.class)
             && parameter.hasParameterAnnotation(FsPaginationParam.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(@NonNull MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
+        @NonNull NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) {
         FsPaginationParam annotation = parameter.getParameterAnnotation(FsPaginationParam.class);
         if (annotation == null) {
             return null;
@@ -54,7 +56,7 @@ public class FsPaginationParamHandlerMethodArgumentResolver implements HandlerMe
         }
     }
 
-    private int extractIntegerParameter(NativeWebRequest webRequest, String name, int defaultValue)
+    private int extractIntegerParameter(@NonNull NativeWebRequest webRequest, @NonNull String name, int defaultValue)
         throws NumberFormatException {
         String value = webRequest.getParameter(name);
         return value != null ? Integer.parseInt(value) : defaultValue;

@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.NoArgsConstructor;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -27,14 +29,14 @@ public class FsSortParamHandlerMethodArgumentResolver implements HandlerMethodAr
     private static final Pattern SORT_PATTERN = Pattern.compile(REGEX);
 
     @Override
-    public boolean supportsParameter(MethodParameter parameter) {
+    public boolean supportsParameter(@NonNull MethodParameter parameter) {
         return parameter.getParameterType().isAssignableFrom(FsSort.class)
             && parameter.hasParameterAnnotation(FsSortParam.class);
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
-        NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+    public Object resolveArgument(@NonNull MethodParameter parameter, @Nullable ModelAndViewContainer mavContainer,
+        @NonNull NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) {
         FsSortParam annotation = parameter.getParameterAnnotation(FsSortParam.class);
         if (annotation == null) {
             return null;

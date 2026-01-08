@@ -19,7 +19,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.sql.Timestamp;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -55,7 +55,7 @@ public class FsUtilityToolkit
 {
     static final Logger logger = LoggerFactory.getLogger(FsUtilityToolkit.class);
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Key SECRET_KEY = Keys.hmacShaKeyFor(generateRandomKey(32));
     private static final String KEY = "QqyEMwgY0WLdEeEf"; // 16 byte
     public static final long REFRESH_TOKEN_EXPIRATION_TIME = 60 * 60 * 24; // 24 Hours
     public static final long ACCESS_TOKEN_EXPIRATION_TIME = 60 * 60; // 60 Minutes
@@ -72,6 +72,18 @@ public class FsUtilityToolkit
      * </p>
      */
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+    /**
+     * Generates a random key of the specified size in bytes.
+     *
+     * @param keySize The size of the key in bytes.
+     * @return A byte array containing random bytes.
+     */
+    private static byte[] generateRandomKey(int keySize) {
+        byte[] key = new byte[keySize];
+        new SecureRandom().nextBytes(key);
+        return key;
+    }
 
     // ==================================================
     // ============ Bean Conversion Methods =============
@@ -110,7 +122,7 @@ public class FsUtilityToolkit
             T target = targetType.getDeclaredConstructor().newInstance();
 
             // 2. Perform a shallow copy of properties (using Spring BeanUtils)
-            BeanUtils.copyProperties(source, target);
+            BeanUtils.copyProperties(source, Objects.requireNonNull(target));
 
             // 3. Process list fields for deep conversion
             for (Field sourceField : source.getClass().getDeclaredFields()) {
@@ -292,20 +304,21 @@ public class FsUtilityToolkit
      * @param <T> The target object type.
      */
     public static <S, T> void convert(S source, T target) {
-        final BeanWrapper src = new BeanWrapperImpl(source);
+        final BeanWrapper src = new BeanWrapperImpl(Objects.requireNonNull(source));
         PropertyDescriptor[] propertyDescriptors = src.getPropertyDescriptors();
         Set<String> nullPropertyNames = new HashSet<>();
 
         // Identify properties in the source object that are null
         for (PropertyDescriptor pd : propertyDescriptors) {
-            Object srcValue = src.getPropertyValue(pd.getName());
+            Object srcValue = src.getPropertyValue(Objects.requireNonNull(pd.getName()));
             if (srcValue == null)
                 nullPropertyNames.add(pd.getName());
         }
 
         // Copy properties, ignoring those identified as null in the source
         // The last argument is an array of properties to IGNORE during the copy operation.
-        BeanUtils.copyProperties(source, target, nullPropertyNames.toArray(new String[0]));
+        String[] ignoreProperties = Objects.requireNonNull(nullPropertyNames.toArray(new String[0]));
+        BeanUtils.copyProperties(Objects.requireNonNull(source), Objects.requireNonNull(target), ignoreProperties);
     }
 
     // ==================================================
@@ -367,14 +380,14 @@ public class FsUtilityToolkit
      * @return A signed JWT token as a {@link String}.
      */
     public static String generateAccessToken(UserResource user, LocalDateTime expiresAt) {
-        Map<String, Object> payload = new HashMap<>();
-        payload.put(CLAIMS_SUB, user.getUid());
-        payload.put(Claims.EXPIRATION, Timestamp.valueOf(expiresAt));
-        payload.put(Claims.ISSUED_AT, new Date(System.currentTimeMillis()));
-        payload.put(CLAIMS_EMAIL, user.getEmail());
+        Date expirationDate = Date.from(expiresAt.atZone(ZoneId.systemDefault()).toInstant());
+        Date issuedAtDate = new Date(System.currentTimeMillis());
 
         return Jwts.builder()
-            .setClaims(payload)
+            .subject(user.getUid())
+            .expiration(expirationDate)
+            .issuedAt(issuedAtDate)
+            .claim(CLAIMS_EMAIL, user.getEmail())
             .signWith(SECRET_KEY)
             .compact();
     }
@@ -390,13 +403,13 @@ public class FsUtilityToolkit
      * @return A signed JWT token as a {@link String}.
      */
     public static String generateRefreshToken(UserResource user, LocalDateTime expiryDate) {
-        Map<String, Object> payload = new HashMap<>();
-        payload.put(CLAIMS_SUB, user.getUid());
-        payload.put(Claims.EXPIRATION, Timestamp.valueOf(expiryDate));
-        payload.put(Claims.ISSUED_AT, new Date(System.currentTimeMillis()));
+        Date expirationDate = Date.from(expiryDate.atZone(ZoneId.systemDefault()).toInstant());
+        Date issuedAtDate = new Date(System.currentTimeMillis());
 
         return Jwts.builder()
-            .setClaims(payload)
+            .subject(user.getUid())
+            .expiration(expirationDate)
+            .issuedAt(issuedAtDate)
             .signWith(SECRET_KEY)
             .compact();
     }

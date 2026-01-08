@@ -169,7 +169,8 @@ public class AuthenticationService
         sqsTemplate.send(Objects.requireNonNull(EmailSqsConsumer.QUEUE_NAME), Objects.requireNonNull(message));
         // Save verification code to redis with 10-minute expiry.
         Duration codeExpiryDuration = Objects.requireNonNull(Duration.ofMinutes(10));
-        redisTemplate.opsForValue().set("code:email:" + email, Objects.requireNonNull(verificationCode), codeExpiryDuration);
+        redisTemplate.opsForValue().set("code:email:" + email, Objects.requireNonNull(verificationCode),
+            codeExpiryDuration);
     }
 
     /**
@@ -373,7 +374,8 @@ public class AuthenticationService
         rabbitTemplate.convertAndSend(EmailSqsConsumer.QUEUE_NAME, message);
         // Save UID to redis for link validation with 30-minute expiry.
         Duration expiryDuration = Objects.requireNonNull(Duration.ofMinutes(30));
-        redisTemplate.opsForValue().set("reset-password:email:" + email, Objects.requireNonNull(user.getUid()), expiryDuration);
+        redisTemplate.opsForValue().set("reset-password:email:" + email, Objects.requireNonNull(user.getUid()),
+            expiryDuration);
     }
 
     /**

@@ -12,9 +12,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
 import org.seasar.doma.Domain;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Getter
@@ -63,7 +63,7 @@ public final class ID<E> implements Serializable
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            ID<?> id = (ID) o;
+            ID<?> id = (ID<?>) o;
             return this.value.equals(id.value);
         } else {
             return false;
@@ -79,7 +79,7 @@ public final class ID<E> implements Serializable
     {
         public IDConverter() {}
 
-        public ID<?> convert(@NotNull String value) {
+        public ID<?> convert(@NonNull String value) {
             return ID.of(value);
         }
     }

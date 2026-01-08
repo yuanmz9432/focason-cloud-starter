@@ -7,7 +7,6 @@ package com.focason.platform.user.controller;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
-import java.util.Objects;
 import com.focason.core.annotation.FsConditionParam;
 import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.annotation.FsSortParam;
@@ -23,6 +22,7 @@ import com.focason.core.response.UserSearchResponse;
 import com.focason.core.utility.FsUtilityToolkit;
 import com.focason.platform.user.repository.UserRepository;
 import com.focason.platform.user.service.UserService;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,14 +117,15 @@ public class UserController
         UriComponentsBuilder uriBuilder) {
 
         // Convert request to resource and delegate creation to service
-        final String uuid = service.create(Objects.requireNonNull(FsUtilityToolkit.convert(request, UserResource.class)));
+        final String uuid =
+            service.create(Objects.requireNonNull(FsUtilityToolkit.convert(request, UserResource.class)));
 
         // Construct the URI for the new resource using method reference
         ResponseEntity<UserFetchResponse> methodCallResult = Objects.requireNonNull(on(getClass()).fetch(uuid));
         var uri = relativeTo(Objects.requireNonNull(uriBuilder))
             .withMethodCall(methodCallResult)
             .build()
-            .encode()   
+            .encode()
             .toUri();
 
         return ResponseEntity.created(uri).build();

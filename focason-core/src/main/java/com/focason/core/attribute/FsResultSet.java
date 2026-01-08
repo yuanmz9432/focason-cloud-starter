@@ -53,7 +53,7 @@ public final class FsResultSet<T> implements Serializable
         } else if (!(o instanceof FsResultSet)) {
             return false;
         } else {
-            FsResultSet<?> other = (FsResultSet) o;
+            FsResultSet<?> other = (FsResultSet<?>) o;
             Object this$data = this.getData();
             Object other$data = other.getData();
             if (this$data == null) {

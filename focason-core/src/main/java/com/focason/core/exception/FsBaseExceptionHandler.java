@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public class FsBaseExceptionHandler
             .traceId(extractTraceId(request))
             .build();
 
-        return ResponseEntity.status(httpStatus).body(errorResource);
+        return ResponseEntity.status(Objects.requireNonNull(httpStatus)).body(errorResource);
     }
 
     /**

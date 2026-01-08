@@ -3,7 +3,6 @@
 // =====================================================
 package com.focason.platform.notification.controller;
 
-import java.util.Objects;
 import com.focason.core.annotation.FsConditionParam;
 import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.annotation.FsSortParam;
@@ -18,6 +17,7 @@ import com.focason.platform.consumer.NotificationSqsConsumer;
 import com.focason.platform.notification.repository.NotificationRepository;
 import com.focason.platform.notification.service.NotificationService;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;

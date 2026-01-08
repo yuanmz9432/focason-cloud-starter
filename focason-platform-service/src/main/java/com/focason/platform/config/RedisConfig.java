@@ -7,7 +7,6 @@ import java.time.Duration;
 import java.util.Objects;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -15,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.lang.NonNull;
 
 /**
  * RedisConfig
@@ -76,7 +76,8 @@ public class RedisConfig
             RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer());
 
         // Create the default cache configuration
-        Duration cacheTtl = Objects.requireNonNull(Duration.ofMinutes(30)); // Set default cache expiration time to 30 minutes
+        Duration cacheTtl = Objects.requireNonNull(Duration.ofMinutes(30)); // Set default cache expiration time to 30
+                                                                            // minutes
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
             .entryTtl(cacheTtl)
             .serializeKeysWith(stringPair) // Use String serializer for cache keys

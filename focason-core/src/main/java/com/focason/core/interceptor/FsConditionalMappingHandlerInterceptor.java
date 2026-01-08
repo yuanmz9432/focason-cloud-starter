@@ -9,11 +9,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -52,7 +53,7 @@ public record FsConditionalMappingHandlerInterceptor(Environment environment)imp
  * @return true to proceed with the execution chain, false otherwise (by throwing an exception).
  * @throws NoHandlerFoundException if the mapping is intentionally disabled by the property condition.
  */
-@Override public boolean preHandle(@NotNull HttpServletRequest request,@NotNull HttpServletResponse response,@NotNull Object handler)throws NoHandlerFoundException{
+@Override public boolean preHandle(@NonNull HttpServletRequest request,@NonNull HttpServletResponse response,@NonNull Object handler)throws NoHandlerFoundException{
 // 1. Check if the handler is a controller method
 if(!(handler instanceof HandlerMethod method)){return true;}
 
@@ -73,7 +74,7 @@ return true;}
  * @param annotation The method or class annotation.
  * @return true if the mapping should be disabled (condition not met), false otherwise.
  */
-private boolean isMappingDisabled(FsConditionalMappingOnProperty annotation){if(annotation!=null){String propValue=this.environment.getProperty(annotation.name());
+private boolean isMappingDisabled(FsConditionalMappingOnProperty annotation){if(annotation!=null){String propValue=this.environment.getProperty(Objects.requireNonNull(annotation.name()));
 
 // If the property value is not found/empty
 if(!StringUtils.hasText(propValue)){
@@ -96,6 +97,6 @@ return false;}}
  */
 private NoHandlerFoundException getNoHandlerFoundException(HttpServletRequest request){
 // Collect all request headers into a MultiValueMap for the HttpHeaders constructor
-Map<String,List<String>>headerMap=Collections.list(request.getHeaderNames()).stream().collect(Collectors.toMap(Function.identity(),(name)->Collections.list(request.getHeaders(name))));
+Map<String,List<String>>headerMap=Objects.requireNonNull(Collections.list(request.getHeaderNames()).stream().collect(Collectors.toMap(Function.identity(),(name)->Collections.list(request.getHeaders(name)))));
 
-return new NoHandlerFoundException(request.getMethod(),request.getRequestURI(),new HttpHeaders(new LinkedMultiValueMap<>(headerMap)));}}
+String method=Objects.requireNonNull(request.getMethod());String requestUri=Objects.requireNonNull(request.getRequestURI());return new NoHandlerFoundException(method,requestUri,new HttpHeaders(new LinkedMultiValueMap<>(headerMap)));}}

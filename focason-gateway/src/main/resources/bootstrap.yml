@@ -23,6 +23,8 @@ spring:
     port: ${RABBITMQ_PORT:5672}                                      # RabbitMQ server port
     username: ${RABBITMQ_USERNAME:guest}                             # RabbitMQ authentication username
     password: ${RABBITMQ_PASSWORD:guest}                             # RabbitMQ authentication password
+    ssl:
+      enabled: ${RABBITMQ_SSL:false}                                 # It must be enabled because Amazon MQ mandates SSL.
   cloud:
     config:
       name: ${CLOUD_CONFIG_NAME:focason-gateway}                     # Configuration file name in config server
@@ -69,3 +71,5 @@ logging:
     name: logs/focason-gateway.log                                   # Log file path
   level:
     root: ${LOG_LEVEL:INFO}                                          # Root logging level
+    org.springframework.amqp: ${LOG_LEVEL:INFO}
+    org.springframework.retry: ${LOG_LEVEL:INFO}

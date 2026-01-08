@@ -23,6 +23,8 @@ spring:
     port: ${RABBITMQ_PORT:5672}                                       # RabbitMQ port
     username: ${RABBITMQ_USERNAME:guest}                              # RabbitMQ username
     password: ${RABBITMQ_PASSWORD:guest}                              # RabbitMQ password
+    ssl:
+      enabled: ${RABBITMQ_SSL:false}                                  # It must be enabled because Amazon MQ mandates SSL.
 
   cloud:
     bus:
@@ -45,10 +47,26 @@ spring:
         bootstrap: true
 
 # ----------------------------------------------------
-# 2. Logging Configuration
+# 2. Spring Cloud Service Discovery (Eureka) Configuration
+# ----------------------------------------------------
+eureka:
+  instance:
+    hostname: ${INSTANCE_HOSTNAME:localhost}                         # Gateway instance hostname
+  client:
+    service-url:
+      defaultZone: http://${EUREKA_HOSTNAME:localhost}:8761/eureka/  # Eureka server URL for registration
+
+# ----------------------------------------------------
+# 3. Logging Configuration
 # ----------------------------------------------------
 logging:
   file:
     name: logs/focason-config-server.log                              # Log file path
   level:
     root: ${LOG_LEVEL:INFO}                                           # Root logging level
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh, health # 为Actuator开放所需监控地址

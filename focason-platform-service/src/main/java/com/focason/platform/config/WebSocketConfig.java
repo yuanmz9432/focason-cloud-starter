@@ -5,6 +5,7 @@ package com.focason.platform.config;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -49,7 +50,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
      * @param registration The channel registration builder.
      */
     @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
+    public void configureClientInboundChannel(@NonNull ChannelRegistration registration) {
         // Use the same interceptor to handle per-message authorization or processing
         registration.interceptors(authInterceptor);
     }
@@ -60,7 +61,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
      * @param registry The registry to register STOMP endpoints.
      */
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp") // Define the HTTP path for WebSocket connection (STOMP over SockJS endpoint)
             .setHandshakeHandler(fsPrincipalHandshakeHandler) // Use custom handler for Principal creation
             .addInterceptors(authInterceptor) // Add handshake interceptor for authentication logic

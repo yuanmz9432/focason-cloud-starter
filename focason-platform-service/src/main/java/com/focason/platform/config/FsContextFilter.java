@@ -7,8 +7,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.MDC;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -36,9 +36,9 @@ public class FsContextFilter extends OncePerRequestFilter
      */
     @Override
     protected void doFilterInternal(
-        HttpServletRequest request,
-        @NotNull HttpServletResponse response,
-        @NotNull FilterChain filterChain)
+        @NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response,
+        @NonNull FilterChain filterChain)
         throws ServletException, IOException {
 
         // Extract user identity headers (typically passed by an API Gateway or Load Balancer)

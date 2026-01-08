@@ -6,8 +6,8 @@ package com.focason.platform.config;
 import com.sun.security.auth.UserPrincipal;
 import java.security.Principal;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
@@ -53,8 +53,8 @@ public class FsPrincipalHandshakeHandler extends DefaultHandshakeHandler
      * @return A {@link Principal} representing the authenticated user, or {@code null} if authentication fails.
      */
     @Override
-    protected Principal determineUser(@NotNull ServerHttpRequest request, @NotNull WebSocketHandler wsHandler,
-        Map<String, Object> attributes) {
+    protected Principal determineUser(@NonNull ServerHttpRequest request, @NonNull WebSocketHandler wsHandler,
+        @NonNull Map<String, Object> attributes) {
         String userId = (String) attributes.get("userId");
         // We use UserPrincipal for compatibility and simple representation of the user ID.
         return new UserPrincipal(userId);

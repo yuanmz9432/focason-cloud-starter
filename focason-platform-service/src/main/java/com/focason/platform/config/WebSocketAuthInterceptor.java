@@ -5,12 +5,13 @@ package com.focason.platform.config;
 
 import com.focason.core.utility.FsUtilityToolkit;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
@@ -51,8 +52,8 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor, HandshakeIn
      */
     @Override
     public boolean beforeHandshake(
-        @NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response,
-        @NotNull WebSocketHandler wsHandler, @NotNull Map<String, Object> attributes) {
+        @NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response,
+        @NonNull WebSocketHandler wsHandler, @NonNull Map<String, Object> attributes) {
 
         // Ensure we are working with a standard servlet request
         if (!(request instanceof ServletServerHttpRequest servletRequest)) {
@@ -96,8 +97,8 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor, HandshakeIn
      * @param ex Exception if the handshake failed, or null otherwise.
      */
     @Override
-    public void afterHandshake(@NotNull ServerHttpRequest request, @NotNull ServerHttpResponse response,
-        @NotNull WebSocketHandler wsHandler, Exception ex) {
+    public void afterHandshake(@NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response,
+        @NonNull WebSocketHandler wsHandler, @Nullable Exception ex) {
         // Implementation specific cleanup or logging can go here, but currently a no-op.
     }
 

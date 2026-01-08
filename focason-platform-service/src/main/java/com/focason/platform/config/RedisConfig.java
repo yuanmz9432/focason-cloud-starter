@@ -4,8 +4,10 @@
 package com.focason.platform.config;
 
 import java.time.Duration;
+import java.util.Objects;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -68,22 +70,18 @@ public class RedisConfig
      * @return A configured RedisCacheManager instance.
      */
     @Bean
-    public RedisCacheManager cacheManager(LettuceConnectionFactory connectionFactory) {
+    public RedisCacheManager cacheManager(@NonNull LettuceConnectionFactory connectionFactory) {
         // Define the serialization method for the cache keys and values
         RedisSerializationContext.SerializationPair<String> stringPair =
             RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer());
 
         // Create the default cache configuration
+        Duration cacheTtl = Objects.requireNonNull(Duration.ofMinutes(30)); // Set default cache expiration time to 30 minutes
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(30)) // Set default cache expiration time to 30 minutes
+            .entryTtl(cacheTtl)
             .serializeKeysWith(stringPair) // Use String serializer for cache keys
             .serializeValuesWith(
-                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())); // Use
-                                                                                                                       // JSON
-                                                                                                                       // serializer
-                                                                                                                       // for
-                                                                                                                       // cache
-                                                                                                                       // values
+                RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         // Build the Cache Manager using the connection factory and default configuration
         return RedisCacheManager.builder(connectionFactory)

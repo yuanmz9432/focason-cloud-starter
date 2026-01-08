@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.AllArgsConstructor;
@@ -116,7 +117,7 @@ public class AuthenticationTokenFilter implements GatewayFilter
         // The core requirement is fulfilled by mutating the request headers inside authenticate().
 
         // Proceed with the modified request
-        return chain.filter(exchange.mutate().request(authenticatedRequest).build());
+        return chain.filter(exchange.mutate().request(Objects.requireNonNull(authenticatedRequest)).build());
     }
 
     /**

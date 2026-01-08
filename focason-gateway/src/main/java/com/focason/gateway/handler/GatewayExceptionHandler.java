@@ -13,17 +13,19 @@ import com.focason.core.utility.FsExceptionToolKit;
 import com.focason.core.utility.FsUtilityToolkit;
 import feign.FeignException;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -63,14 +65,12 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler
      */
     @Override
     @NonNull
-    public Mono<Void> handle(ServerWebExchange exchange, @NonNull Throwable ex) {
-        logger.error("Gateway Exception Handler caught exception: path={}, error={}",
-            exchange.getRequest().getPath(), ex.getMessage());
+    public Mono<Void> handle(@NonNull ServerWebExchange exchange, @NonNull Throwable ex) {
 
         final ServerHttpResponse response = exchange.getResponse();
 
         if (response.isCommitted()) {
-            return Mono.error(ex);
+            return Objects.requireNonNull(Mono.error(ex));
         }
 
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -80,12 +80,13 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler
 
         response.setStatusCode(errorDetail.httpStatus());
 
-        return response.writeWith(Mono.fromSupplier(() -> {
+        Mono<DataBuffer> dataBufferMono = Mono.fromSupplier(() -> {
             DataBufferFactory bufferFactory = response.bufferFactory();
             try {
                 // Return the standardized error response
                 return bufferFactory.wrap(
-                    objectMapper.writeValueAsBytes(errorDetail.errorResource()));
+                    Objects.requireNonNull(
+                        objectMapper.writeValueAsBytes(Objects.requireNonNull(errorDetail.errorResource()))));
             } catch (JsonProcessingException e) {
                 logger.error("Error serializing response body: {}", e.getMessage());
                 // Fallback to a simple error response
@@ -93,13 +94,14 @@ public class GatewayExceptionHandler implements ErrorWebExceptionHandler
                     FsErrorResource fallback = FsErrorResource.of(
                         FsErrorCode.INTERNAL_SERVER_ERROR.getValue(),
                         "An error occurred while processing your request");
-                    return bufferFactory.wrap(objectMapper.writeValueAsBytes(fallback));
+                    return bufferFactory.wrap(Objects.requireNonNull(objectMapper.writeValueAsBytes(fallback)));
                 } catch (JsonProcessingException ex2) {
                     logger.error("Failed to create fallback error response");
                     return bufferFactory.wrap(new byte[0]);
                 }
             }
-        }));
+        });
+        return response.writeWith(Objects.requireNonNull(dataBufferMono));
     }
 
     /**

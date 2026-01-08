@@ -7,24 +7,20 @@
 # -----------------------------------------------------
 server:
   port: ${SERVER_PORT:8080}                                          # Service port number
+  address: 0.0.0.0                                                   # Server binding address (all network interfaces)
   servlet:
     context-path: /gateway                                           # Application context path
-  address: 0.0.0.0                                                   # Server binding address (all network interfaces)
 
 spring:
+  # Spring Application Configuration
   application:
     name: ${APPLICATION_NAME:focason-gateway}                        # Application name
+  # Spring Main Configuration
   main:
     allow-bean-definition-overriding: true                           # Allow bean definition overriding
-    web-application-type: reactive                                   # Application type (reactive web application)
     allow-circular-references: true                                  # Allow circular bean references in Cloud components
-  rabbitmq:
-    host: ${RABBITMQ_HOST:localhost}                                 # RabbitMQ server hostname
-    port: ${RABBITMQ_PORT:5672}                                      # RabbitMQ server port
-    username: ${RABBITMQ_USERNAME:guest}                             # RabbitMQ authentication username
-    password: ${RABBITMQ_PASSWORD:guest}                             # RabbitMQ authentication password
-    ssl:
-      enabled: ${RABBITMQ_SSL:false}                                 # It must be enabled because Amazon MQ mandates SSL.
+    web-application-type: reactive                                   # Application type (reactive web application)
+  # Spring Cloud Config Client Configuration
   cloud:
     config:
       name: ${CLOUD_CONFIG_NAME:focason-gateway}                     # Configuration file name in config server
@@ -33,25 +29,6 @@ spring:
       discovery:
         enabled: true                                                # Enable service discovery for config server
         service-id: ${CONFIG_SERVICE_ID:focason-config-server}       # Config server service ID
-    gateway:
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: ["*"]                                    # Allowed CORS origins
-            allowedHeaders: "*"                                      # Allowed CORS headers
-            allowedMethods:                                          # Allowed HTTP methods for CORS
-              - GET
-              - POST
-              - PUT
-              - PATCH
-              - DELETE
-              - OPTIONS
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh, bus-refresh, health                        # Actuator endpoints to expose for monitoring
 
 # ----------------------------------------------------
 # 2. Spring Cloud Service Discovery (Eureka) Configuration
@@ -62,14 +39,3 @@ eureka:
   client:
     service-url:
       defaultZone: http://${EUREKA_HOSTNAME:localhost}:8761/eureka/  # Eureka server URL for registration
-
-# ----------------------------------------------------
-# 3. Logging Configuration
-# ----------------------------------------------------
-logging:
-  file:
-    name: logs/focason-gateway.log                                   # Log file path
-  level:
-    root: ${LOG_LEVEL:INFO}                                          # Root logging level
-    org.springframework.amqp: ${LOG_LEVEL:INFO}
-    org.springframework.retry: ${LOG_LEVEL:INFO}

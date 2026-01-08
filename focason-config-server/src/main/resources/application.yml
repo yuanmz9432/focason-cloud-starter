@@ -42,7 +42,7 @@ spring:
           username: ${GITHUB_USERNAME}                                # Git username
           password: ${GITHUB_TOKEN}                                   # ⚠ MUST be environment variable, never hard-code
           default-label: ${GITHUB_BRANCH:main}                        # Git branch to read config from
-          search-paths: ${GITHUB_ROOT_PATH:config}                    # Directory containing config files
+          search-paths: ${GITHUB_ROOT_PATH}                           # Directory containing config files
           skip-ssl-validation: true                                   # Skip SSL validation
         bootstrap: true
 

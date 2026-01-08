@@ -46,8 +46,6 @@ public class FileController
     private final String FILE_DOWNLOAD_URL = "/api/v1/files/download";
     private final String FILE_UPLOAD_URL = "/api/v1/files/upload";
     private final String FILE_UPLOAD_CALLBACK_URL = "/api/v1/files/callback";
-    private final String FILE_TASK_URL = "/api/v1/files/task";
-    private final String FILE_SEARCH_URL = "/api/v1/files";
 
     /**
      * Generates a presigned URL for secure, direct file upload to S3.

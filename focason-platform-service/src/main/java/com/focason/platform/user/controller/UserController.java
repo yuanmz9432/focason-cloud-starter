@@ -7,6 +7,7 @@ package com.focason.platform.user.controller;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.on;
 import static org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder.relativeTo;
 
+import java.util.Objects;
 import com.focason.core.annotation.FsConditionParam;
 import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.annotation.FsSortParam;
@@ -116,13 +117,14 @@ public class UserController
         UriComponentsBuilder uriBuilder) {
 
         // Convert request to resource and delegate creation to service
-        final String uuid = service.create(FsUtilityToolkit.convert(request, UserResource.class));
+        final String uuid = service.create(Objects.requireNonNull(FsUtilityToolkit.convert(request, UserResource.class)));
 
         // Construct the URI for the new resource using method reference
-        var uri = relativeTo(uriBuilder)
-            .withMethodCall(on(getClass()).fetch(uuid))
+        ResponseEntity<UserFetchResponse> methodCallResult = Objects.requireNonNull(on(getClass()).fetch(uuid));
+        var uri = relativeTo(Objects.requireNonNull(uriBuilder))
+            .withMethodCall(methodCallResult)
             .build()
-            .encode()
+            .encode()   
             .toUri();
 
         return ResponseEntity.created(uri).build();
@@ -138,7 +140,7 @@ public class UserController
     @RequestMapping(method = RequestMethod.PUT, value = UPDATE_USER_URL)
     public ResponseEntity<Void> update(@PathVariable("uid") String uuid,
         @RequestBody UserUpdateRequest request) {
-        service.update(uuid, FsUtilityToolkit.convert(request, UserResource.class));
+        service.update(uuid, Objects.requireNonNull(FsUtilityToolkit.convert(request, UserResource.class)));
         return ResponseEntity.noContent().build();
     }
 

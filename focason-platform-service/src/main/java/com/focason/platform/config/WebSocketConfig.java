@@ -39,6 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
      * Custom handler used to determine the user Principal during the handshake,
      * typically utilizing the user ID extracted by the {@link WebSocketAuthInterceptor}.
      */
+    @NonNull
     private final FsPrincipalHandshakeHandler fsPrincipalHandshakeHandler;
 
     /**
@@ -76,7 +77,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
      * @param registry The message broker registry.
      */
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry registry) {
+    public void configureMessageBroker(@NonNull MessageBrokerRegistry registry) {
         // Enable a simple in-memory message broker to handle subscriptions
         registry.enableSimpleBroker("/topic", "/queue");
         // /topic: for broadcasting messages (many-to-many)
@@ -95,7 +96,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
      * @param registration The registration builder for WebSocket transport settings.
      */
     @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+    public void configureWebSocketTransport(@NonNull WebSocketTransportRegistration registration) {
         registration.setMessageSizeLimit(128 * 1024); // Set the maximum size for incoming STOMP messages (128KB)
         registration.setSendTimeLimit(20 * 1000); // Set the maximum time allowed to send a message (20 seconds)
         registration.setSendBufferSizeLimit(512 * 1024); // Set the maximum buffer size for outbound messages (512KB)

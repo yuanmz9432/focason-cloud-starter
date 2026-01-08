@@ -3,6 +3,7 @@
 // =====================================================
 package com.focason.platform.notification.controller;
 
+import java.util.Objects;
 import com.focason.core.annotation.FsConditionParam;
 import com.focason.core.annotation.FsPaginationParam;
 import com.focason.core.annotation.FsSortParam;
@@ -19,7 +20,6 @@ import com.focason.platform.notification.service.NotificationService;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.AllArgsConstructor;
 import org.slf4j.MDC;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +44,6 @@ public class NotificationController
 {
 
     /** RabbitTemplate for sending asynchronous messages to the notification queue. */
-    private final RabbitTemplate rabbitTemplate;
     private final SqsTemplate sqsTemplate;
 
     /** Service layer for business logic related to notification search and read status management. */
@@ -71,8 +70,9 @@ public class NotificationController
     @RequestMapping(method = RequestMethod.POST, value = BROADCAST_URL)
     public ResponseEntity<Void> broadcast(@RequestBody NotificationRequest request) {
         // Write a message to RabbitMQ.
-        sqsTemplate.send(NotificationSqsConsumer.QUEUE_NAME,
+        NotificationResource resource = Objects.requireNonNull(
             FsUtilityToolkit.convert(request, NotificationResource.class));
+        sqsTemplate.send(NotificationSqsConsumer.QUEUE_NAME, resource);
         return ResponseEntity.noContent().build();
     }
 
@@ -88,8 +88,9 @@ public class NotificationController
     @RequestMapping(method = RequestMethod.POST, value = SEND_TO_USER_URL)
     public ResponseEntity<Void> sendToUsers(@RequestBody NotificationRequest request) {
         // Write a message to RabbitMQ.
-        sqsTemplate.send(NotificationSqsConsumer.QUEUE_NAME,
+        NotificationResource resource = Objects.requireNonNull(
             FsUtilityToolkit.convert(request, NotificationResource.class));
+        sqsTemplate.send(NotificationSqsConsumer.QUEUE_NAME, resource);
         return ResponseEntity.noContent().build();
     }
 
